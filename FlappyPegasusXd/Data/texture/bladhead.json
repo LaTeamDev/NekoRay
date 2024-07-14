@@ -1,0 +1,98 @@
+{ "frames": {
+   "bladhead 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 1.ase": {
+    "frame": { "x": 30, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 2.ase": {
+    "frame": { "x": 60, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 3.ase": {
+    "frame": { "x": 90, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 4.ase": {
+    "frame": { "x": 120, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 5.ase": {
+    "frame": { "x": 150, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 6.ase": {
+    "frame": { "x": 180, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 7.ase": {
+    "frame": { "x": 210, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 8.ase": {
+    "frame": { "x": 240, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   },
+   "bladhead 9.ase": {
+    "frame": { "x": 270, "y": 0, "w": 30, "h": 46 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 46 },
+    "sourceSize": { "w": 30, "h": 46 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3-beta16-dev",
+  "image": "bladhead.png",
+  "format": "RGBA8888",
+  "size": { "w": 300, "h": 46 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Sprite Sheet", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

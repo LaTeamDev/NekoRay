@@ -5,6 +5,7 @@ using NekoLib.Scenes;
 using NekoRay;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
+using Font = NekoRay.Font;
 using Music = NekoRay.Music;
 
 namespace FlappyPegasus; 
@@ -13,10 +14,16 @@ public class MenuScene : BaseScene {
     public override void Initialize() {
         var cameraObject = new GameObject("Camera");
         var camera = cameraObject.AddComponent<Camera2D>();
+        camera.BackgroundColor = Raylib.BLUE;
         camera.IsMain = true;
         var textObject = new GameObject("Text");
-        var text = textObject.AddComponent<Text>();
-        text.TextString = "WHAT? HELP ME!";
+        var text = textObject.AddComponent<ShadowedText>();
+        text.Font = Font.FromLove2d("Data/texture/scorefont.png", "0123456789xm");
+        text.ShadowFont = Font.FromLove2d("Data/texture/scorefont_s.png", "0123456789xm");
+        text.TextString = "280m";
+        text.ShadowColor = Raylib.BLACK;
+        textObject.Transform.LocalScale = new Vector3(2f, 2f, 0f);
+
         var canvas = new GameObject("Canvas");
         canvas.AddComponent<Canvas>();
         

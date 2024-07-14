@@ -1,6 +1,6 @@
 namespace NekoRay; 
 
-public class RenderTexture : IDisposable {
+public class RenderTexture : NekoObject, IDisposable {
     internal RayRenderTexture _renderTexture;
     internal RenderTexture() { }
 
@@ -24,7 +24,7 @@ public class RenderTexture : IDisposable {
 
     public bool IsReady => Raylib.IsRenderTextureReady(_renderTexture);
 
-    public void Dispose() {
+    public override void Dispose() {
         Raylib.UnloadRenderTexture(_renderTexture);
     }
 

@@ -16,15 +16,11 @@ public class Camera2D : BaseCamera {
 
     public Color BackgroundColor = new(0, 0, 0, 0);
 
-    void Awake() {
-        _camera = new ZeroElectric.Vinculum.Camera2D();
-    }
-
     void LateUpdate() {
         _camera.target = new Vector2(Transform.Position.X, Transform.Position.Y);
         _camera.offset = new Vector2(Raylib.GetRenderWidth() / 2f, Raylib.GetRenderHeight() / 2f);
         _camera.rotation = Transform.Rotation.YawPitchRollAsVector3().Z;
-        if (Zoom >= 0f) Zoom = 1f;
+        if (Zoom <= 0f) Zoom = 1f;
     }
 
     void Draw() {

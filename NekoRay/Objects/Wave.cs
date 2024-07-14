@@ -2,7 +2,7 @@ using ZeroElectric.Vinculum.Extensions;
 
 namespace NekoRay; 
 
-public class Wave : IDisposable {
+public class Wave : NekoObject {
     internal RayWave _wave;
 
     internal Wave(RayWave wave) {
@@ -15,7 +15,7 @@ public class Wave : IDisposable {
 
     public bool IsReady => Raylib.IsWaveReady(_wave);
 
-    public void Dispose() {
+    public override void Dispose() {
         Raylib.UnloadWave(_wave);
     }
 

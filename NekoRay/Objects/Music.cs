@@ -1,6 +1,6 @@
 namespace NekoRay; 
 
-public class Music : IPlayable {
+public class Music : NekoObject, IPlayable {
     internal RayMusic _Music;
     
     public bool IsReady => Raylib.IsMusicReady(_Music);
@@ -12,7 +12,7 @@ public class Music : IPlayable {
 
     public static Music Load(string filename) => new(Raylib.LoadMusicStream(filename));
 
-    public void Dispose() {
+    public override void Dispose() {
         Raylib.UnloadMusicStream(_Music);
     }
 

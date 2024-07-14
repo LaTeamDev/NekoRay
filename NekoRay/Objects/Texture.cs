@@ -4,7 +4,7 @@ using ZeroElectric.Vinculum.Extensions;
 
 namespace NekoRay; 
 
-public class Texture : IDisposable {
+public class Texture : NekoObject {
     internal RayTexture _texture;
     internal Texture() { }
 
@@ -19,7 +19,7 @@ public class Texture : IDisposable {
     public int Width => _texture.width;
     public int Height => _texture.height;
 
-    public void Dispose() {
+    public override void Dispose() {
         Raylib.UnloadTexture(_texture);
     }
 

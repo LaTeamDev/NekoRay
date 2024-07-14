@@ -34,7 +34,7 @@ public class AudioPlayer : Behaviour {
     
     public override void Dispose() {
         base.Dispose();
-        AudioClip?.Dispose();
+        AudioClip?.Stop();
     }
 
     public void Update() {

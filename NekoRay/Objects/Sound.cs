@@ -1,6 +1,6 @@
 namespace NekoRay; 
 
-public class Sound : IPlayable {
+public class Sound : NekoObject, IPlayable {
     internal RaySound _sound;
 
     public bool IsAlias { get; private set; } = false;
@@ -17,7 +17,7 @@ public class Sound : IPlayable {
         IsAlias = true
     };
 
-    public void Dispose() {
+    public override void Dispose() {
         if (IsAlias) Raylib.UnloadSoundAlias(_sound);
         else Raylib.UnloadSound(_sound);
     }

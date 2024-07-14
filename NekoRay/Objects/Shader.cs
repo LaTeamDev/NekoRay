@@ -3,7 +3,7 @@ using ZeroElectric.Vinculum;
 
 namespace NekoRay; 
 
-public class Shader : IDisposable {
+public class Shader : NekoObject {
     private RayShader _shader;
     internal Shader() { }
 
@@ -48,7 +48,7 @@ public class Shader : IDisposable {
         }
     }
 
-    public void Dispose() {
+    public override void Dispose() {
         Raylib.UnloadShader(_shader);
     }
 }

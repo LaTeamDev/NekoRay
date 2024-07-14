@@ -1,7 +1,7 @@
 namespace NekoRay; 
 
 [Obsolete("Unfinished")]
-public class AudioStream : IPlayable {
+public class AudioStream : NekoObject, IPlayable {
     internal RayAudioStream _AudioStream;
     
     public bool IsReady => Raylib.IsAudioStreamReady(_AudioStream);

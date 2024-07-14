@@ -3,10 +3,13 @@ using ZeroElectric.Vinculum.Extensions;
 
 namespace NekoRay; 
 
-public class Image : IDisposable {
+public class Image : NekoObject {
     internal RayImage _image;
     
     internal Image() { }
+
+    public int Height => _image.height;
+    public int Width => _image.width;
 
     public static Image Load(string filename) {
         return new Image {
@@ -52,7 +55,7 @@ public class Image : IDisposable {
     
     public bool IsReady => Raylib.IsImageReady(_image);
 
-    public void Dispose() {
+    public override void Dispose() {
         Raylib.UnloadImage(_image);
     }
 

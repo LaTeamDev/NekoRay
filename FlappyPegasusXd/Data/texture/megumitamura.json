@@ -1,0 +1,98 @@
+{ "frames": {
+   "megumitamura 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 1.ase": {
+    "frame": { "x": 42, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 2.ase": {
+    "frame": { "x": 84, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 3.ase": {
+    "frame": { "x": 126, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 4.ase": {
+    "frame": { "x": 168, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 5.ase": {
+    "frame": { "x": 210, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 6.ase": {
+    "frame": { "x": 252, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 7.ase": {
+    "frame": { "x": 294, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 8.ase": {
+    "frame": { "x": 336, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   },
+   "megumitamura 9.ase": {
+    "frame": { "x": 378, "y": 0, "w": 42, "h": 52 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 52 },
+    "sourceSize": { "w": 42, "h": 52 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3-beta16-dev",
+  "image": "megumitamura.png",
+  "format": "RGBA8888",
+  "size": { "w": 420, "h": 52 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Sprite Sheet", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

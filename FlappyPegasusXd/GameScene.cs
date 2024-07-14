@@ -1,3 +1,4 @@
+using System.Numerics;
 using FlappyPegasus.GameStuff;
 using NekoLib.Core;
 using NekoLib.Scenes;
@@ -14,9 +15,16 @@ public class GameScene : BaseScene {
         var camera = new GameObject("Camera").AddComponent<Camera2D>();
         camera.BackgroundColor = Raylib.BLUE;
         camera.IsMain = true;
+        camera.Zoom = 2f;
 
-        var player = new GameObject("Player").AddComponent<Player>();
-        
+        var player = new GameObject("Player")
+            .AddComponent<Player>();
+        player._spriteRenderer = player.GameObject.AddChild("Sprite").AddComponent<SpriteRenderer2D>();
+        var spriteTransform = player._spriteRenderer.GameObject.Transform;
+        spriteTransform.LocalScale = spriteTransform.LocalScale with {X = -spriteTransform.LocalScale.X};
+
+        player.AnimationFrames = AsepriteLoader.Load("Data/texture/bladhead.json");
+
         base.Initialize();
 
         OverlayScene = new PauseScene();
