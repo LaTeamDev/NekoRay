@@ -8,7 +8,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Company>VanderCat</Company>
         <Product>NekoRay Silly Engine</Product>
-        <AssemblyVersion>1.0</AssemblyVersion>
+        <AssemblyVersion>1.1</AssemblyVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
