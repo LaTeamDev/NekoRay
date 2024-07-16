@@ -9,6 +9,8 @@
         <Company>VanderCat</Company>
         <Product>NekoRay Silly Engine</Product>
         <AssemblyVersion>1.1</AssemblyVersion>
+        <LangVersion>default</LangVersion>
+        <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

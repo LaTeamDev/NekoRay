@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0-android</TargetFramework>
+        <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
+        <OutputType>Exe</OutputType>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <ApplicationId>com.companyname.NekoRayDroid</ApplicationId>
+        <ApplicationVersion>1</ApplicationVersion>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    </PropertyGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\FlappyPegasusXd\FlappyPegasusXd.csproj" />
+      <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <AndroidNativeLibrary Include="lib\arm64-v8a\libraylib.so">
+            <Abi>arm64-v8a</Abi>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </AndroidNativeLibrary>
+    </ItemGroup>
+</Project>
