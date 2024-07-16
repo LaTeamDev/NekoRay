@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace NekoRay; 
 
 public static class Extensions {
@@ -9,4 +11,6 @@ public static class Extensions {
         SceneManager.SetSceneActive(scene);
         return go;
     }
+
+    public static Vector2 ToVector2(this Vector3 vector) => new(vector.X, vector.Y);
 }

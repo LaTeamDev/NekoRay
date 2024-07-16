@@ -18,8 +18,8 @@ public class MenuScene : BaseScene {
         camera.IsMain = true;
         var textObject = new GameObject("Text");
         var text = textObject.AddComponent<ShadowedText>();
-        text.Font = Font.FromLove2d("Data/texture/scorefont.png", "0123456789xm");
-        text.ShadowFont = Font.FromLove2d("Data/texture/scorefont_s.png", "0123456789xm");
+        text.Font = Data.GetFont("Data/texture/scorefont.png", "0123456789xm");
+        text.ShadowFont = Data.GetFont("Data/texture/scorefont_s.png", "0123456789xm");
         text.TextString = "280m";
         text.ShadowColor = Raylib.BLACK;
         textObject.Transform.LocalScale = new Vector3(2f, 2f, 0f);

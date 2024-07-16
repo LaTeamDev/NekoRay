@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Box2D.NetStandard" Version="2.4.7-alpha" />
       <PackageReference Include="Raylib-CSharp-Vinculum" Version="5.0.1" />
       <PackageReference Include="Tomlyn" Version="0.17.0" />
     </ItemGroup>
@@ -31,6 +32,10 @@
     <ItemGroup>
       <None Remove="default.conf.toml" />
       <EmbeddedResource Include="default.conf.toml" />
+      <None Remove="licenses.txt" />
+      <EmbeddedResource Include="licenses.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

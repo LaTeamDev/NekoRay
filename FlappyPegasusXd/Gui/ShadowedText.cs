@@ -7,7 +7,7 @@ namespace FlappyPegasus.Gui;
 
 public class ShadowedText : Text {
     public NekoRay.Font ShadowFont;
-    public Color ShadowColor;
+    public Color ShadowColor = Raylib.BLACK;
     public override void Render() {
         ShadowFont.Draw(
             TextString, 

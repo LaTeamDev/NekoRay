@@ -6,7 +6,7 @@ using Timer = NekoRay.Timer;
 
 namespace FlappyPegasus.GameStuff; 
 
-public class Player : Behaviour {
+public class PlayerAnimation : Behaviour {
     public AnimationFrame[] AnimationFrames;
     public SpriteRenderer2D _spriteRenderer;
     private float _time;
@@ -25,10 +25,7 @@ public class Player : Behaviour {
     void Update() {
         UpdateAnimation();
         _time += Timer.DeltaF;
-        Transform.LocalPosition = 
-            new Vector3(MathF.Sin(_time)*128f, MathF.Cos(_time)*128f, 0);
-    }
-    void DrawGui() {
-        Raylib.DrawText($"player anim frame: {_animationFrameIndex}", 0, 40, 20, Raylib.RED);
+        /*Transform.LocalPosition = 
+            new Vector3(MathF.Sin(_time)*128f, MathF.Cos(_time)*128f, 0);*/
     }
 }

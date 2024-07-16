@@ -41,7 +41,7 @@ public static class Program {
         }
         var conf = ReadConf(gameId);
         var game = GetGame(conf.Identity);
-        //Raylib.SetWindowState(conf.GetFlags());
+        Raylib.SetWindowState(conf.GetFlags());
         Raylib.InitWindow(conf.Width, conf.Height, "NekoRay");
         try {
             var loopFunction = game.Run(args);
