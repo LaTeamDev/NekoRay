@@ -6,6 +6,7 @@ namespace NekoRay;
 
 public static class Program {
     private static bool _shouldQuit = false;
+    public static bool ShouldQuit => _shouldQuit;
     public static void Quit() => _shouldQuit = true;
     
     private static NekoRayConf ReadConf(string id = "default") {
@@ -22,7 +23,7 @@ public static class Program {
         GameBase gameBase;
         if (!File.Exists(Identity + ".dll")) return new NoGame();
         var gameDll = Assembly.LoadFrom(Identity+".dll");
-        var gameType = gameDll.GetTypes().FirstOrDefault(type => type.IsAssignableTo(typeof(GameBase)));
+        var gameType = gameDll.GetTypes().FirstOrDefault(type => typeof(GameBase).IsAssignableFrom(type));
         if (gameType is null)
             gameBase = new NoGame();
         else
