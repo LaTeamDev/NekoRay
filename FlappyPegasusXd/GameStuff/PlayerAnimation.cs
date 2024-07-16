@@ -13,14 +13,20 @@ public class PlayerAnimation : Behaviour {
     private int _animationFrameIndex = 0;
     private float _animationTime = 0;
     public AnimationFrame CurrentFrame => AnimationFrames[_animationFrameIndex];
+    public int FreezeFrame = -1;
     void UpdateAnimation() {
+        _spriteRenderer.Sprite = CurrentFrame.Sprite;
+        if (_animationFrameIndex == FreezeFrame) return;
         _animationTime += Timer.DeltaF;
         while (_animationTime >= CurrentFrame.Time) {
             _animationTime -= CurrentFrame.Time;
-            _animationFrameIndex++;
+            _animationFrameIndex++;;
             if (_animationFrameIndex >= AnimationFrames.Length) _animationFrameIndex = 0;
         }
-        _spriteRenderer.Sprite = CurrentFrame.Sprite;
+    }
+
+    public void RunAnim(int startFrame = 0) {
+        _animationFrameIndex = startFrame;
     }
     void Update() {
         UpdateAnimation();

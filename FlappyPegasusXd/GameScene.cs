@@ -15,35 +15,46 @@ namespace FlappyPegasus;
 public class GameScene : BaseScene {
 
     public OverlayScene OverlayScene;
+    
     public override void Initialize() {
         this.CreateWorld();
+
+        #region Camera
         var camera = new GameObject("Camera").AddComponent<Camera2D>();
         camera.BackgroundColor = Raylib.BLUE;
         camera.IsMain = true;
         camera.Zoom = 2f;
+        #endregion
 
+        #region Canvas
         var canvas = new GameObject("Canvas").AddComponent<Canvas>();
         var scoreText = canvas.GameObject.AddChild("Score Text").AddComponent<ShadowedText>();
         scoreText.Font = Data.GetFont("Data/texture/scorefont.png", "0123456789xm");
         scoreText.ShadowFont = Data.GetFont("Data/texture/scorefont_s.png", "0123456789xm");
         scoreText.Transform.LocalPosition = new Vector3(120f, 120f, 0f);
         scoreText.Transform.LocalScale = Vector3.One * 2;
+        #endregion
 
+        #region Player
         var playerAnimation = new GameObject("Player")
             .AddComponent<PlayerAnimation>();
         playerAnimation._spriteRenderer = playerAnimation.GameObject.AddChild("Sprite").AddComponent<SpriteRenderer2D>();
         var spriteTransform = playerAnimation._spriteRenderer.GameObject.Transform;
-        spriteTransform.LocalScale = spriteTransform.LocalScale with {X = -spriteTransform.LocalScale.X};
+        //playerAnimation._spriteRenderer.GameObject.Transform.Parent = null;
+        playerAnimation._spriteRenderer.FlipX = true;
         var collider = playerAnimation.GameObject.AddComponent<CircleCollider>();
-        collider.Radius = 16f;
+        collider.Radius = 12f;
         
         var rigidbody = playerAnimation.GameObject.AddComponent<Rigidbody2D>();
         rigidbody.BodyType = BodyType.Dynamic;
         var player = playerAnimation.GameObject.AddComponent<PlayerMove>();
+        player.Sprite = playerAnimation._spriteRenderer;
         player.rb2D = rigidbody;
-        player.CurrentScore = scoreText;
-
+        player.Animation = playerAnimation;
+        player.Animation.FreezeFrame = 0;
+        
         playerAnimation.AnimationFrames = AsepriteLoader.Load("Data/texture/bladhead.json");
+        #endregion
 
         base.Initialize();
 

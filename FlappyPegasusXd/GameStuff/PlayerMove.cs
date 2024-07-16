@@ -1,10 +1,12 @@
 using System.Numerics;
 using Box2D.NetStandard.Collision;
 using Box2D.NetStandard.Dynamics.Contacts;
+using NekoLib;
 using NekoLib.Core;
 using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
+using ZeroElectric.Vinculum.Extensions;
 
 namespace FlappyPegasus.GameStuff; 
 
@@ -17,73 +19,40 @@ public class PlayerMove : Behaviour {
     private float jumpPower = 3f;
     private float speedMove = 8f;
     private float currentDist;
-    private float rotateSpd = 0.45f;
+    private float rotateSpd = .15f;
+    public SpriteRenderer2D Sprite;
+    public PlayerAnimation Animation;
 
-    // Coins
-    public Text ScoreCoin;
-    public int CoinScore;
-    private int currentCoins = 0;
-
-    // Score
-    public Text CurrentScore;
-    private int score;
-
-    private void Awake()
-    {
-        score = SaveData.BestScore??0;
-        CoinScore = SaveData.CoinCount??0;
-    }
-
-    void UpdateHud() {
-        //ScoreCoin.TextString = currentCoins.ToString();
-    }
+    public ScoreController Score;
 
     private void Update()
     {
         TouchJump();
-        //MovePlayerX();
-    }
-
-    void LateUpdate() {
-        UpdateHud();
-    }
-
-    void MovePlayerX()
-    {
-        currentDist = Transform.Position.X / 100;
-        rb2D.LinearVelocity = rb2D.LinearVelocity with {X = speedMove + currentDist};
-
-        score = (int)rb2D.Position.X;
-        CurrentScore.TextString = score.ToString();
     }
 
     private void ProcessTouch() {
         var jump = Raylib.IsKeyPressed(KeyboardKey.KEY_Z);
         if (!jump)
             return;
-        //rb2D.simulated = true;
-        //StartPanel.SetActive(!rb2D.simulated);
         rb2D.LinearVelocity = -Vector2.UnitY * jumpPower;
+        Animation.RunAnim(5);
         //JumpSound.Play();
     }
+
+    private Vector4 smoothDamp;
     
     private void TouchJump() {
         ProcessTouch();
         
-        //rb2D.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(0, 0, rb2D.LinearVelocity.Y * rotateSpd);
+        
+        Sprite.Transform.Rotation = NekoMath.Damp(
+            Sprite.Transform.Rotation, 
+            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, rb2D.LinearVelocity.Y* rotateSpd),
+            ref smoothDamp,
+            0.2f);
     }
 
-    public void CoinSaves()
-    {
-        ScoreCoin.TextString = currentCoins.ToString();
-        SaveData.CoinCount = CoinScore + currentCoins;
-    }
 
-    public void SaveScore() {
-        if (score <= SaveData.BestScore) return;
-        SaveData.BestScore = score;
-        SaveData.Save();
-    }
 
     public void CounterDead()
     {
@@ -100,18 +69,18 @@ public class PlayerMove : Behaviour {
         //LoseMenuPanel.SetActive(!rb2D.simulated);
         //CounterAchievement.CheckDead(score, currentCoins, deaths);
         CounterDead();
-        SaveScore();
+        Score.SaveScore();
+        Score.SaveCoin();
     }
 
     private void OnBeginSensor2D(Contact collision)
     {
         var contactRb = (Rigidbody2D)collision.GetFixtureB().GetBody().UserData;
         if (!contactRb.GameObject.Tags.Contains("Coin")) return;
-        currentCoins++;
-        CoinSaves();
+        Score.CurrenctCoins++;
         Destroy(contactRb.GameObject);
     }
     void DrawGui() {
-        Raylib.DrawText($"player: {rb2D.LinearVelocity.ToString()}", 0, 40, 20, Raylib.RED);
+        Raylib.DrawText($"player: {Sprite.Transform.LocalRotation.YawPitchRollAsVector3()}", 0, 40, 20, Raylib.RED);
     }
 }
