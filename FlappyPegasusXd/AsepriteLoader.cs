@@ -8,9 +8,10 @@ namespace FlappyPegasus;
 
 public static class AsepriteLoader {
     public static AnimationFrame[] Load(string path) {
-        if (!File.Exists(path)) return Array.Empty<AnimationFrame>();
-        
-        var text = File.ReadAllText(path);
+        //if (!File.Exists(path)) return Array.Empty<AnimationFrame>();
+
+        var text = Raylib.LoadFileText(path);//File.ReadAllText(path);
+        Console.WriteLine(path);
         using var obj = JsonDocument.Parse(text);
 
         var filename = obj.RootElement.GetProperty("meta").GetProperty("image").GetString()??Path.GetFileNameWithoutExtension(path)+".png";

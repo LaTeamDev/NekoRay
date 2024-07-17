@@ -31,7 +31,7 @@ public class PlayerMove : Behaviour {
     }
 
     private void ProcessTouch() {
-        var jump = Raylib.IsKeyPressed(KeyboardKey.KEY_Z);
+        var jump = Raylib.IsKeyPressed(KeyboardKey.KEY_Z) || Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT);
         if (!jump)
             return;
         rb2D.LinearVelocity = -Vector2.UnitY * jumpPower;

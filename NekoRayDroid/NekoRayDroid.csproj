@@ -8,6 +8,7 @@
         <ApplicationId>com.companyname.NekoRayDroid</ApplicationId>
         <ApplicationVersion>1</ApplicationVersion>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
       <ProjectReference Include="..\FlappyPegasusXd\FlappyPegasusXd.csproj" />
@@ -18,5 +19,9 @@
             <Abi>arm64-v8a</Abi>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </AndroidNativeLibrary>
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="test.txt" />
+        <AndroidAsset Include="..\FlappyPegasusXd\Data\**" />
     </ItemGroup>
 </Project>

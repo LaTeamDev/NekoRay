@@ -23,7 +23,7 @@ public class GameScene : BaseScene {
         var camera = new GameObject("Camera").AddComponent<Camera2D>();
         camera.BackgroundColor = Raylib.BLUE;
         camera.IsMain = true;
-        camera.Zoom = 2f;
+        camera.Zoom = Raylib.GetRenderHeight() / 288f;
         #endregion
 
         #region Canvas
