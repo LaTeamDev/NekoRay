@@ -21,9 +21,10 @@ public class PlayerMove : Behaviour {
     private float currentDist;
     private float rotateSpd = .15f;
     public SpriteRenderer2D Sprite;
-    public PlayerAnimation Animation;
+    public SimpleAnimation Animation;
 
     public ScoreController Score;
+    public OverlayScene GameOverScene;
 
     private void Update()
     {
@@ -43,7 +44,8 @@ public class PlayerMove : Behaviour {
     
     private void TouchJump() {
         ProcessTouch();
-        
+        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT))
+            rb2D.Position = BaseCamera.Main?.ScreenToWorld(Raylib.GetMousePosition()).ToVector2()/ Physics.MeterScale??rb2D.Position;
         
         Sprite.Transform.Rotation = NekoMath.Damp(
             Sprite.Transform.Rotation, 
@@ -54,23 +56,20 @@ public class PlayerMove : Behaviour {
 
 
 
-    public void CounterDead()
-    {
-        deaths++;
-        if (deaths <= SaveData.DeathCount) return;
-        SaveData.DeathCount = deaths;
+    public void OnDeath() {
+        Score.UpdateSaveData();
+        SaveData.DeathCount++;
         SaveData.Save();
+        //CounterAchievement.CheckDead(score, currentCoins, deaths);
+        GameOverScene.Open();
     }
 
     private void OnBeginContact2D(Contact collision) {
-        var contactRb = (Rigidbody2D)collision.GetFixtureB().GetBody().UserData;
+        var contactRb = (Rigidbody2D)collision.GetFixtureA().GetBody().UserData;
+        if (contactRb.GameObject == GameObject)
+            contactRb = (Rigidbody2D)collision.GetFixtureB().GetBody().UserData;
         if (!contactRb.GameObject.Tags.Contains("Danger")) return;
-        //isTouchEnable = false;
-        //LoseMenuPanel.SetActive(!rb2D.simulated);
-        //CounterAchievement.CheckDead(score, currentCoins, deaths);
-        CounterDead();
-        Score.SaveScore();
-        Score.SaveCoin();
+        OnDeath();
     }
 
     private void OnBeginSensor2D(Contact collision)
@@ -79,8 +78,5 @@ public class PlayerMove : Behaviour {
         if (!contactRb.GameObject.Tags.Contains("Coin")) return;
         Score.CurrenctCoins++;
         Destroy(contactRb.GameObject);
-    }
-    void DrawGui() {
-        Raylib.DrawText($"player: {Sprite.Transform.LocalRotation.YawPitchRollAsVector3()}", 0, 40, 20, Raylib.RED);
     }
 }

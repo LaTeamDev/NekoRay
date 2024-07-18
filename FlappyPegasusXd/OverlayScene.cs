@@ -15,7 +15,7 @@ public abstract class OverlayScene : BaseScene {
 
     private IScene _prevScene;
     protected GameObject MainGameRoot;
-    private bool Active => SceneManager.ActiveScene == this;
+    public bool Active => SceneManager.ActiveScene == this;
     
     public void Open() {
         if (Active) return;

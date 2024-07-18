@@ -13,12 +13,6 @@ public class Sprite : NekoObject {
         Texture = texture;
         Bounds = bounds;
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static float с(float a) {
-        return a > 0 ? 1 : 0;
-    }
-
     public void Draw(Vector2 destination, Vector2? scale = null, Vector2? origin = null, float rotation = 0f, Color? color = null) {
         scale ??= Vector2.One;
         origin ??= Vector2.Zero;

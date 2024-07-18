@@ -19,8 +19,4 @@ public class SpriteRenderer2D : Behaviour {
             float.RadiansToDegrees(Transform.Rotation.YawPitchRollAsVector3().Z),
             Color);
     }
-
-    void DrawGui() {
-        Raylib.DrawText(Transform.ToString(), 99, 99, 10, Raylib.WHITE);
-    }
 }

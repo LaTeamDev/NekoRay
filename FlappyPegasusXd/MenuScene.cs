@@ -20,7 +20,7 @@ public class MenuScene : BaseScene {
         var text = textObject.AddComponent<ShadowedText>();
         text.Font = Data.GetFont("Data/texture/scorefont.png", "0123456789xm");
         text.ShadowFont = Data.GetFont("Data/texture/scorefont_s.png", "0123456789xm");
-        text.TextString = "280m";
+        text.TextString = SaveData.BestScore+"m";
         text.ShadowColor = Raylib.BLACK;
         textObject.Transform.LocalScale = new Vector3(2f, 2f, 0f);
 

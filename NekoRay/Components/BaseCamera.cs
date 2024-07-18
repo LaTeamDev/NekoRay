@@ -1,3 +1,4 @@
+using System.Numerics;
 using NekoLib.Core;
 using ZeroElectric.Vinculum;
 
@@ -22,4 +23,7 @@ public abstract class BaseCamera : Behaviour {
     }
 
     public RenderTexture RenderTexture = RenderTexture.Load(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
+
+    public abstract Vector2 WorldToScreen(Vector3 position);
+    public abstract Vector3 ScreenToWorld(Vector2 position);
 }

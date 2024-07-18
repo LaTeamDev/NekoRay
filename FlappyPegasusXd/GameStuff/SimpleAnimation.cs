@@ -6,7 +6,7 @@ using Timer = NekoRay.Timer;
 
 namespace FlappyPegasus.GameStuff; 
 
-public class PlayerAnimation : Behaviour {
+public class SimpleAnimation : Behaviour {
     public AnimationFrame[] AnimationFrames;
     public SpriteRenderer2D _spriteRenderer;
     private float _time;
@@ -20,7 +20,7 @@ public class PlayerAnimation : Behaviour {
         _animationTime += Timer.DeltaF;
         while (_animationTime >= CurrentFrame.Time) {
             _animationTime -= CurrentFrame.Time;
-            _animationFrameIndex++;;
+            _animationFrameIndex++;
             if (_animationFrameIndex >= AnimationFrames.Length) _animationFrameIndex = 0;
         }
     }

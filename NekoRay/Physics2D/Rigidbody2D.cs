@@ -2,6 +2,7 @@
 using Box2D.NetStandard.Collision.Shapes;
 using Box2D.NetStandard.Common;
 using Box2D.NetStandard.Dynamics.Bodies;
+using Box2D.NetStandard.Dynamics.Fixtures;
 using Box2D.NetStandard.Dynamics.World;
 using Box2D.NetStandard.Dynamics.World.Callbacks;
 using ZeroElectric.Vinculum.Extensions;
@@ -99,7 +100,7 @@ public class Rigidbody2D : Behaviour {
             linearDamping = _startLinearDamping,
             allowSleep = true,
             linearVelocity = _startLinearVelocity,
-            position = Transform.Position.ToVector2(),
+            position = Transform.Position.ToVector2()/Physics.MeterScale,
             userData = this,
             fixedRotation = _startFixedRotation,
             type = BodyType
@@ -121,11 +122,20 @@ public class Rigidbody2D : Behaviour {
         Transform.Rotation = Quaternion.CreateFromYawPitchRoll(old.X, old.Y, Rotation);
     }
 
-    void Render() {
+    unsafe void Render() {
         var fixture = _body.GetFixtureList();
+        if (fixture is null) return;
         if (fixture.Shape.GetType().IsAssignableTo(typeof(CircleShape))) {
             var shape = (CircleShape) fixture.Shape;
-            Raylib.DrawCircleLinesV(Physics.MeterScale * Position, shape.Radius, Raylib.WHITE);
+            Raylib.DrawCircleLinesV(Physics.MeterScale * Position, shape.Radius*Physics.MeterScale, Raylib.WHITE);
+            return;
+        }
+        if (fixture.Shape.GetType().IsAssignableTo(typeof(PolygonShape))) {
+            var shape = (PolygonShape) fixture.Shape;
+            var verts = shape.GetVertices().Select(vector2 => (vector2+Position)*Physics.MeterScale).ToArray();
+            fixed (Vector2* vert = verts)
+                Raylib.DrawLineStrip(vert, verts.Length, Raylib.WHITE);
+            return;
         }
     }
 }

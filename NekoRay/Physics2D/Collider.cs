@@ -7,19 +7,20 @@ namespace NekoRay.Physics2D;
 public abstract class Collider : Component {
     public Shape Shape;
     public float Density = 1f;
-    public Filter Filter;
-    public float Friction;
-    public float Restitution;
+    public Filter? Filter;
+    public float? Friction;
+    public float? Restitution;
     public bool IsSensor;
 
     public virtual FixtureDef GetFixtureDef() {
-        return new FixtureDef {
-            density = Density,
-            filter = Filter,
-            friction = Friction,
-            restitution = Restitution,
+        var fixtureDef = new FixtureDef {
             isSensor = IsSensor,
-            userData = this
+            userData = this,
+            density = Density
         };
+        fixtureDef.filter = Filter??fixtureDef.filter;
+        fixtureDef.friction = Friction??fixtureDef.friction;
+        fixtureDef.restitution = Restitution??fixtureDef.restitution;
+        return fixtureDef;
     }
 }

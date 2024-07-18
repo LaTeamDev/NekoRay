@@ -43,4 +43,12 @@ public class Camera2D : BaseCamera {
         IsMain = false;
         RenderTexture.Dispose();
     }
+
+    public override Vector2 WorldToScreen(Vector3 position) {
+        return Raylib.GetWorldToScreen2D(position.ToVector2(), _camera);
+    }
+    
+    public override Vector3 ScreenToWorld(Vector2 position) {
+        return new Vector3(Raylib.GetScreenToWorld2D(position, _camera), 0f);
+    }
 }

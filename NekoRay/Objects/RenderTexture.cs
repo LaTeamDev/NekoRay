@@ -28,20 +28,25 @@ public class RenderTexture : NekoObject, IDisposable {
         Raylib.UnloadRenderTexture(_renderTexture);
     }
 
+    private static Stack<RenderTexture> _renderTextureStack = new ();
+
     public AttachMode Attach() {
-        return new AttachMode(this);
+        _renderTextureStack.Push(this);
+        Raylib.BeginTextureMode(_renderTexture);
+        return new AttachMode(Detach);
     }
 
-    public class AttachMode : IDisposable {
-        internal RenderTexture _renderTexture;
-
-        internal AttachMode(RenderTexture renderTexture) {
-            _renderTexture = renderTexture;
-            Raylib.BeginTextureMode(_renderTexture._renderTexture);
+    private void Detach() {
+        if (!_renderTextureStack.Contains(this))
+            throw new Exception("Huh??? The texture you want to pop isn't even in stack?? wth");
+        Raylib.EndTextureMode();
+        if (!_renderTextureStack.TryPop(out var renderTexture)) {
+            return;
         }
-        
-        public void Dispose() {
-            Raylib.EndTextureMode();
-        }
+        if (renderTexture != this) {
+            throw new Exception("you tried to detach in wrong order");
+        } 
+        if (_renderTextureStack.TryPeek(out var anotherRenderTexture))
+            Raylib.BeginTextureMode(anotherRenderTexture._renderTexture);
     }
 }
