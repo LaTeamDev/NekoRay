@@ -4,16 +4,16 @@ height = 600
 vsync = false
 msaa = false
 
-#[Window]
-#resizable = false
-#undecorated = false
-#transparent = false
-#hidden = false
-#alwaysRun = false
-#minimized = false
-#maximized = false
-#unfocused = false
-#topmost = false
-#high_dpi = false
-#mouse_passthrough = false
-#interlaced = false
+[window]
+resizable = false
+undecorated = false
+transparent = false
+hidden = false
+always_run = false
+minimized = false
+maximized = false
+unfocused = false
+topmost = false
+high_dpi = false
+mouse_passthrough = false
+interlaced = false

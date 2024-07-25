@@ -12,11 +12,11 @@ public class ScoreController : Behaviour {
     
     public int CurrenctCoins;
     public int CurrenctScore => (int)_score;
-    private float _score = 0f;
+    public float _score = 0f;
 
     public float StartSpeed = 1f;
-    private float _speed;
-    public float Velocity = 1f;
+    public float _speed;
+    public float Velocity = 0.125f;
 
     void Awake() {
         _speed = StartSpeed;
@@ -27,7 +27,7 @@ public class ScoreController : Behaviour {
     }
 
     void LateUpdate() {
-        CoinText.TextString = "x"+CurrenctCoins;
+        CoinText.TextString = "x"+_speed;
         ScoreText.TextString = CurrenctScore+"m";
     }
 

@@ -19,6 +19,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\NekoRay.Diagnostics\NekoRay.Diagnostics.csproj" />
       <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
     </ItemGroup>
 
@@ -47,10 +48,37 @@
       <None Update="Data\texture\T228.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Data\texture\Mountains_B.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Data\texture\Ground_A.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Data\texture\Mountains_A.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Data\texture\Tree_A.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Data\texture\clouds1.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Data\texture\clouds2.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Data\texture\logo.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\" />
+      <None Include="Data\shader\movetexture.frag">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="WatsonWebsocket" Version="4.1.2" />
     </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ public class EnemySpawner : Behaviour {
     public float SpawnRate = 1f;
     private float _time;
     private Random random = new((int)Timer.Time);
-    private float SpawnRadius = 120f;
+    private float SpawnRadius = 288f;
     private List<AnimationFrame[]> EnemyAnimations = new();
 
     void Awake() {

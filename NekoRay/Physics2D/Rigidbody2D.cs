@@ -138,4 +138,10 @@ public class Rigidbody2D : Behaviour {
             return;
         }
     }
+
+    public override void Dispose() {
+        base.Dispose();
+        _world.DestroyBody(_body);
+        _body = null;
+    }
 }

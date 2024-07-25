@@ -34,6 +34,10 @@ This distribution contains code from the following projects (full license text b
     Website: https://github.com/kikito/bump.lua
     License: MIT
     Copyright (c) 2012 Enrique García Cota
+ - Modified IconFontCppHeaders
+    Website: https://github.com/juliettef/IconFontCppHeaders
+    License: zlib
+    Copyright (c) 2017 Juliette Foucaut and Doug Binks
 
 zlib license
     This software is provided 'as-is', without any express or implied

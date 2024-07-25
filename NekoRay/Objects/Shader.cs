@@ -19,12 +19,19 @@ public class Shader : NekoObject {
 
     public bool IsReady => Raylib.IsShaderReady(_shader);
 
+    private Dictionary<string, int> _shaderAttributeLocationCache = new();
+    private Dictionary<string, int> _shaderUniformLocationCache = new();
     public int GetLocation(string uniformName) {
-        return Raylib.GetShaderLocation(_shader, uniformName);
+        //if (_shaderUniformLocationCache.TryGetValue(uniformName, out var value))
+        //    return value;
+        return _shaderUniformLocationCache[uniformName] = Raylib.GetShaderLocation(_shader, uniformName);
     }
 
+
     public int GetAttributeLocation(string attributeName) {
-        return Raylib.GetShaderLocationAttrib(_shader, attributeName);
+        //if (_shaderAttributeLocationCache.TryGetValue(attributeName, out var value))
+        //    return value;
+        return _shaderAttributeLocationCache[attributeName] = Raylib.GetShaderLocationAttrib(_shader, attributeName);
     }
 
     public void SetValue<T>(int uniformLocation, ref T value) where T : unmanaged {
@@ -46,6 +53,34 @@ public class Shader : NekoObject {
                 Raylib.SetShaderValue(_shader, uniformLocation, value, ShaderUniformDataType.SHADER_UNIFORM_VEC4);
                 break;
         }
+    }
+    public void SetVector2(string name, Vector2 value) =>
+        Raylib.SetShaderValue(_shader, GetLocation(name), value, ShaderUniformDataType.SHADER_UNIFORM_VEC2);
+    
+    public void SetFloat(string name, float value) =>
+        Raylib.SetShaderValue(_shader, GetLocation(name), value, ShaderUniformDataType.SHADER_UNIFORM_FLOAT);
+    
+    
+    private static Stack<Shader> _shaderStack = new ();
+
+    public AttachMode Attach() {
+        _shaderStack.Push(this);
+        Raylib.BeginShaderMode(_shader);
+        return new AttachMode(Detach);
+    }
+
+    private void Detach() {
+        if (!_shaderStack.Contains(this))
+            throw new Exception("Huh??? The texture you want to pop isn't even in stack?? wth");
+        Raylib.EndShaderMode();
+        if (!_shaderStack.TryPop(out var shader)) {
+            return;
+        }
+        if (shader != this) {
+            throw new Exception("you tried to detach in wrong order");
+        } 
+        if (_shaderStack.TryPeek(out var anotherShader))
+            Raylib.BeginShaderMode(anotherShader._shader);
     }
 
     public override void Dispose() {

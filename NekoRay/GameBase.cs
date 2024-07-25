@@ -38,6 +38,7 @@ public abstract class GameBase {
         return () => {
             Timer.Step();
             UpdateEvents();
+            NekoLib.Core.Timer.Global.Update(Timer.DeltaF);
             Update();
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.BLACK);

@@ -9,4 +9,9 @@ public class AttachMode : IDisposable {
     public void Dispose() {
         OnDetach();
     }
+
+    /// <summary>
+    /// Alias for Dispose.
+    /// </summary>
+    public void Detach() => Dispose();
 }

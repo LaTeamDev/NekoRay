@@ -9,6 +9,7 @@ using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
+using Shader = NekoRay.Shader;
 using Timer = NekoRay.Timer;
 
 namespace FlappyPegasus; 
@@ -17,7 +18,9 @@ public class GameScene : BaseScene {
 
     public OverlayScene OverlayScene;
     public OverlayScene GameOverScene;
-    
+
+    private Action UpdateBg;
+
     public override void Initialize() {
         this.CreateWorld();
 
@@ -29,16 +32,40 @@ public class GameScene : BaseScene {
         camera.GameObject.AddComponent<MoveCamera>();
         #endregion
 
+        #region Background
+        var background = new GameObject("Background");
+        background.Transform.Position = new Vector3(-256f, -144f, 0f);
+        
+        var cloudsB = background.AddChild("CloudsB").AddComponent<ShaderDrawBg>();
+        cloudsB.Texture = Data.GetTexture("Data/texture/clouds2.png");
+        cloudsB.Transform.LocalPosition = new Vector3(0f, 32f, 0f);
+
+        var cloudsA = background.AddChild("CloudsA").AddComponent<ShaderDrawBg>();
+        cloudsA.Texture = Data.GetTexture("Data/texture/clouds1.png");
+        
+        var groundA = background.AddChild("GroundA").AddComponent<ShaderDrawBg>();
+        groundA.Texture = Data.GetTexture("Data/texture/Mountains_A.png");
+        groundA.Transform.LocalPosition = new Vector3(0f, 288f - groundA.Texture.Height - 16f, 0f);
+        
+        var groundB = background.AddChild("GroundB").AddComponent<ShaderDrawBg>();
+        groundB.Texture = Data.GetTexture("Data/texture/Mountains_B.png");
+        groundB.Transform.LocalPosition = new Vector3(0f, 288f - groundB.Texture.Height, 0f);
+        
+        var groundC = background.AddChild("GroundC").AddComponent<ShaderDrawBg>();
+        groundC.Texture = Data.GetTexture("Data/texture/Tree_A.png");
+        groundC.Transform.LocalPosition = new Vector3(0f, 288f - groundC.Texture.Height, 0f);
+        #endregion
+
         #region Canvas
         var canvas = new GameObject("Canvas").AddComponent<Canvas>();
         var scoreText = canvas.GameObject.AddChild("Score Text").AddComponent<ShadowedText>();
-        scoreText.Font = Data.GetFont("Data/texture/scorefont.png", "0123456789xm");
-        scoreText.ShadowFont = Data.GetFont("Data/texture/scorefont_s.png", "0123456789xm");
+        scoreText.Font = Data.GetFont("Data/texture/scorefont.png", "0123456789xm.");
+        scoreText.ShadowFont = Data.GetFont("Data/texture/scorefont_s.png", "0123456789xm.");
         scoreText.Transform.LocalPosition = new Vector3(120f, 120f, 0f);
         scoreText.Transform.LocalScale = Vector3.One * 2;
         var coinText = canvas.GameObject.AddChild("Coin text").AddComponent<ShadowedText>();
-        coinText.Font = Data.GetFont("Data/texture/scorefont.png", "0123456789xm");
-        coinText.ShadowFont = Data.GetFont("Data/texture/scorefont_s.png", "0123456789xm");
+        coinText.Font = Data.GetFont("Data/texture/scorefont.png", "0123456789xm.");
+        coinText.ShadowFont = Data.GetFont("Data/texture/scorefont_s.png", "0123456789xm.");
         coinText.Transform.LocalPosition = new Vector3(120f, 160f, 0f);
         coinText.Transform.LocalScale = Vector3.One * 2;
         #endregion
@@ -102,8 +129,7 @@ public class GameScene : BaseScene {
         enemySpawner.SpawnLocation.Position = Vector3.UnitX * 290f;
         enemySpawner.Score = player.Score;
         #endregion
-
-
+        
         #region Overlay Scenes
         OverlayScene = new PauseScene();
         GameOverScene = new GameOverScene();
@@ -112,7 +138,20 @@ public class GameScene : BaseScene {
         SceneManager.SetSceneActive(this);
         player.GameOverScene = GameOverScene;
         #endregion
-        
+
+        var groundD = background.AddChild("GroundC").AddComponent<ShaderDrawBg>();
+        groundD.Texture = Data.GetTexture("Data/texture/Ground_A.png");
+        groundD.Transform.LocalPosition = new Vector3(0f, 288f - groundD.Texture.Height, 0f);
+
+        UpdateBg = () => {
+            cloudsA.Speed = 2f * player.Score._speed;
+            cloudsB.Speed = 1f * player.Score._speed;
+            groundA.Speed = 0.25f * player.Score._speed;
+            groundB.Speed = 8f * player.Score._speed;
+            groundC.Speed = 32f * player.Score._speed;
+            groundD.Speed = 64f * player.Score._speed;
+        };
+
         base.Initialize();
     }
 
@@ -127,6 +166,8 @@ public class GameScene : BaseScene {
     }
 
     public override void Update() {
+        UpdateBg();
+        
         if (!SceneManager.ActiveScene.GetType().IsAssignableTo(typeof(OverlayScene))) {
             base.Update();
             this.GetWorld().Step(Timer.DeltaF, 8, 3);
