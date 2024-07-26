@@ -24,9 +24,17 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="data\**"  CopyToOutputDirectory="PreserveNewest"  />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Update="pony.conf.toml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="data\textures\" />
     </ItemGroup>
 
 </Project>

@@ -6,12 +6,13 @@ using NekoRay;
 using ZeroElectric.Vinculum;
 using Timer = NekoRay.Timer;
 
-namespace FlappyPegasus;
+namespace HotlineSPonyami;
 
 public class Game : GameBase {
 
     public override void Load(string[] args) {
         Raylib.SetWindowTitle("Hotline S Ponyami");
+        SceneManager.LoadScene(new TiledScene());
     }
 
     public override void Draw() {
