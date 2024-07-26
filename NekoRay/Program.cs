@@ -49,6 +49,7 @@ public static class Program {
             while (!(Raylib.WindowShouldClose() || _shouldQuit)) {
                 loopFunction();
             }
+            game.Shutdown();
         }
         catch (Exception e) when (!Debugger.IsAttached){
             var loopFunction = game.ErrorHandler(e);

@@ -1,9 +1,11 @@
 using NekoLib.Scenes;
+using rlImGui_cs;
 using ZeroElectric.Vinculum;
 
 namespace NekoRay; 
 
 public abstract class GameBase {
+
     public virtual void Load(string[] args) {
         
     }
@@ -34,6 +36,7 @@ public abstract class GameBase {
 
     public virtual LoopFunction Run(string[] args) {
         Raylib.InitAudioDevice();
+        rlImGui.Setup();
         Load(args);
         return () => {
             Timer.Step();
@@ -45,6 +48,10 @@ public abstract class GameBase {
             Draw();
             Raylib.EndDrawing();
         };
+    }
+
+    public virtual void Shutdown() {
+        rlImGui.Shutdown();
     }
 
     public virtual LoopFunction ErrorHandler(Exception msg) {
