@@ -28,7 +28,7 @@ public class MenuScene : BaseScene {
         text.TextString = SaveData.BestScore+"m";
         text.ShadowColor = Raylib.BLACK;
         textObject.Transform.LocalScale = new Vector3(2f, 2f, 0f);
-        //cameraObject.AddComponent<ImguiDemoWindow>();
+        cameraObject.AddComponent<ImguiDemoWindow>();
         
         #region Background
         var background = new GameObject("Background");

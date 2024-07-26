@@ -8,6 +8,7 @@
         <AssemblyName>pony</AssemblyName>
         <RootNamespace>HotlineSPonyami</RootNamespace>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -24,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="data\**"  CopyToOutputDirectory="PreserveNewest"  />
+        <None Update="data\**" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,6 +36,12 @@
 
     <ItemGroup>
       <Folder Include="data\textures\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Serilog" Version="4.0.1" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+      <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     </ItemGroup>
 
 </Project>

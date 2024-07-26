@@ -1,4 +1,6 @@
 using System.Numerics;
+using FlappyPegasus.Gui;
+using NekoLib.Core;
 using NekoRay;
 using ZeroElectric.Vinculum;
 using Texture = NekoRay.Texture;
@@ -13,8 +15,8 @@ public class TiledScene : BaseScene
     {
         _tileAtlas = Data.GetTexture("data/textures/texture_atlas.png");
     }
-    public override void Initialize()
-    {
+    public override void Initialize() {
+        new GameObject("meow").AddComponent<ImguiDemoWindow>();
         base.Initialize();
         
     }
