@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\NekoLib\NekoLib\NekoLib.csproj" />
+      <ProjectReference Include="..\..\rlImGui-CSharp-Vinculum\rlImGui\rlImGui.csproj" />
     </ItemGroup>
 
     <ItemGroup>
