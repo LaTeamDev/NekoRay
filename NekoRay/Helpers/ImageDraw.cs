@@ -7,7 +7,7 @@ namespace NekoRay;
 public static class ImageDraw {
     public static unsafe void ClearBackground(this Image image, Color color) {
         var pin = image._image.GcPin();
-        Raylib.ImageClearBackground((ZeroElectric.Vinculum.Image*)pin.AddrOfPinnedObject(), color);
+        Raylib.ImageClearBackground((RayImage*)pin.AddrOfPinnedObject(), color);
         pin.Free();
     }
 }

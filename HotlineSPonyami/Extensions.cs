@@ -7,4 +7,8 @@ public static class Extensions {
             dictionary.Remove(kv.Key);
         }
     }
+
+    public static Animation ToAnimation(this AnimationFrame[] animationFrames) {
+        return new Animation(animationFrames);
+    }
 }
