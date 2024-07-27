@@ -1,4 +1,5 @@
 using System.Text;
+using HotlineSPonyami.Tools;
 using MessagePack;
 using NekoLib.Core;
 using NekoLib.Scenes;
@@ -12,6 +13,11 @@ public class Game : GameBase {
 
     public override void Load(string[] args) {
         Raylib.SetWindowTitle("Hotline S Ponyami");
+        if (args.Contains("--tools"))
+        {
+            SceneManager.LoadScene(new EditorScene(32, 32));
+            return;
+        }
         SceneManager.LoadScene(new TiledScene());
     }
 

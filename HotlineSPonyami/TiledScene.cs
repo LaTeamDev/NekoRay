@@ -1,4 +1,5 @@
 using System.Numerics;
+using NekoLib.Core;
 using NekoRay;
 using ZeroElectric.Vinculum;
 using Texture = NekoRay.Texture;
@@ -16,7 +17,6 @@ public class TiledScene : BaseScene
     public override void Initialize()
     {
         base.Initialize();
-        
     }
 
     public override void Draw()

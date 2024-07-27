@@ -25,16 +25,24 @@
 
     <ItemGroup>
         <None Update="data\**"  CopyToOutputDirectory="PreserveNewest"  />
+        <None Update="data\textures\unpacked\floors\dev_floor.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="data\textures\unpacked\floors\dev_01.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="data\textures\unpacked\floors\dev_02.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="data\textures\unpacked\walls\dev_wall.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
       <None Update="pony.conf.toml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="data\textures\" />
     </ItemGroup>
 
 </Project>
