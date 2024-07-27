@@ -3,7 +3,6 @@ using ImGuiNET;
 using NekoLib;
 using NekoLib.Core;
 using NekoRay;
-using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
 using Timer = NekoRay.Timer;
 
@@ -11,50 +10,30 @@ namespace HotlineSPonyami.Gameplay;
 
 public class PlayerController : Behaviour {
     public float Speed = 100f;
-    private Animation _backLegForward;
-    private Animation _frontLegForward;
-    private Animation _backLegRight;
-    private Animation _frontLegRight;
-    private Sprite _body;
-
-    public PlayerController() {
-        _backLegForward = AsepriteLoader.Load("data/textures/entity/player/back_leg_forwad.json").ToAnimation();
-        _frontLegForward = AsepriteLoader.Load("data/textures/entity/player/front_leg_forwad.json").ToAnimation();
-        _backLegRight = AsepriteLoader.Load("data/textures/entity/player/back_leg_forwad.json").ToAnimation();
-        _frontLegRight = AsepriteLoader.Load("data/textures/entity/player/front_leg_forwad.json").ToAnimation();
-        _body = Data.GetSprite("data/textures/entity/player/body.png");
-    }
-
-    public PlayerInventory Inventory;
-
     void Render() {
         if (!Game.ToolsMode) return;
-        
-        _body.Draw(
-            Transform.Position.ToVector2(),
-            Transform.LocalScale.ToVector2(),
-            new Vector2(_body.Width/2, _body.Height/2),
-            float.RadiansToDegrees(Transform.Rotation.GetEulerAngles().Z)
-        );
+        Raylib.DrawRectanglePro(
+            new Rectangle(Transform.Position.X, Transform.Position.Y, 24f, 48f),
+            new Vector2(12f, 24f),
+            float.RadiansToDegrees(Transform.Rotation.GetEulerAngles().Z),
+            Raylib.WHITE
+            );
     }
-
-    private Vector2 _normalizedInput;
-    private Vector3 _mousePos;
 
     void Update() {
         var input = new Vector2(
             (Input.IsDown("right") ? 1 : 0) - (Input.IsDown("left") ? 1 : 0),
             (Input.IsDown("down") ? 1 : 0) - (Input.IsDown("up") ? 1 : 0)
         );
-        _normalizedInput = Vector2.Normalize(input);
-        if (float.IsNaN(_normalizedInput.X))
-            _normalizedInput.X = 0f;
-        if (float.IsNaN(_normalizedInput.Y))
-            _normalizedInput.Y = 0f;
-        
+        var normalizedInput = Vector2.Normalize(input);
+        if (float.IsNaN(normalizedInput.X))
+            normalizedInput.X = 0f;
+        if (float.IsNaN(normalizedInput.Y))
+            normalizedInput.Y = 0f;
+
         Transform.Position = Transform.Position with {
-            X = Transform.Position.X + _normalizedInput.X * Timer.DeltaF * Speed, 
-            Y = Transform.Position.Y + _normalizedInput.Y * Timer.DeltaF * Speed
+            X = Transform.Position.X + normalizedInput.X * Timer.DeltaF * Speed, 
+            Y = Transform.Position.Y + normalizedInput.Y * Timer.DeltaF * Speed
         };
         var mousePos = BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition());
         Transform.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, 
@@ -62,14 +41,8 @@ public class PlayerController : Behaviour {
     }
 
     void DrawGui() {
-        if (!Game.ToolsMode) return;
         if (ImGui.Begin("player")) {
             ImGui.Text(Transform.Rotation.GetEulerAngles().ToString());
-            ImGui.Text("Carrying");
-            foreach (var item in Inventory.Items) {
-               ImGui.Text(item.ToString()); 
-            }
         }
-        ImGui.End();
     }
 }
