@@ -64,13 +64,15 @@ public class Game : GameBase {
     }
 
     public Console Console;
-    public bool ToolsMode = false;
+    public static bool ToolsMode = false;
 
     public override void Load(string[] args) {
+        Console.Register<Input>();
+        Console.Register<EditorScene>();
+        Console.Register<Gameplay.Commands>();
         Initlogging();
         Raylib.SetWindowTitle("Hotline S Ponyami");
         SceneManager.LoadScene(new PersistantScene());
-        Console.Register<EditorScene>();
         ToolsMode = args.Contains("--tools");
         Console = new GameObject("Console").AddComponent<Console>();
         Console.Enabled = ToolsMode;
@@ -86,6 +88,7 @@ public class Game : GameBase {
     }
 
     public override void Update() {
+        Input.Update();
         base.Update();
     }
 }
