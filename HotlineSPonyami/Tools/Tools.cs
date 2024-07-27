@@ -3,32 +3,31 @@ using NekoLib.Core;
 
 namespace HotlineSPonyami.Tools;
 
-public class Tools : Behaviour
+public class Tools : EditorWindow
 {
-    private EditorScene? _scene;
-
-    public void Initialize(EditorScene scene)
-    {
-        if (_scene == null)
-            _scene = scene;
-    }
-    
     void DrawGui()
     {
         if (ImGui.Begin("Tools"))
         {
-            ImGui.Text("Tools:");
-            int i = 0;
-            foreach (var tool in _scene.GetAllTools())
+            if (ImGui.CollapsingHeader("Tools"))
             {
-                if (ImGui.Button(tool.Name))
+                int i = 0;
+                foreach (var tool in Scene.GetAllTools())
                 {
-                    _scene.SelectTool(i);
+                    if (Scene.SelectedTool != tool && ImGui.Button(tool.Name))
+                    {
+                        Scene.SelectTool(i);
+                    }
+
+                    if (Scene.SelectedTool == tool) ImGui.Text(Scene.SelectedTool.Name + " - Selected");
+                    i++;
                 }
-                i++;
             }
-            ImGui.Text("Parameters:");
-            _scene?.SelectedTool?.DrawGui();
+
+            if (ImGui.CollapsingHeader("Parameters"))
+            {
+                Scene?.SelectedTool?.DrawGui();
+            }
         }
         ImGui.End();
     }

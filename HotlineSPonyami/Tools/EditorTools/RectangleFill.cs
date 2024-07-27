@@ -7,10 +7,6 @@ public class RectangleFill : TileTool
     public override string Name => "Rectangle Fill";
     
     private int _startX, _startY;
-    public override void OnSelect()
-    {
-        
-    }
 
     protected override void OnUpdate(int x, int y)
     {
@@ -34,7 +30,7 @@ public class RectangleFill : TileTool
             {
                 for (int tileY = minY; tileY <= maxY; tileY++)
                 {
-                    Scene.SetTextureToTile(tileX, tileY, SelectedTexture);
+                    Scene.Field.SetTile(tileX, tileY, SelectedTexture);
                 }
             }
         }
@@ -49,7 +45,7 @@ public class RectangleFill : TileTool
         }
         int width = x - _startX + 1;
         int height = y - _startY + 1;
-        Raylib.DrawRectangleLines(_startX * EditorScene.TextureSize, _startY * EditorScene.TextureSize, EditorScene.TextureSize * width, EditorScene.TextureSize * height, Raylib.RED);
+        Raylib.DrawRectangleLines(_startX * TileField.TextureSize, _startY * TileField.TextureSize, TileField.TextureSize * width, TileField.TextureSize * height, Raylib.RED);
         base.OnDraw(x, y);
     }
 }
