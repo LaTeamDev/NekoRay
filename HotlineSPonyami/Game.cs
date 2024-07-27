@@ -35,7 +35,7 @@ public class Game : GameBase {
         Raylib.SetWindowTitle("Hotline S Ponyami");
         SceneManager.LoadScene(new PersistantScene());
         SceneManager.LoadScene(new TiledScene());
-        //new GameObject("Console").AddComponent<Console>();
+        new GameObject("Console").AddComponent<Console>();
     }
 
     public override void Draw() {

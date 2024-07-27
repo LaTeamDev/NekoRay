@@ -46,12 +46,19 @@ public abstract class GameBase {
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.BLACK);
             Draw();
+            rlImGui.Begin(Timer.DeltaF);
+            DrawGui();
+            rlImGui.End();
             Raylib.EndDrawing();
         };
     }
 
     public virtual void Shutdown() {
         rlImGui.Shutdown();
+    }
+
+    public virtual void DrawGui() {
+        SceneManager.InvokeScene("DrawGui");
     }
 
     public virtual LoopFunction ErrorHandler(Exception msg) {
