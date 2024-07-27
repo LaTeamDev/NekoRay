@@ -26,23 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-<<<<<<< HEAD
-        <None Update="data\**"  CopyToOutputDirectory="PreserveNewest"  />
-        <None Update="data\textures\unpacked\floors\dev_floor.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="data\textures\unpacked\floors\dev_01.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="data\textures\unpacked\floors\dev_02.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="data\textures\unpacked\walls\dev_wall.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-=======
         <None Update="data\**" CopyToOutputDirectory="PreserveNewest" />
->>>>>>> origin/jam-feature/console
     </ItemGroup>
 
     <ItemGroup>
@@ -50,39 +34,7 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
-
-<<<<<<< HEAD
-=======
-    <ItemGroup>
-      <Folder Include="data\textures\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Serilog" Version="4.0.1" />
-      <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
-      <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-    </ItemGroup>
-
->>>>>>> origin/jam-feature/console
-        <None Update="data\**"  CopyToOutputDirectory="PreserveNewest"  />
-        <None Update="data\textures\unpacked\floors\dev_floor.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="data\textures\unpacked\floors\dev_01.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="data\textures\unpacked\floors\dev_02.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="data\textures\unpacked\walls\dev_wall.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="data\**" CopyToOutputDirectory="PreserveNewest" />
-
-    <ItemGroup>
-      <Folder Include="data\textures\" />
-    </ItemGroup>
-
+    
     <ItemGroup>
       <PackageReference Include="Serilog" Version="4.0.1" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
