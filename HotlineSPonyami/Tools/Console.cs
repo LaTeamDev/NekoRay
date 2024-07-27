@@ -98,9 +98,13 @@ public class Console : Behaviour {
         var param = _commands[command].GetParameters();
         for (var index = 0; index < param.Length; index++) {
             var parameter = param[index];
-            if (parameter.GetType() == args[index].GetType()) continue;
-            if (args[index].GetType() == typeof(string)) continue;
-            var parseMethod = parameter.GetType().GetMethod("Parse", BindingFlags.Public | BindingFlags.Static);
+            if (args.Length <= index) {
+                Serilog.Log.Error("Parameter count mismatch in {CommandName}", command);
+                return;
+            }
+            if (parameter.ParameterType == args[index].GetType()) continue;
+            if (args[index].GetType() != typeof(string)) continue;
+            var parseMethod = parameter.ParameterType.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static);
             if (parseMethod is null)
                 throw new ArgumentException("the type is wrong and i cant parse it", parameter.Name);
             args[index] = parseMethod.Invoke(null, new object?[] { args[index]});
@@ -114,6 +118,15 @@ public class Console : Behaviour {
     //TODO: Support params
     public static void Echo(string meow) {
         Serilog.Log.Information(meow);
+    }
+    
+    [ConCommand("test_cmd")]
+    [ConDescription("meow")]
+    //TODO: Support params
+    public static void TestCommand(string meow, float wow = 12f, int hehe = 33) {
+        Serilog.Log.Information(meow);
+        Serilog.Log.Information("{0}", wow);
+        Serilog.Log.Information("{0}", hehe);
     }
     
     [ConCommand("help")]
