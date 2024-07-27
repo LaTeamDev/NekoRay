@@ -6,7 +6,7 @@ public class FloodFillTool : TileTool
 {
     public override string Name => "Flood Fill";
 
-    private void Flood(int x, int y, int from, int to)
+    private void Flood(int x, int y, byte from, byte to)
     {
         if(x < 0 || y < 0 || x >= Scene.Field.SizeX || y >= Scene.Field.SizeY) return;
         if(Scene.Field.GetTile(x, y) != from) return;

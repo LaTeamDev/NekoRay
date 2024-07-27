@@ -1,11 +1,13 @@
 using System.Numerics;
+using NekoRay;
 using ZeroElectric.Vinculum;
+using Image = NekoRay.Image;
 
 namespace HotlineSPonyami.Tools;
 
 public class TileField : IBinarySavable
 {
-    private int[,] _tiles;
+    private byte[,] _tiles;
     private int _sizeX, _sizeY; 
     public int SizeX => _sizeX; public int SizeY => _sizeY;
 
@@ -15,25 +17,25 @@ public class TileField : IBinarySavable
     {
         _sizeX = sizeX;
         _sizeY = sizeY;
-        _tiles = new int[sizeX,sizeY];
+        _tiles = new byte[sizeX,sizeY];
         for (int x = 0; x < _sizeX; x++)
         {
             for (int y = 0; y < _sizeY; y++)
             {
-                _tiles[x, y] = -1;
+                _tiles[x, y] = 0;
             }
         }
     }
 
-    public void SetTile(int x, int y, int id)
+    public void SetTile(int x, int y, byte id)
     {
         if(x < 0 || y < 0 || x >= _sizeX || y >= _sizeY) return;
         _tiles[x, y] = id;
     }
 
-    public int GetTile(int x, int y)
+    public byte GetTile(int x, int y)
     {
-        if(x < 0 || y < 0 || x >= _sizeX || y >= _sizeY) return -1;
+        if(x < 0 || y < 0 || x >= _sizeX || y >= _sizeY) return 0;
         return _tiles[x, y];
     }
 
@@ -46,8 +48,8 @@ public class TileField : IBinarySavable
             {
                 Rectangle source = new Rectangle(0,0, TextureSize, TextureSize);
                 Rectangle destination = new Rectangle(x * TextureSize,y * TextureSize, TextureSize, TextureSize);
-                int tile = _tiles[x, y];
-                if(tile != -1) UnpackedTextures.GetFloorTextureById(GetTile(x, y)).Draw(source, destination, Vector2.One / 2f, 0, Raylib.WHITE);
+                byte tile = _tiles[x, y];
+                if(tile > 0) UnpackedTextures.GetFloorTextureById(GetTile(x, y)).Draw(source, destination, Vector2.One / 2f, 0, Raylib.WHITE);
             }
         }
 
@@ -74,13 +76,26 @@ public class TileField : IBinarySavable
     {
         _sizeX = reader.ReadInt32();
         _sizeY = reader.ReadInt32();
-        _tiles = new int[_sizeX, _sizeY];
+        _tiles = new byte[_sizeX, _sizeY];
         for (int x = 0; x < _sizeX; x++)
         {
             for (int y = 0; y < _sizeY; y++)
             {
-                _tiles[x, y] = reader.ReadInt32();
+                _tiles[x, y] = reader.ReadByte();
             }
         }
+    }
+
+    public Image Export()
+    {
+        Image finalMap = ImageGen.Color(SizeX, SizeY, Raylib.BLACK);
+        for (int x = 0; x < _sizeX; x++)
+        {
+            for (int y = 0; y < _sizeY; y++)
+            {
+                finalMap.DrawPixel(x, y, new Color(_tiles[x, y], (byte)0, (byte)0, (byte)255));
+            }
+        }
+        return finalMap;
     }
 }
