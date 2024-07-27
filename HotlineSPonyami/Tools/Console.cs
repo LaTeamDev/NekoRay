@@ -2,8 +2,10 @@
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using HotlineSPonyami.Gameplay.Debug;
 using ImGuiNET;
 using NekoLib.Core;
+using NekoLib.Scenes;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Core;
@@ -151,6 +153,15 @@ public class Console : Behaviour {
     [ConDescription("Clears Console")]
     public static void Clear() {
         _messageLog.Clear();
+    }
+    
+    [ConCommand("ls")]
+    [ConDescription("list gameobjects in scene by index")]
+    public static void LoadDebugScene(string index) {
+        int idx = int.Parse(index);
+        foreach (var rootGameObject in SceneManager.Scenes[idx].RootGameObjects) {
+            Serilog.Log.Information(rootGameObject.Name);
+        }
     }
 
     public static void Register<T>() {
