@@ -56,10 +56,12 @@ public class Shader : NekoObject {
     }
     public void SetVector2(string name, Vector2 value) =>
         Raylib.SetShaderValue(_shader, GetLocation(name), value, ShaderUniformDataType.SHADER_UNIFORM_VEC2);
-    
+    public void SetInt(string name, int value) =>
+        Raylib.SetShaderValue(_shader, GetLocation(name), value, ShaderUniformDataType.SHADER_UNIFORM_INT);
     public void SetFloat(string name, float value) =>
         Raylib.SetShaderValue(_shader, GetLocation(name), value, ShaderUniformDataType.SHADER_UNIFORM_FLOAT);
-
+    public void SetTexture(string name, Texture value) =>
+        Raylib.SetShaderValueTexture(_shader, GetLocation(name), value._texture);
     
     
     private static Stack<Shader> _shaderStack = new ();
@@ -69,6 +71,7 @@ public class Shader : NekoObject {
         Raylib.BeginShaderMode(_shader);
         return new AttachMode(Detach);
     }
+    
 
     private void Detach() {
         if (!_shaderStack.Contains(this))

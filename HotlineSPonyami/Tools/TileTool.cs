@@ -7,7 +7,7 @@ namespace HotlineSPonyami.Tools;
 
 public abstract class TileTool : BaseTool
 {
-    private static int _selectedTexture = -1; protected static int SelectedTexture => _selectedTexture;
+    private static byte _selectedTexture = 0; protected static byte SelectedTexture => _selectedTexture;
     private static Texture? _previewTexture = null;
     private bool _isSelecting = false;
     
@@ -44,7 +44,7 @@ public abstract class TileTool : BaseTool
         //ImGui.InputText("Selected Texture", ref _selectedTexture, 25); //Temp
         
         ImGui.Text("Selected: " + _selectedTexture);
-        if (SelectedTexture >= 0 && _previewTexture == null)
+        if (SelectedTexture > 0 && _previewTexture == null)
         {
             _previewTexture = UnpackedTextures.GetFloorTextureById(SelectedTexture);
         }
@@ -52,7 +52,7 @@ public abstract class TileTool : BaseTool
         if (ImGui.Button("Clear"))
         {
             _previewTexture = null;
-            _selectedTexture = -1;
+            _selectedTexture = 0;
         }
         ImGui.SameLine();
         if (ImGui.Button("Select"))
@@ -73,7 +73,7 @@ public abstract class TileTool : BaseTool
                     if (ImGui.ImageButton("floor_tex" + i, (IntPtr)image.Id, new Vector2(32, 32)))
                     {
                         _previewTexture = null;
-                        _selectedTexture = i;
+                        _selectedTexture = (byte)(i);
                         _isSelecting = false;
                     }
                     l++;
