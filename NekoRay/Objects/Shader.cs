@@ -59,6 +59,7 @@ public class Shader : NekoObject {
     
     public void SetFloat(string name, float value) =>
         Raylib.SetShaderValue(_shader, GetLocation(name), value, ShaderUniformDataType.SHADER_UNIFORM_FLOAT);
+
     
     
     private static Stack<Shader> _shaderStack = new ();

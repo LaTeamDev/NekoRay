@@ -46,13 +46,14 @@ public abstract class BaseScene : IScene {
         }
 
         DrawCameraTexture();
+    }
 
-        
-        rlImGui.Begin(Timer.DeltaF);
+    public virtual void DrawGui() {
+        var currentGameObjects = new GameObject[GameObjects.Count];
+        GameObjects.CopyTo(currentGameObjects);
         foreach (var gameObject in currentGameObjects) {
             gameObject.SendMessage("DrawGui");
         }
-        rlImGui.End();
     }
 
     public void Dispose() {

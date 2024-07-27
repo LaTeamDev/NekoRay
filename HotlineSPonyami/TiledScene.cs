@@ -14,8 +14,7 @@ public class TiledScene : BaseScene
     {
         _tileAtlas = Data.GetTexture("data/textures/texture_atlas.png");
     }
-    public override void Initialize()
-    {
+    public override void Initialize() {
         base.Initialize();
     }
 
