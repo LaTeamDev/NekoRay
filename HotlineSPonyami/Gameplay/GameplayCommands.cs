@@ -1,11 +1,13 @@
 ﻿using System.Numerics;
 using System.Reflection;
+using Box2D.NetStandard.Dynamics.Bodies;
 using HotlineSPonyami.Gameplay.Debug;
 using HotlineSPonyami.Tools;
 using NekoLib;
 using NekoLib.Core;
 using NekoLib.Scenes;
 using NekoRay;
+using NekoRay.Physics2D;
 using Serilog;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
@@ -21,11 +23,27 @@ public sealed class Commands {
 
     static Commands() {
         AddEntity("player", (gameObject) => {
-            gameObject.AddComponent<PlayerController>();
+            var pl = gameObject.AddComponent<PlayerController>();
+            pl.Inventory = gameObject.AddComponent<PlayerInventory>();
+            pl.Inventory.Capacity = 1f;
+            var collector = pl.GameObject.AddChild("CollectSensor").AddComponent<PlayerCollector>();
+            collector.Inventory = pl.Inventory;
+            collector.rb = collector.GameObject.AddComponent<Rigidbody2D>();
+            collector.rb.BodyType = BodyType.Kinematic;
+            var collider = collector.GameObject.AddComponent<CircleCollider>();
+            collider.Radius = 16f/ Physics.MeterScale;
+            collider.IsSensor = true;
             return gameObject;
         });
         AddEntity("camera2d", (gameObject) => {
             gameObject.AddComponent<Camera2D>();
+            return gameObject;
+        });
+        AddEntity("carryable", (gameObject) => {
+            gameObject.AddComponent<Carryable>();
+            var rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.BodyType = BodyType.Kinematic;
+            //rb.
             return gameObject;
         });
     }
@@ -50,8 +68,18 @@ public sealed class Commands {
             return null;
         }
         var gameObject = builder.Invoke(new GameObject(name));
-        gameObject.Initialize();
+        
+        InitializeTree(gameObject);
+        gameObject.Transform.Position = BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition());
+        
         return gameObject;
+    }
+
+    private static void InitializeTree(GameObject gameObject) {
+        gameObject.Initialize();
+        foreach (var transform in gameObject.Transform) {
+            InitializeTree(transform.GameObject);
+        }
     }
     
     [ConCommand("cam_track_gameObject")]

@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -8,6 +9,7 @@ using MessagePack;
 using NekoLib.Core;
 using NekoLib.Scenes;
 using NekoRay;
+using NekoRay.Physics2D;
 using Serilog;
 using Serilog.Events;
 using ZeroElectric.Vinculum;
@@ -67,6 +69,7 @@ public class Game : GameBase {
     public static bool ToolsMode = false;
 
     public override void Load(string[] args) {
+        Physics.DefaultGravity = Vector2.Zero;
         Console.Register<Input>();
         Console.Register<EditorScene>();
         Console.Register<Gameplay.Commands>();
@@ -76,6 +79,7 @@ public class Game : GameBase {
         ToolsMode = args.Contains("--tools");
         Console = new GameObject("Console").AddComponent<Console>();
         Console.Enabled = ToolsMode;
+        Console.ExecFile("autoexec");
         if (!ToolsMode && !args.Contains("--console")) return;
         KeyPressed += (key, b) => {
             if (key == KeyboardKey.KEY_F5)
