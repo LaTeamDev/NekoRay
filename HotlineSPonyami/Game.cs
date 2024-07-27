@@ -92,6 +92,7 @@ public class Game : GameBase {
     }
 
     public override void Update() {
+        Input.Update();
         base.Update();
     }
 }
