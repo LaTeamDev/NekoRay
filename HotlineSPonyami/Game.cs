@@ -60,7 +60,7 @@ public class Game : GameBase {
             .ForContext("Name", "NekoRay");
 
 
-        Raylib.SetTraceLogCallback(&RaylibCallback);
+            //Raylib.SetTraceLogCallback(&RaylibCallback);
     }
 
     public Console Console;
