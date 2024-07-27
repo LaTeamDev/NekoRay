@@ -63,19 +63,23 @@ public class Game : GameBase {
         Raylib.SetTraceLogCallback(&RaylibCallback);
     }
 
+    public Console Console;
+    public bool ToolsMode = false;
+
     public override void Load(string[] args) {
         Initlogging();
         Raylib.SetWindowTitle("Hotline S Ponyami");
         SceneManager.LoadScene(new PersistantScene());
-        new GameObject("Console").AddComponent<Console>();
-        if (args.Contains("--tools"))
-        {
-            SceneManager.LoadScene(new EditorScene(32, 32));
-            return;
-        }
-        SceneManager.LoadScene(new TiledScene());
+        Console.Register<EditorScene>();
+        ToolsMode = args.Contains("--tools");
+        Console = new GameObject("Console").AddComponent<Console>();
+        Console.Enabled = ToolsMode;
+        if (!ToolsMode && !args.Contains("--console")) return;
+        KeyPressed += (key, b) => {
+            if (key == KeyboardKey.KEY_F5)
+                Console.Enabled = !Console.Enabled;
+        };
     }
-
     public override void Draw() {
         base.Draw();
         Raylib.DrawFPS(0, 0);

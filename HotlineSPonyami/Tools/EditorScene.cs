@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Numerics;
 using HotlineSPonyami.Tools.EditorTools;
 using NekoLib.Core;
+using NekoLib.Scenes;
 using NekoRay;
 using ZeroElectric.Vinculum;
 using Texture = NekoRay.Texture;
@@ -133,5 +134,11 @@ public class EditorScene : BaseScene
             Raylib.DrawLine(0, y * TextureSize, _sizeX * TextureSize, y * TextureSize, Raylib.GRAY);
         SelectedTool.OnDraw();
         Raylib.EndMode2D();
+    }
+
+    [ConCommand("editor_open")]
+    [ConDescription("Opens editor. Usage:(editor_open sizex sizey)")]
+    public static void OpenEditor(string sizeX, string sizeY) {
+        SceneManager.LoadScene(new EditorScene(int.Parse(sizeX), int.Parse(sizeY)));
     }
 }
