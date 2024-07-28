@@ -10,7 +10,7 @@ using Timer = NekoRay.Timer;
 namespace HotlineSPonyami.Gameplay; 
 
 public class PlayerController : Behaviour {
-    public float Speed = 100f;
+    public float Speed = 100f/Physics.MeterScale;
     private Animation _backLegForward;
     private Animation _frontLegForward;
     private Animation _backLegRight;
@@ -23,6 +23,10 @@ public class PlayerController : Behaviour {
         _backLegRight = AsepriteLoader.Load("data/textures/entity/player/back_leg_forwad.json").ToAnimation();
         _frontLegRight = AsepriteLoader.Load("data/textures/entity/player/front_leg_forwad.json").ToAnimation();
         _body = Data.GetSprite("data/textures/entity/player/body.png");
+    }
+
+    void Awake() {
+        RigidBody.LinearDamping = 12f;
     }
 
     public PlayerInventory Inventory;
@@ -40,6 +44,7 @@ public class PlayerController : Behaviour {
 
     private Vector2 _normalizedInput;
     private Vector3 _mousePos;
+    public Rigidbody2D RigidBody;
 
     void Update() {
         var input = new Vector2(
@@ -52,13 +57,13 @@ public class PlayerController : Behaviour {
         if (float.IsNaN(_normalizedInput.Y))
             _normalizedInput.Y = 0f;
         
-        Transform.Position = Transform.Position with {
+        /*Transform.Position = Transform.Position with {
             X = Transform.Position.X + _normalizedInput.X * Timer.DeltaF * Speed, 
             Y = Transform.Position.Y + _normalizedInput.Y * Timer.DeltaF * Speed
-        };
+        };*/
+        RigidBody.LinearVelocity = _normalizedInput * Speed;
         var mousePos = BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition());
-        Transform.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, 
-            MathF.Atan2(mousePos.X-Transform.Position.X, Transform.Position.Y-mousePos.Y));
+        RigidBody.Rotation = MathF.Atan2(mousePos.X-Transform.Position.X, Transform.Position.Y-mousePos.Y);
     }
 
     void DrawGui() {

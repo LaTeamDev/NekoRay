@@ -7,7 +7,7 @@ namespace HotlineSPonyami.Gameplay;
 
 public class Carryable : Component {
     public float Weight;
-    public float _time;
-    public Vector3 _velocity;
+    public Vector2 _velocity;
     public Rigidbody2D RB;
+    public bool Breakable;
 }
