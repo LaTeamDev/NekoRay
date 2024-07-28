@@ -6,7 +6,7 @@ using Timer = NekoRay.Timer;
 
 namespace HotlineSPonyami.Gameplay; 
 
-public class PlayerInventory : Behaviour {
+public class Inventory : Behaviour {
     public float Capacity;
     private Queue<Carryable> _items = new();
     public Carryable[] Items => _items.ToArray();
@@ -21,7 +21,7 @@ public class PlayerInventory : Behaviour {
     public bool Add(Carryable item) {
         if (_carrying + item.Weight > Capacity)
             return false;
-        _carrying += _carrying;
+        _carrying += item.Weight;
         if (_items.Contains(item)) {
             Log.Warning("Attempt to collect already collected item");
             return false;
@@ -30,7 +30,7 @@ public class PlayerInventory : Behaviour {
         return true;
     }
 
-    public bool Shoot() {
+    public bool ShootAt(Vector2 position) {
         return false;
     }
 

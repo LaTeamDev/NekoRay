@@ -29,7 +29,7 @@ public class PlayerController : Behaviour {
         RigidBody.LinearDamping = 12f;
     }
 
-    public PlayerInventory Inventory;
+    public Inventory Inventory;
 
     void Render() {
         if (!Game.ToolsMode) return;
@@ -70,7 +70,7 @@ public class PlayerController : Behaviour {
         if (!Game.ToolsMode) return;
         if (ImGui.Begin("player")) {
             ImGui.Text(Transform.Rotation.GetEulerAngles().ToString());
-            ImGui.Text("Carrying");
+            ImGui.Text($"Carrying {Inventory.Carrying}/{Inventory.Capacity}");
             foreach (var item in Inventory.Items) {
                ImGui.Text(item.ToString()); 
             }

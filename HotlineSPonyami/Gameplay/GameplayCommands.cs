@@ -25,15 +25,16 @@ public sealed class Commands {
     static Commands() {
         AddEntity("player", (gameObject) => {
             var pl = gameObject.AddComponent<PlayerController>();
-            pl.Inventory = gameObject.AddComponent<PlayerInventory>();
+            pl.Inventory = gameObject.AddComponent<Inventory>();
             pl.Inventory.Capacity = 1f;
             pl.RigidBody = gameObject.AddComponent<Rigidbody2D>();
             pl.RigidBody.BodyType = BodyType.Dynamic;
             var colliderPlayer = pl.GameObject.AddComponent<CircleCollider>();
-            colliderPlayer.Radius = 24f / Physics.MeterScale;
+            colliderPlayer.Radius = 14f / Physics.MeterScale;
             colliderPlayer.Filter = new Filter();
             colliderPlayer.Filter.categoryBits = (ushort) PhysCategory.Player;
             var collector = pl.GameObject.AddChild("CollectSensor").AddComponent<PlayerCollector>();
+            collector.Player = pl;
             collector.Inventory = pl.Inventory;
             collector.rb = collector.GameObject.AddComponent<Rigidbody2D>();
             collector.rb.BodyType = BodyType.Kinematic;
