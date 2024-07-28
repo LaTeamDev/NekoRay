@@ -18,7 +18,7 @@ public class EditorMenu : EditorWindow
         {
             if (ImGui.MenuItem("Save"))
             {
-                DialogResult result = Dialog.FileSave();
+                DialogResult result = Dialog.FileSave("map", Path.Combine(Directory.GetCurrentDirectory(), "data"));
                 if (result.IsOk)
                 {
                     using (BinaryWriter writer = new BinaryWriter(File.Open(result.Path, FileMode.OpenOrCreate)))
@@ -29,7 +29,7 @@ public class EditorMenu : EditorWindow
             }
             if (ImGui.MenuItem("Open"))
             {
-                DialogResult result = Dialog.FileOpen();
+                DialogResult result = Dialog.FileOpen("map", Path.Combine(Directory.GetCurrentDirectory(), "data"));
                 if (result.IsOk)
                 {
                     using (BinaryReader reader = new BinaryReader(File.Open(result.Path, FileMode.Open)))
@@ -58,7 +58,7 @@ public class EditorMenu : EditorWindow
 
             if (ImGui.MenuItem("Export Map"))
             {
-                DialogResult result = Dialog.FileSave();
+                DialogResult result = Dialog.FileSave("png", Path.Combine(Directory.GetCurrentDirectory(), "data"));
                 if (result.IsOk)
                 {
                     Image image = Scene.Field.Export();

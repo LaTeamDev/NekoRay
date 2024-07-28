@@ -39,7 +39,7 @@ public class LineWallTool : BaseWallTool
             (endY, startY) = (startY, endY);
         }
 
-        if (Raylib.IsMouseButtonDown(0))
+        if (Raylib.IsMouseButtonDown(0)) // vc: MouseButton enum is more readable y'know
         {
             DrawCorner(startX, startY, new Color(0,255,0,100));
             Raylib.DrawLine(startX, startY, endX, endY, Raylib.GREEN);
