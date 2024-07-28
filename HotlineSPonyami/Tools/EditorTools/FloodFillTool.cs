@@ -9,8 +9,8 @@ public class FloodFillTool : TileTool
     private void Flood(int x, int y, byte from, byte to)
     {
         if(x < 0 || y < 0 || x >= Scene.Field.SizeX || y >= Scene.Field.SizeY) return;
-        if(Scene.Field.GetTile(x, y) != from) return;
-        Scene.Field.SetTile(x, y, to);
+        if(Scene.Field.GetTileFloor(x, y) != from) return;
+        Scene.Field.SetTileFloor(x, y, to);
         Flood(x + 1, y, from, to);
         Flood(x - 1, y, from, to);
         Flood(x, y + 1, from, to);
@@ -21,7 +21,7 @@ public class FloodFillTool : TileTool
     {
         if (Raylib.IsMouseButtonPressed(0))
         {
-            Flood(x, y, Scene.Field.GetTile(x, y), SelectedTexture);
+            Flood(x, y, Scene.Field.GetTileFloor(x, y), SelectedTexture);
         }
     }
 }

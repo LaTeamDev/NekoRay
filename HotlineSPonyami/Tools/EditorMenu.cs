@@ -45,10 +45,10 @@ public class EditorMenu : EditorWindow
         {
             if (ImGui.MenuItem("Generate Tile Map Texture"))
             {
-                Image finalImage = ImageGen.Color(UnpackedTextures.GetAllTextures().Count * 32, 32, Raylib.WHITE);
-                for (int i = 0; i < UnpackedTextures.GetAllTextures().Count; i++)
+                Image finalImage = ImageGen.Color(UnpackedTextures.GetAllFloorTextures().Count * 32, 32, Raylib.WHITE);
+                for (int i = 0; i < UnpackedTextures.GetAllFloorTextures().Count; i++)
                 {
-                    Image img = Image.FromTexture(UnpackedTextures.GetAllTextures()[i]);
+                    Image img = Image.FromTexture(UnpackedTextures.GetAllFloorTextures()[i]);
                     Rectangle src = new Rectangle(0, 0, 32, 32);
                     Rectangle dest = new Rectangle(i * 32, 0, 32, 32);
                     finalImage.Draw(img, src, dest, Raylib.WHITE);

@@ -10,7 +10,7 @@ public class TilePointTool : TileTool
     {
         if (Raylib.IsMouseButtonDown(0))
         {
-            Scene.Field.SetTile(x, y, SelectedTexture);
+            Scene.Field.SetTileFloor(x, y, SelectedTexture);
         }
     }
 }

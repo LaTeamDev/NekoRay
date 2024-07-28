@@ -42,55 +42,6 @@ public abstract class TileTool : BaseTool
     public override void DrawGui()
     {
         //ImGui.InputText("Selected Texture", ref _selectedTexture, 25); //Temp
-        
-        ImGui.Text("Selected: " + _selectedTexture);
-        if (SelectedTexture > 0 && _previewTexture == null)
-        {
-            _previewTexture = UnpackedTextures.GetFloorTextureById(SelectedTexture);
-        }
-        if(_previewTexture != null) ImGui.Image((IntPtr)_previewTexture.Id, new Vector2(32, 32));
-        if (ImGui.Button("Clear"))
-        {
-            _previewTexture = null;
-            _selectedTexture = 0;
-        }
-        ImGui.SameLine();
-        if (ImGui.Button("Select"))
-        {
-            _isSelecting = true;
-            ImGui.OpenPopup("Texture Selector");
-        }
-
-        if (ImGui.BeginPopupModal("Texture Selector", ref _isSelecting, ImGuiWindowFlags.AlwaysAutoResize))
-        {
-            if (ImGui.BeginChild("Preview", new Vector2(200, 150)))
-            {
-                const int perLine = 4;
-                int l = 0;
-                int i = 0;
-                foreach (var image in UnpackedTextures.GetAllTextures())
-                {
-                    if (ImGui.ImageButton("floor_tex" + i, (IntPtr)image.Id, new Vector2(32, 32)))
-                    {
-                        _previewTexture = null;
-                        _selectedTexture = (byte)(i);
-                        _isSelecting = false;
-                    }
-                    l++;
-                    i++;
-                    if (l >= perLine)
-                        l = 0;
-                    else
-                        ImGui.SameLine();
-                }
-                ImGui.EndChild();
-            }
-            
-            if (ImGui.Button("Cancel"))
-            {
-                _isSelecting = false;
-            }
-            ImGui.EndPopup();
-        }
+        UnpackedTextures.DrawImGuiSelector(ref _selectedTexture, ref _previewTexture, ref _isSelecting, UnpackedTextures.GetAllFloorTextures());
     }
 }

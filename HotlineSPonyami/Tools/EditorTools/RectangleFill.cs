@@ -30,7 +30,7 @@ public class RectangleFill : TileTool
             {
                 for (int tileY = minY; tileY <= maxY; tileY++)
                 {
-                    Scene.Field.SetTile(tileX, tileY, SelectedTexture);
+                    Scene.Field.SetTileFloor(tileX, tileY, SelectedTexture);
                 }
             }
         }

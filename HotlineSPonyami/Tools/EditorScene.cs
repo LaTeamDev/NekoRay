@@ -16,6 +16,7 @@ public class EditorScene : BaseScene, IBinarySavable
     private TileField _filed; public TileField Field => _filed;
     public int _selectedTool = 0; public BaseTool SelectedTool => _tools[_selectedTool];
     private List<BaseTool> _tools = new List<BaseTool>();
+    private List<EntityTemplate> _templates = new List<EntityTemplate>();
 
     public EditorScene(int sizeX, int sizeY)
     {
@@ -44,6 +45,12 @@ public class EditorScene : BaseScene, IBinarySavable
         FloodFillTool flood = new FloodFillTool();
         flood.Initialize(this);
         _tools.Add(flood);
+        LineWallTool lineWall = new LineWallTool();
+        lineWall.Initialize(this);
+        _tools.Add(lineWall);
+        EntityCreatorTool entityCreatorTool = new EntityCreatorTool();
+        entityCreatorTool.Initialize(this);
+        _tools.Add(entityCreatorTool);
         new GameObject("Inspector").AddComponent<Inspector>();
         new GameObject("Tools").AddComponent<Tools>().Initialize(this);
         _camera = new GameObject("DragCamera").AddComponent<DragCamera>();
@@ -58,6 +65,14 @@ public class EditorScene : BaseScene, IBinarySavable
         x = (int)MathF.Floor(mousePos.X);
         y = (int)MathF.Floor(mousePos.Y);
     }
+
+    public void GetCurrentCorner(out int x, out int y)
+    {
+        Vector2 mousePos = _camera.ScreenToWorld(Raylib.GetMousePosition());
+        mousePos /= (float)TileField.TextureSize;
+        x = (int)MathF.Round(mousePos.X);
+        y = (int)MathF.Round(mousePos.Y);
+    }
     
     public override void Update()
     {
@@ -71,6 +86,10 @@ public class EditorScene : BaseScene, IBinarySavable
         base.Draw();
         Raylib.BeginMode2D(_camera.Camera);
         _filed?.Draw();
+        foreach (var ent in _templates)
+        {
+            ent.Draw();
+        }
         SelectedTool.OnDraw();
         Raylib.EndMode2D();
     }
@@ -84,10 +103,24 @@ public class EditorScene : BaseScene, IBinarySavable
     public void Save(BinaryWriter writer)
     {
         _filed.Save(writer);
+        writer.Write(_templates.Count);
+        for (int i = 0; i < _templates.Count; i++)
+        {
+            writer.Write(_templates[i].GetType().Name);
+            _templates[i].Save(writer);
+        }
     }
 
     public void Load(BinaryReader reader)
     {
         _filed.Load(reader);
+        int count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+        {
+            string name = reader.ReadString();
+            EntityTemplate template = EntityTemplate.CreateByName(name);
+            template.Load(reader);
+            _templates.Add(template);
+        }
     }
 }
