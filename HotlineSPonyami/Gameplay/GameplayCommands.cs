@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Reflection;
 using Box2D.NetStandard.Dynamics.Bodies;
-using HotlineSPonyami.Gameplay.Debug;
+using HotlineSPonyami.Gameplay.DebugStuff;
 using HotlineSPonyami.Tools;
 using NekoLib;
 using NekoLib.Core;

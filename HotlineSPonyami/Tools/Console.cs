@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using HotlineSPonyami.Gameplay.Debug;
+using HotlineSPonyami.Gameplay.DebugStuff;
 using ImGuiNET;
 using NekoLib.Core;
 using NekoLib.Scenes;
