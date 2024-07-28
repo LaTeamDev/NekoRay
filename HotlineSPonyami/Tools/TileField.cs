@@ -8,10 +8,9 @@ namespace HotlineSPonyami.Tools;
 public struct Tile
 {
     public byte FloorId;
-    public byte WallId;
-    public bool Down;
-    public bool Left;
-    public bool Pile;
+    public byte Down;
+    public byte Left;
+    public byte Pile;
 }
 
 public class TileField : IBinarySavable
@@ -27,20 +26,7 @@ public class TileField : IBinarySavable
         _sizeX = sizeX;
         _sizeY = sizeY;
         _tiles = new Tile[sizeX,sizeY];
-        for (int x = 0; x < _sizeX; x++)
-        {
-            for (int y = 0; y < _sizeY; y++)
-            {
-                _tiles[x, y] = new Tile
-                {
-                    FloorId = 0,
-                    WallId = 1,
-                    Down = false,
-                    Left = false,
-                    Pile = false
-                };
-            }
-        }
+        Clear();
     }
 
     public void SetTileFloor(int x, int y, byte id)
@@ -74,23 +60,19 @@ public class TileField : IBinarySavable
             for (int x = startX; x < endX; x++)
             {
                 if(x < 0 || startY < 0 || x >= _sizeX || startY >= _sizeY) continue;
-                _tiles[x, startY].WallId = wallId;
-                _tiles[x, startY].Down = true;
+                _tiles[x, startY].Down = wallId;
             }
+            return;
         }
-        else
+        for (int y = startY; y < endY; y++)
         {
-            for (int y = startY; y < endY; y++)
-            {
-                if(startX < 0 || y < 0 || startX >= _sizeX || y >= _sizeY) continue;
-                _tiles[startX, y].WallId = wallId;
-                _tiles[startX, y].Left = true;
-            }
+            if(startX < 0 || y < 0 || startX >= _sizeX || y >= _sizeY) continue;
+            _tiles[startX, y].Left = wallId;
         }
     }
 
 
-    public void Draw()
+    public void Draw(bool drawGrid)
     {
         for (int x = 0; x < _sizeX; x++)
         {
@@ -101,32 +83,30 @@ public class TileField : IBinarySavable
                 byte tile = _tiles[x, y].FloorId;
                 if(tile > 0) UnpackedTextures.GetFloorTextureById(GetTileFloor(x, y)).Draw(source, destination, Vector2.One / 2f, 0, Raylib.WHITE);
 
-                if (_tiles[x, y].WallId > 0)
+                if (_tiles[x, y].Left != 0)
                 {
-                    if (_tiles[x, y].Left)
-                    {
-                        Rectangle leftSource = new Rectangle(0, 0, 7, 32);
-                        Rectangle leftDestionaton = new Rectangle(x * 32, y * 32, 7, 32);
-                        UnpackedTextures.GetWallTextureById(_tiles[x, y].WallId).Draw(leftSource, leftDestionaton, Vector2.Zero, 0, Raylib.WHITE);
-                    }
+                    Rectangle leftSource = new Rectangle(0, 0, 7, 32);
+                    Rectangle leftDestination = new Rectangle(x * 32, y * 32, 7, 32);
+                    UnpackedTextures.GetWallTextureById(_tiles[x, y].Left).Draw(leftSource, leftDestination, Vector2.Zero, 0, Raylib.WHITE);
+                }
 
-                    if (_tiles[x, y].Down)
-                    {
-                        Rectangle downSource = new Rectangle(16, 48 - 7, 32, 7);
-                        Rectangle downDestination = new Rectangle(x * 32, y * 32 + 32 - 7, 32, 7);
-                        UnpackedTextures.GetWallTextureById(_tiles[x, y].WallId).Draw(downSource, downDestination, Vector2.Zero, 0, Raylib.WHITE);
-                    }
+                if (_tiles[x, y].Down != 0)
+                {
+                    Rectangle downSource = new Rectangle(16, 48 - 7, 32, 7);
+                    Rectangle downDestination = new Rectangle(x * 32, y * 32 + 32 - 7, 32, 7);
+                    UnpackedTextures.GetWallTextureById(_tiles[x, y].Down).Draw(downSource, downDestination, Vector2.Zero, 0, Raylib.WHITE);
+                }
 
-                    if (_tiles[x, y].Pile)
-                    {
-                        Rectangle pileSource = new Rectangle(0, 48 - 7, 7, 7);
-                        Rectangle pileDestination = new Rectangle(x * 32, y * 32 + 32 - 7, 7, 7);
-                        UnpackedTextures.GetWallTextureById(_tiles[x, y].WallId).Draw(pileSource, pileDestination, Vector2.Zero, 0, Raylib.WHITE);
-                    }
+                if (_tiles[x, y].Pile !=0)
+                {
+                    Rectangle pileSource = new Rectangle(0, 48 - 7, 7, 7);
+                    Rectangle pileDestination = new Rectangle(x * 32, y * 32 + 32 - 7, 7, 7);
+                    UnpackedTextures.GetWallTextureById(_tiles[x, y].Pile).Draw(pileSource, pileDestination, Vector2.Zero, 0, Raylib.WHITE);
                 }
             }
         }
 
+        if (!drawGrid) return;
         for (int x = 0; x <= _sizeX; x++)
             Raylib.DrawLine(x * TextureSize, 0, x * TextureSize, _sizeY * TextureSize, Raylib.GRAY);
         for (int y = 0; y <= _sizeY; y++)
@@ -142,7 +122,6 @@ public class TileField : IBinarySavable
             for (int y = 0; y < _sizeY; y++)
             {
                 writer.Write(_tiles[x, y].FloorId);
-                writer.Write(_tiles[x, y].WallId);
                 writer.Write(_tiles[x, y].Down);
                 writer.Write(_tiles[x, y].Left);
                 writer.Write(_tiles[x, y].Pile);
@@ -161,10 +140,9 @@ public class TileField : IBinarySavable
             {
                 _tiles[x, y] = new Tile();
                 _tiles[x, y].FloorId = reader.ReadByte();
-                _tiles[x, y].WallId = reader.ReadByte();
-                _tiles[x, y].Down = reader.ReadBoolean();
-                _tiles[x, y].Left = reader.ReadBoolean();
-                _tiles[x, y].Pile = reader.ReadBoolean();
+                _tiles[x, y].Down = reader.ReadByte();
+                _tiles[x, y].Left = reader.ReadByte();
+                _tiles[x, y].Pile = reader.ReadByte();
             }
         }
     }
@@ -176,9 +154,32 @@ public class TileField : IBinarySavable
         {
             for (int y = 0; y < _sizeY; y++)
             {
-                finalMap.DrawPixel(x, y, new Color(_tiles[x, y].FloorId, _tiles[x, y].WallId, (byte)0, (byte)255));
+                //TODO: FIXME
+                finalMap.DrawPixel(x, y, new Color(_tiles[x, y].FloorId, _tiles[x, y].Left, (byte)0, (byte)255));
             }
         }
         return finalMap;
+    }
+
+    public void Clear() {
+        for (int x = 0; x < _sizeX; x++)
+        {
+            for (int y = 0; y < _sizeY; y++)
+            {
+                _tiles[x, y] = new Tile
+                {
+                    FloorId = 0,
+                    Down = 0,
+                    Left = 0,
+                    Pile = 0
+                };
+            }
+        }
+    }
+    
+    public Tile this[int x, int y]
+    {
+        get => _tiles[x,y];
+        //set => _tiles[x,y] = value;
     }
 }

@@ -6,12 +6,17 @@ using Timer = NekoRay.Timer;
 
 namespace HotlineSPonyami.Tools;
 
-public class DragCamera : Behaviour
+public class DragCamera : Behaviour 
 {
     private ZeroElectric.Vinculum.Camera2D _camera;
-    public ZeroElectric.Vinculum.Camera2D Camera => _camera;
+    public ZeroElectric.Vinculum.Camera2D Camera => _camera; // why not just use camera2d component/extend it?
 
     private Vector2 _mouseStart;
+
+    public float Zoom {
+        get => Camera.zoom;
+        set => _camera.zoom = value;
+    }
 
     private void Start()
     {

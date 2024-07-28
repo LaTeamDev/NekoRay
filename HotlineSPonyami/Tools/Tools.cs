@@ -28,6 +28,11 @@ public class Tools : EditorWindow
             {
                 Scene?.SelectedTool?.DrawGui();
             }
+            if (ImGui.CollapsingHeader("Camera")) {
+                var zoom = Scene.Camera.Zoom;
+                ImGui.DragFloat("Zoom", ref zoom, 0.01f, 0.01f, 10f);
+                if (zoom != Scene.Camera.Zoom) Scene.Camera.Zoom = zoom;
+            }
         }
         ImGui.End();
     }

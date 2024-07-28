@@ -18,6 +18,8 @@ public class EditorScene : BaseScene, IBinarySavable
     private List<BaseTool> _tools = new List<BaseTool>();
     private List<EntityTemplate> _templates = new List<EntityTemplate>();
 
+    public bool DrawGrid = true;
+
     public EditorScene(int sizeX, int sizeY)
     {
         _filed = new TileField(sizeX, sizeY);
@@ -51,7 +53,7 @@ public class EditorScene : BaseScene, IBinarySavable
         EntityCreatorTool entityCreatorTool = new EntityCreatorTool();
         entityCreatorTool.Initialize(this);
         _tools.Add(entityCreatorTool);
-        new GameObject("Inspector").AddComponent<Inspector>();
+        new GameObject("Inspector").AddComponent<Inspector>().Initialize(this);
         new GameObject("Tools").AddComponent<Tools>().Initialize(this);
         _camera = new GameObject("DragCamera").AddComponent<DragCamera>();
         new GameObject("EditorMenu").AddComponent<EditorMenu>().Initialize(this);
@@ -85,7 +87,7 @@ public class EditorScene : BaseScene, IBinarySavable
     {
         base.Draw();
         Raylib.BeginMode2D(_camera.Camera);
-        _filed?.Draw();
+        _filed?.Draw(DrawGrid);
         foreach (var ent in _templates)
         {
             ent.Draw();

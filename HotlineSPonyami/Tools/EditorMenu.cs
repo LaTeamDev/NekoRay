@@ -38,6 +38,11 @@ public class EditorMenu : EditorWindow
                     }
                 }
             }
+            if (ImGui.MenuItem("Clear")) {
+                Scene.Field.Clear();
+            }
+
+            ImGui.MenuItem("Draw grid", "", ref Scene.DrawGrid);
             ImGui.EndMenu();
         }
 
