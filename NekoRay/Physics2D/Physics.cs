@@ -1,20 +1,18 @@
 ﻿using System.Numerics;
-using Box2D.NetStandard.Collision;
-using Box2D.NetStandard.Common;
-using Box2D.NetStandard.Dynamics.World;
+using Box2D;
 
 namespace NekoRay.Physics2D; 
 
 public static class Physics {
     private static Dictionary<IScene, World> _sceneWorlds = new();
     public static Vector2 DefaultGravity = new(0f, 9.31f);
-    private static NekoRayContactListener ContactListener = new();
-    public static float MeterScale = 64f;
 
     public static void CreateWorld(this IScene scene, Vector2 gravity) {
         if (_sceneWorlds.ContainsKey(scene)) return;
-        var world = new World(gravity);
-        world.SetContactListener(ContactListener);
+        var world = new NekoRayWorld(new WorldDef {
+            Gravity = gravity
+        });
+        //world.SetContactListener(ContactListener);
         _sceneWorlds[scene] = world;
     }
     public static void CreateWorld(this IScene scene) {
@@ -26,8 +24,9 @@ public static class Physics {
         throw new Exception($"There is no world for scene {scene.Name}");
     }
 
-    public static AABB ToAABB(this Rectangle rectangle) {
-        return new AABB(new Vector2(rectangle.x, rectangle.y),
-            new Vector2(rectangle.x + rectangle.width, rectangle.y + rectangle.Height));
-    }
+    public static AABB ToAABB(this Rectangle rectangle) =>
+        new AABB {
+            LowerBound = new Vector2(rectangle.x, rectangle.y),
+            UpperBound = new Vector2(rectangle.x + rectangle.width, rectangle.y + rectangle.Height)
+        };
 }

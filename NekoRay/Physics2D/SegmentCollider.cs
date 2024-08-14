@@ -2,8 +2,8 @@
 
 namespace NekoRay.Physics2D; 
 
-public class PolygonCollider : Collider {
-    public override ShapeType Type => ShapeType.Polygon;
+public class SegmentCollider : Collider {
+    public override ShapeType Type => ShapeType.Segment;
     public override void CreateShape(Body body) {
         throw new NotImplementedException();
     }

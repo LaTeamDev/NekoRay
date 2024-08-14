@@ -1,4 +1,5 @@
 using System.Text;
+using Box2D;
 using MessagePack;
 using NekoLib.Core;
 using NekoLib.Scenes;
@@ -16,6 +17,7 @@ public class Game : GameBase {
     public override void Load(string[] args) {
         Server = new Server();
         Raylib.SetWindowTitle("Flappy Pegasus xd");
+        World.LengthUnitsPerMeter = 64f;
         KeyPressed += OnKeyPressed;
         SaveData.Load();
         SceneManager.LoadScene(new MenuScene());
