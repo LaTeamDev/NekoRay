@@ -89,10 +89,12 @@ public class Rigidbody2D : Behaviour {
         set => CurrentStuff.IsBullet = value;
     }
 
-    //TODO: tie with component?
-    public bool IsBodyEnabled {
-        get => CurrentStuff.IsEnabled;
-        set => CurrentStuff.IsEnabled = value;
+    void OnEnable() {
+        CurrentStuff.IsEnabled = true;
+    }
+
+    void OnDisable() {
+        CurrentStuff.IsEnabled = false;
     }
 
     public bool AutomaticMass {
@@ -137,9 +139,7 @@ public class Rigidbody2D : Behaviour {
     
     public void ApplyMassFromShapes() =>
         _body.ApplyMassFromShapes();
-    
-    public int GetShapeCount() => _body.GetShapeCount();
-    
+
     void Start() {
         _bodyDef.Position = Transform.Position.ToVector2();
         _bodyDef.UserData = this;

@@ -1,13 +1,9 @@
 using System.Numerics;
 using Box2D;
-using Box2D.NetStandard.Collision;
-using Box2D.NetStandard.Dynamics.Contacts;
-using NekoLib;
 using NekoLib.Core;
 using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
-using ZeroElectric.Vinculum.Extensions;
 
 namespace FlappyPegasus.GameStuff; 
 
@@ -47,10 +43,10 @@ public class PlayerMove : Behaviour {
         ProcessTouch();
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT))
             rb2D.Position = BaseCamera.Main?.ScreenToWorld(Raylib.GetMousePosition()).ToVector2()??rb2D.Position;
-        
+
         Sprite.Transform.Rotation = NekoMath.Damp(
             Sprite.Transform.Rotation, 
-            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, rb2D.LinearVelocity.Y* rotateSpd),
+            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, rb2D.LinearVelocity.Y * rotateSpd/World.LengthUnitsPerMeter),
             ref smoothDamp,
             0.2f);
     }
