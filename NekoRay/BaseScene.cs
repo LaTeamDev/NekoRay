@@ -1,6 +1,8 @@
 using System.Numerics;
+using ImGuiNET;
 using NekoLib.Core;
 using NekoLib.Scenes;
+using rlImGui_cs;
 using ZeroElectric.Vinculum;
 
 namespace NekoRay; 
@@ -44,7 +46,11 @@ public abstract class BaseScene : IScene {
         }
 
         DrawCameraTexture();
+    }
 
+    public virtual void DrawGui() {
+        var currentGameObjects = new GameObject[GameObjects.Count];
+        GameObjects.CopyTo(currentGameObjects);
         foreach (var gameObject in currentGameObjects) {
             gameObject.SendMessage("DrawGui");
         }

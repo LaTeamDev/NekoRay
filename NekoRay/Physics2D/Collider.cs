@@ -11,12 +11,12 @@ public abstract class Collider : Component {
     public float? Friction;
     public float? Restitution;
     public bool IsSensor;
-
+    
     public virtual FixtureDef GetFixtureDef() {
         var fixtureDef = new FixtureDef {
             isSensor = IsSensor,
             userData = this,
-            density = Density
+            density = Density,
         };
         fixtureDef.filter = Filter??fixtureDef.filter;
         fixtureDef.friction = Friction??fixtureDef.friction;

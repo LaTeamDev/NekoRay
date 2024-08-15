@@ -106,14 +106,24 @@ public class Rigidbody2D : Behaviour {
             type = BodyType
         };
         _body = _world.CreateBody(bodyDef);
-        var fixtureDefs = GameObject.GetComponentsInChildren().Where(
+        var colliders = GameObject.GetComponentsInChildren().Where(
             component => component.GetType().IsAssignableTo(typeof(Collider))
-        ).Cast<Collider>().Select(collider => collider.GetFixtureDef()).ToList();
-        foreach (var fixtureDef in fixtureDefs) {
-            _body.CreateFixture(fixtureDef);
+        ).Cast<Collider>(). ToList();
+        foreach (var collider in colliders) {
+            var fixture = _body.CreateFixture(collider.GetFixtureDef());
         }
 
         _isReady = true;
+    }
+
+    void OnEnabled() {
+        if (!_isReady) return;
+        _body.SetEnabled(true);
+    }
+
+    void OnDisabled() {
+        if (!_isReady) return;
+        _body.SetEnabled(false);
     }
 
     void Update() {
