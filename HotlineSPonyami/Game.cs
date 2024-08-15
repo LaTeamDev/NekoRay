@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -8,6 +9,7 @@ using MessagePack;
 using NekoLib.Core;
 using NekoLib.Scenes;
 using NekoRay;
+using NekoRay.Physics2D;
 using Serilog;
 using Serilog.Events;
 using ZeroElectric.Vinculum;
@@ -64,16 +66,20 @@ public class Game : GameBase {
     }
 
     public Console Console;
-    public bool ToolsMode = false;
+    public static bool ToolsMode = false;
 
     public override void Load(string[] args) {
+        Physics.DefaultGravity = Vector2.Zero;
+        Console.Register<Input>();
+        Console.Register<EditorScene>();
+        Console.Register<Gameplay.Commands>();
         Initlogging();
         Raylib.SetWindowTitle("Hotline S Ponyami");
         SceneManager.LoadScene(new PersistantScene());
-        Console.Register<EditorScene>();
         ToolsMode = args.Contains("--tools");
         Console = new GameObject("Console").AddComponent<Console>();
         Console.Enabled = ToolsMode;
+        Console.ExecFile("autoexec");
         if (!ToolsMode)
         {
             SceneManager.LoadScene(new TiledScene());
@@ -90,6 +96,7 @@ public class Game : GameBase {
     }
 
     public override void Update() {
+        Input.Update();
         base.Update();
     }
 }

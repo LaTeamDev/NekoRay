@@ -80,7 +80,7 @@ public class EditorMenu : EditorWindow
             }
             ImGui.EndMenu();
         }
-        
+
         ImGui.EndMainMenuBar();
     }
 }

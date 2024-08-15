@@ -2,8 +2,10 @@
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using HotlineSPonyami.Gameplay.DebugStuff;
 using ImGuiNET;
 using NekoLib.Core;
+using NekoLib.Scenes;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Core;
@@ -67,6 +69,7 @@ public class Console : Behaviour {
 
     void SubmitBuffer() {
         try {
+            _messageLog.Enqueue("> "+ _inputBuffer);
             Submit(_inputBuffer);
         }
         catch (Exception e) {
@@ -76,7 +79,6 @@ public class Console : Behaviour {
     }
 
     public static void Submit(string commandline) {
-        _messageLog.Enqueue("> "+ commandline);
         var regex = new Regex("(?<!\\\\);");
         var commands = regex.Split(commandline).Select(com => com.Replace("\\;", ";")).ToArray();
         foreach (var command in commands) {
@@ -151,6 +153,26 @@ public class Console : Behaviour {
     [ConDescription("Clears Console")]
     public static void Clear() {
         _messageLog.Clear();
+    }
+    
+    [ConCommand("ls")]
+    [ConDescription("list gameobjects in scene by index")]
+    public static void LoadDebugScene(string index) {
+        int idx = int.Parse(index);
+        foreach (var rootGameObject in SceneManager.Scenes[idx].RootGameObjects) {
+            Serilog.Log.Information(rootGameObject.Name);
+        }
+    }
+    
+    [ConCommand("exec")]
+    [ConDescription("run commands from thefile")]
+    public static void ExecFile(string path) {
+        var systemPath = Path.Combine("data", "cfg", path+".cfg");
+        if (!File.Exists(systemPath)) {
+            Serilog.Log.Error("No file {Path} found", path);
+            return;
+        }
+        Submit(string.Join(";", File.ReadAllLines(systemPath)));
     }
 
     public static void Register<T>() {
