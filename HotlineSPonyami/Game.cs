@@ -74,6 +74,10 @@ public class Game : GameBase {
         ToolsMode = args.Contains("--tools");
         Console = new GameObject("Console").AddComponent<Console>();
         Console.Enabled = ToolsMode;
+        if (!ToolsMode)
+        {
+            SceneManager.LoadScene(new TiledScene());
+        }
         if (!ToolsMode && !args.Contains("--console")) return;
         KeyPressed += (key, b) => {
             if (key == KeyboardKey.KEY_F5)

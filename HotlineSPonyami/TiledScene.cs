@@ -1,8 +1,12 @@
 using System.Numerics;
+using Box2D.NetStandard.Dynamics.Fixtures;
 using HotlineSPonyami.Tools;
 using NekoLib.Core;
 using NekoRay;
+using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
+using Camera2D = NekoRay.Camera2D;
+using Image = NekoRay.Image;
 using Shader = NekoRay.Shader;
 using Texture = NekoRay.Texture;
 
@@ -12,38 +16,57 @@ public class TiledScene : BaseScene
 {
     private Texture _uvTexture;
     private Texture _tileAtlas;
-    private Shader _mapShader;
+    private Texture _wallsAtlas;
     
-    private DragCamera _camera;
+    private Camera2D _camera;
     
     public TiledScene()
     {
-        _mapShader = Data.GetShader("data/shaders/field_shader.frag", "data/shaders/field_shader.vert");
         _tileAtlas = Data.GetTexture("data/textures/texture_atlas.png");
+        _wallsAtlas = Data.GetTexture("data/textures/walls_atlas.png");
         _uvTexture = Data.GetTexture("data/test_map.png");
         _tileAtlas.Filter = TextureFilter.TEXTURE_FILTER_POINT;
         _uvTexture.Filter = TextureFilter.TEXTURE_FILTER_POINT;
+        _wallsAtlas.Filter = TextureFilter.TEXTURE_FILTER_POINT;
         _tileAtlas.GenMipmaps();
         _uvTexture.GenMipmaps();
+        _wallsAtlas.GenMipmaps();
     }
     public override void Initialize() {
-        _camera = new GameObject("DragCamera").AddComponent<DragCamera>();
-        base.Initialize();
-    }
-
-    public override void Draw()
-    {
-        base.Draw();
-        Raylib.BeginMode2D(_camera.Camera);
-        using (_mapShader.Attach())
+        this.CreateWorld();
+        _camera = new GameObject("Camera Cam").AddComponent<Camera2D>();
+        _camera.IsMain = true;
+        _camera.Transform.Position += Vector3.One * 75;
+        
+        TileRenderer renderer = new GameObject("Tile Renderer").AddComponent<TileRenderer>();
+        renderer.UvTexture = _uvTexture;
+        Image img = Image.FromTexture(_uvTexture);
+        
+        
+        for (int x = 0; x < _uvTexture.Width; x++)
         {
-            _mapShader.SetTexture("uvMap", _uvTexture);
-            _mapShader.SetVector2("mapSize", new Vector2(_uvTexture.Width, _uvTexture.Height));
-            _mapShader.SetInt("atlasWidth", _tileAtlas.Width);
-            Rectangle source = new Rectangle(0, 0, _tileAtlas.Width, _tileAtlas.Height);
-            Rectangle destination = new Rectangle(0, 0, _uvTexture.Width * 32, _uvTexture.Height * 32);
-            _tileAtlas.Draw(source, destination, Vector2.Zero, 0f, Raylib.WHITE);
+            for (int y = 0; y < _uvTexture.Height; y++)
+            {
+                if (img.GetColorAt(x, y).g > 0)
+                {
+                    Rigidbody2D wall = new GameObject($"Wall_{x}_{y}").AddComponent<Rigidbody2D>();
+                    PolygonCollider wallCollider = wall.GameObject.AddComponent<PolygonCollider>();
+                    wallCollider.Filter = new Filter();
+                    wallCollider.Filter.categoryBits = 1;
+                    wallCollider.SetAsBox(7f / Physics.MeterScale / 2f, 32f / Physics.MeterScale / 2f);
+                    wall.Transform.Position = new Vector3(x * 32 + 7f / 2f, y * 32 + 32f / 2f, 0);
+                }
+                if (img.GetColorAt(x, y).b > 0)
+                {
+                    Rigidbody2D wall = new GameObject($"Wall_{x}_{y}").AddComponent<Rigidbody2D>();
+                    PolygonCollider wallCollider = wall.GameObject.AddComponent<PolygonCollider>();
+                    wallCollider.Filter = new Filter();
+                    wallCollider.Filter.categoryBits = 1;
+                    wallCollider.SetAsBox(32f / Physics.MeterScale / 2f, 7f / Physics.MeterScale / 2f);
+                    wall.Transform.Position = new Vector3(x * 32 + 32f / 2f, (y + 1) * 32 - 7f / 2f, 0);
+                }
+            }
         }
-        Raylib.EndMode2D();
+        base.Initialize();
     }
 }
