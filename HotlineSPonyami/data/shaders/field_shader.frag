@@ -29,6 +29,6 @@ void main()
     localCellCoord.x += (int(texelColor.x * 256)) * (1.0 / float(atlasWidth / textureSize));
     
     
-    finalColor = vec4(localCellCoord, 0, 1);
-    //finalColor = texture2D(texture0, localCellCoord);
+    //finalColor = vec4(localCellCoord, 0, 1);
+    finalColor = texture2D(texture0, localCellCoord);
 }

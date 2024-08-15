@@ -146,19 +146,18 @@ public class TileField : IBinarySavable
             }
         }
     }
-
-    public Image Export()
+    
+    public void Export(string path)
     {
         Image finalMap = ImageGen.Color(SizeX, SizeY, Raylib.BLACK);
         for (int x = 0; x < _sizeX; x++)
         {
             for (int y = 0; y < _sizeY; y++)
             {
-                //TODO: FIXME
-                finalMap.DrawPixel(x, y, new Color(_tiles[x, y].FloorId, _tiles[x, y].Left, (byte)0, (byte)255));
+                finalMap.DrawPixel(x, y, new Color(_tiles[x, y].FloorId, _tiles[x, y].Left, _tiles[x, y].Down, _tiles[x,y].Pile));
             }
         }
-        return finalMap;
+        finalMap.Export(path + ".png");
     }
 
     public void Clear() {

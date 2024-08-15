@@ -58,14 +58,14 @@ public static class UnpackedTextures
     }
     public static ReadOnlyCollection<Texture> GetAllWallTextures()
     {
-        if (_floorTextures == null)
+        if (_wallTextures == null)
             Initialize();
         return _wallTextures.AsReadOnly();
     }
     
     public static Texture GetWallTextureById(int id)
     {
-        if (_floorTextures == null)
+        if (_wallTextures == null)
             Initialize();
         return _wallTextures[id];
     }
