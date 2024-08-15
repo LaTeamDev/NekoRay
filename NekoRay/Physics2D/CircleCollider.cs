@@ -1,21 +1,17 @@
-﻿using System.Numerics;
-using Box2D.NetStandard.Collision.Shapes;
-using Box2D.NetStandard.Dynamics.Fixtures;
+﻿using Box2D;
 
 namespace NekoRay.Physics2D; 
 
 public class CircleCollider : Collider {
-    public CircleCollider() {
-        Shape = new CircleShape();
+    public override ShapeType Type => ShapeType.Circle;
+    private Circle _circle;
+    public float Radius {
+        get => _circle.Radius;
+        set => _circle.Radius = value;
     }
 
-    public float Radius {
-        get => ((CircleShape) Shape).Radius;
-        set => ((CircleShape) Shape).Radius = value;
-    }
-    public override FixtureDef GetFixtureDef() {
-        var fixture = base.GetFixtureDef();
-        fixture.shape = Shape;
-        return fixture;
+    //TODO: Account for gameobject transform and stuff
+    public override void CreateShape(Body body) {
+        body.CreateCircleShape(ShapeDef, _circle);
     }
 }

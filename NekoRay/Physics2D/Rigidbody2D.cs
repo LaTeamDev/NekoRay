@@ -1,119 +1,155 @@
 ﻿using System.Numerics;
-using Box2D.NetStandard.Collision.Shapes;
-using Box2D.NetStandard.Common;
-using Box2D.NetStandard.Dynamics.Bodies;
-using Box2D.NetStandard.Dynamics.Fixtures;
-using Box2D.NetStandard.Dynamics.World;
-using Box2D.NetStandard.Dynamics.World.Callbacks;
+using System.Runtime.InteropServices;
+using Box2D;
 using ZeroElectric.Vinculum.Extensions;
 
 namespace NekoRay.Physics2D; 
 
 public class Rigidbody2D : Behaviour {
     private World _world;
+    private BodyDef _bodyDef = new();
+    private Body? _body;
+
+    private IBody CurrentStuff {
+        get {
+            if (IsReady) return _body;
+            return _bodyDef;
+        }
+    }
     public World World => _world;
     
     void Awake() {
         _world = GameObject.Scene.GetWorld();
     }
-
-    private bool _isReady = false;
-    public bool IsReady => _isReady;
     
-    private float _startAngularDamping = 0f;
-    private float _startAngularVelocity = 0f;
-    private bool _startIsBullet;
-    private float _startLinearDamping = 0f;
-    private Vector2 _startLinearVelocity;
-    private bool _startFixedRotation;
-    public BodyType BodyType;
-
-    public float AngularDamping {
-        get => !IsReady ? _startAngularDamping : _body.GetAngularDamping();
-        set {
-            if (!IsReady) _startAngularDamping = value;
-            else _body.SetAngularDamping(value);
-        }
+    public bool IsReady => _body is not null;
+    
+    public BodyType Type {
+        get => CurrentStuff.Type;
+        set => CurrentStuff.Type = value;
     }
-    
+
+    public Vector2 Position {
+        get => CurrentStuff.Position;
+        set => CurrentStuff.Position = value;
+    }
+
+    public Rotation Rotation {
+        get => CurrentStuff.Rotation;
+        set => CurrentStuff.Rotation = value;
+    }
+
+    public Vector2 LinearVelocity {
+        get => CurrentStuff.LinearVelocity;
+        set => CurrentStuff.LinearVelocity = value;
+    }
+
     public float AngularVelocity {
-        get => !IsReady ? _startAngularVelocity : _body.GetAngularVelocity();
-        set {
-            if (!IsReady) _startAngularVelocity = value;
-            _body.SetAngularVelocity(value);
-        }
-    }
-    
-    public bool IsBullet {
-        get => _startIsBullet;
-        set {
-            if (!IsReady) _startIsBullet = IsBullet;
-            else throw new Exception("Could not change type after initialization");
-        }
+        get => CurrentStuff.AngularVelocity;
+        set => CurrentStuff.AngularVelocity = value;
     }
 
     public float LinearDamping {
-        get => !IsReady ? _startLinearDamping : _body.GetLinearDamping();
-        set {
-            if (!IsReady) _startLinearDamping = value;
-            else _body.SetLinearDampling(value);
-        }
+        get => CurrentStuff.LinearDamping;
+        set => CurrentStuff.LinearDamping = value;
     }
-    
-    public Vector2 LinearVelocity {
-        get => !IsReady ? _startLinearVelocity : _body.GetLinearVelocity();
-        set {
-            if (!IsReady) _startLinearVelocity = value;
-            else _body.SetLinearVelocity(value);
-        }
+
+    public float AngularDamping {
+        get => CurrentStuff.AngularDamping;
+        set => CurrentStuff.AngularDamping = value;
     }
-    
+
+    public float GravityScale {
+        get => CurrentStuff.GravityScale;
+        set => CurrentStuff.GravityScale = value;
+    }
+
+    public float SleepThreshold {
+        get => CurrentStuff.SleepThreshold;
+        set => CurrentStuff.SleepThreshold = value;
+    }
+
+    public bool EnableSleep {
+        get => CurrentStuff.EnableSleep;
+        set => CurrentStuff.EnableSleep = value;
+    }
+
+    public bool IsBodyAwake {
+        get => CurrentStuff.IsAwake;
+        set => CurrentStuff.IsAwake = value;
+    }
+
     public bool FixedRotation {
-        get => !IsReady ? _startFixedRotation : _body.IsFixedRotation();
-        set {
-            if (!IsReady) _startFixedRotation = value;
-            else _body.SetFixedRotation(value);
-        }
+        get => CurrentStuff.FixedRotation;
+        set => CurrentStuff.FixedRotation = value;
     }
 
-    public float Inertia => _body.GetInertia();
-    public float Mass => _body.GetMass();
-
-    public Vector2 Position {
-        get => _body.GetPosition();
-        set => _body.SetTransform(value, Rotation);
+    public bool IsBullet {
+        get => CurrentStuff.IsBullet;
+        set => CurrentStuff.IsBullet = value;
     }
 
-    public float Rotation {
-        get => _body.GetAngle();
-        set => _body.SetTransform(Position, value);
+    void OnEnable() {
+        CurrentStuff.IsEnabled = true;
     }
 
-    private Body _body;
+    void OnDisable() {
+        CurrentStuff.IsEnabled = false;
+    }
+
+    public bool AutomaticMass {
+        get => CurrentStuff.AutomaticMass;
+        set => CurrentStuff.AutomaticMass = value;
+    }
+
+    public Vector2 GetLocalPoint(Vector2 worldPoint)
+        => _body.GetLocalPoint(worldPoint);
+
+    public Vector2 GetWorldPoint(Vector2 localPoint) 
+        => _body.GetWorldPoint(localPoint);
+
+    public Vector2 GetLocalVector(Vector2 worldVector)
+        => _body.GetLocalVector(worldVector);
+    
+    public Vector2 GetWorldVector(Vector2 localVector)
+        => _body.GetWorldVector(localVector);
+    
+    public void ApplyForce(Vector2 force, Vector2 point, bool wake = true) =>
+        _body.ApplyForce(force, point, wake);
+
+    public void ApplyForce(Vector2 force, bool wake = true) =>
+        _body.ApplyForce(force, wake);
+
+    public void ApplyTorque(float torque, bool wake = true) =>
+        _body.ApplyTorque(torque, wake);
+    
+    public void ApplyLinearImpulse(Vector2 impulse, Vector2 point, bool wake = true) =>
+        _body.ApplyLinearImpulse(impulse, point, wake);
+    
+    public void ApplyLinearImpulse(Vector2 impulse, bool wake = true) =>
+        _body.ApplyLinearImpulse(impulse, wake);
+    
+    public void ApplyAngularImpulse(float impulse, bool wake = true) =>
+        _body.ApplyAngularImpulse(impulse, wake);
+    
+    public float Mass => _body.Mass;
+    public float InertiaTensor => _body.InertiaTensor;
+    public Vector2 LocalCenterOfMass => _body.LocalCenterOfMass;
+    public Vector2 WorldCenterOfMass => _body.WorldCenterOfMass;
+    
+    public void ApplyMassFromShapes() =>
+        _body.ApplyMassFromShapes();
 
     void Start() {
-        var bodyDef = new BodyDef {
-            angle = Transform.Rotation.Z,
-            angularDamping = _startAngularDamping,
-            angularVelocity = _startAngularVelocity,
-            bullet = _startIsBullet,
-            linearDamping = _startLinearDamping,
-            allowSleep = true,
-            linearVelocity = _startLinearVelocity,
-            position = Transform.Position.ToVector2()/Physics.MeterScale,
-            userData = this,
-            fixedRotation = _startFixedRotation,
-            type = BodyType
-        };
-        _body = _world.CreateBody(bodyDef);
+        _bodyDef.Position = Transform.Position.ToVector2();
+        _bodyDef.UserData = this;
+        _body = _world.CreateBody(_bodyDef);
         var colliders = GameObject.GetComponentsInChildren().Where(
             component => component.GetType().IsAssignableTo(typeof(Collider))
-        ).Cast<Collider>(). ToList();
+        ).Cast<Collider>();
         foreach (var collider in colliders) {
-            var fixture = _body.CreateFixture(collider.GetFixtureDef());
+            collider.CreateShape(_body);
         }
-
-        _isReady = true;
     }
 
     void OnEnabled() {
@@ -127,31 +163,14 @@ public class Rigidbody2D : Behaviour {
     }
 
     void Update() {
-        Transform.Position = new Vector3(Position.X * Physics.MeterScale, Position.Y* Physics.MeterScale, Transform.Position.Z);
+        Transform.Position = new Vector3(Position.X, Position.Y, Transform.Position.Z);
         var old = Transform.Rotation.YawPitchRollAsVector3(); 
-        Transform.Rotation = Quaternion.CreateFromYawPitchRoll(old.X, old.Y, Rotation);
-    }
-
-    unsafe void Render() {
-        var fixture = _body.GetFixtureList();
-        if (fixture is null) return;
-        if (fixture.Shape.GetType().IsAssignableTo(typeof(CircleShape))) {
-            var shape = (CircleShape) fixture.Shape;
-            Raylib.DrawCircleLinesV(Physics.MeterScale * Position, shape.Radius*Physics.MeterScale, Raylib.WHITE);
-            return;
-        }
-        if (fixture.Shape.GetType().IsAssignableTo(typeof(PolygonShape))) {
-            var shape = (PolygonShape) fixture.Shape;
-            var verts = shape.GetVertices().Select(vector2 => (vector2+Position)*Physics.MeterScale).ToArray();
-            fixed (Vector2* vert = verts)
-                Raylib.DrawLineStrip(vert, verts.Length, Raylib.WHITE);
-            return;
-        }
+        Transform.Rotation = Quaternion.CreateFromYawPitchRoll(old.X, old.Y, Rotation.Angle);
     }
 
     public override void Dispose() {
         base.Dispose();
-        _world.DestroyBody(_body);
+        _body.Dispose();
         _body = null;
     }
 }

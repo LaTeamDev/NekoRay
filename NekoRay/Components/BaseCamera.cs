@@ -14,6 +14,7 @@ public abstract class BaseCamera : Behaviour {
             _isMain = value;
             if (!_isMain) {
                 if (Main == this) Main = null;
+                return;
             }
             if (Main is not null) {
                 Main._isMain = false;
@@ -26,4 +27,9 @@ public abstract class BaseCamera : Behaviour {
 
     public abstract Vector2 WorldToScreen(Vector3 position);
     public abstract Vector3 ScreenToWorld(Vector2 position);
+
+    public override void Dispose() {
+        base.Dispose();
+        IsMain = false;
+    }
 }

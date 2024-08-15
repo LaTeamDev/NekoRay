@@ -1,12 +1,9 @@
 using System.Numerics;
-using Box2D.NetStandard.Collision;
-using Box2D.NetStandard.Dynamics.Contacts;
-using NekoLib;
+using Box2D;
 using NekoLib.Core;
 using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
-using ZeroElectric.Vinculum.Extensions;
 
 namespace FlappyPegasus.GameStuff; 
 
@@ -35,7 +32,7 @@ public class PlayerMove : Behaviour {
         var jump = Raylib.IsKeyPressed(KeyboardKey.KEY_Z) || Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT);
         if (!jump)
             return;
-        rb2D.LinearVelocity = -Vector2.UnitY * jumpPower;
+        rb2D.LinearVelocity = -Vector2.UnitY * jumpPower* World.LengthUnitsPerMeter;
         Animation.RunAnim(5);
         //JumpSound.Play();
     }
@@ -45,11 +42,11 @@ public class PlayerMove : Behaviour {
     private void TouchJump() {
         ProcessTouch();
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT))
-            rb2D.Position = BaseCamera.Main?.ScreenToWorld(Raylib.GetMousePosition()).ToVector2()/ Physics.MeterScale??rb2D.Position;
-        
+            rb2D.Position = BaseCamera.Main?.ScreenToWorld(Raylib.GetMousePosition()).ToVector2()??rb2D.Position;
+
         Sprite.Transform.Rotation = NekoMath.Damp(
             Sprite.Transform.Rotation, 
-            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, rb2D.LinearVelocity.Y* rotateSpd),
+            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, rb2D.LinearVelocity.Y * rotateSpd/World.LengthUnitsPerMeter),
             ref smoothDamp,
             0.2f);
     }
@@ -64,17 +61,17 @@ public class PlayerMove : Behaviour {
         GameOverScene.Open();
     }
 
-    private void OnBeginContact2D(Contact collision) {
-        var contactRb = (Rigidbody2D)collision.GetFixtureA().GetBody().UserData;
+    private void OnBeginContact2D(ContactEvents.BeginTouchEvent collision) {
+        var contactRb = (Rigidbody2D)collision.ShapeA.Body.UserData;
         if (contactRb.GameObject == GameObject)
-            contactRb = (Rigidbody2D)collision.GetFixtureB().GetBody().UserData;
+            contactRb = (Rigidbody2D)collision.ShapeB.Body.UserData;
         if (!contactRb.GameObject.Tags.Contains("Danger")) return;
         OnDeath();
     }
 
-    private void OnBeginSensor2D(Contact collision)
+    private void OnSensorEnter2D(SensorEvents.BeginTouchEvent collision)
     {
-        var contactRb = (Rigidbody2D)collision.GetFixtureB().GetBody().UserData;
+        var contactRb = (Rigidbody2D)collision.SensorShape.Body.UserData;
         if (!contactRb.GameObject.Tags.Contains("Coin")) return;
         Score.CurrenctCoins++;
         Destroy(contactRb.GameObject);

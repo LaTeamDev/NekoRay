@@ -1,6 +1,6 @@
 using System.Numerics;
-using Box2D.NetStandard.Dynamics.Bodies;
-using FlappyPegasus.Debug;
+using Box2D;
+using FlappyPegasus.Dbg;
 using FlappyPegasus.GameStuff;
 using FlappyPegasus.Gui;
 using NekoLib.Core;
@@ -22,7 +22,7 @@ public class GameScene : BaseScene {
     private Action UpdateBg;
 
     public override void Initialize() {
-        this.CreateWorld();
+        this.CreateWorld(Physics.DefaultGravity * World.LengthUnitsPerMeter);
 
         #region Camera
         var camera = new GameObject("Camera").AddComponent<Camera2D>();
@@ -78,10 +78,10 @@ public class GameScene : BaseScene {
         //playerAnimation._spriteRenderer.GameObject.Transform.Parent = null;
         playerAnimation._spriteRenderer.FlipX = true;
         var collider = playerAnimation.GameObject.AddComponent<CircleCollider>();
-        collider.Radius = 12f/Physics.MeterScale;
+        collider.Radius = 12f;
         
         var rigidbody = playerAnimation.GameObject.AddComponent<Rigidbody2D>();
-        rigidbody.BodyType = BodyType.Dynamic;
+        rigidbody.Type = BodyType.Dynamic;
         var player = playerAnimation.GameObject.AddComponent<PlayerMove>();
         player.Sprite = playerAnimation._spriteRenderer;
         player.rb2D = rigidbody;
@@ -97,19 +97,21 @@ public class GameScene : BaseScene {
         var tb = levelBounds.AddChild("Top"); 
         var topBound = new {
             rb = tb.AddComponent<Rigidbody2D>(),
-            collider = tb.AddComponent<PolygonCollider>() //TODO: Make it and edge collider
+            collider = tb.AddComponent<BoxCollider>() //TODO: Make it and segment collider
         };
-        topBound.rb.BodyType = BodyType.Static;
-        topBound.collider.SetAsBox(512f/Physics.MeterScale, 32f/Physics.MeterScale);
+        topBound.rb.Type = BodyType.Static;
+        topBound.collider.Width = 512f;
+        topBound.collider.Height = 32f;
         topBound.rb.Transform.Position = new Vector3(0f, -176f, 0f);
         
         var bb = levelBounds.AddChild("Bottom"); 
         var bottomBound = new {
             rb = bb.AddComponent<Rigidbody2D>(),
-            collider = bb.AddComponent<PolygonCollider>() //TODO: Make it and edge collider
+            collider = bb.AddComponent<BoxCollider>() //TODO: Make it and edge collider
         };
-        bottomBound.rb.BodyType = BodyType.Static;
-        bottomBound.collider.SetAsBox(512f/Physics.MeterScale, 32f/Physics.MeterScale);
+        bottomBound.rb.Type = BodyType.Static;
+        bottomBound.collider.Width = 512f;
+        bottomBound.collider.Height = 32f;
         bottomBound.rb.Transform.Position = new Vector3(0f, 176f, 0f);
         bb.Tags.Add("Danger");
 
@@ -152,6 +154,8 @@ public class GameScene : BaseScene {
             groundD.Speed = 64f * player.Score._speed;
         };
 
+        new GameObject("DebugWorldDraw").AddComponent<DrawWorld>();
+
         base.Initialize();
     }
 
@@ -170,7 +174,7 @@ public class GameScene : BaseScene {
         
         if (!SceneManager.ActiveScene.GetType().IsAssignableTo(typeof(OverlayScene))) {
             base.Update();
-            this.GetWorld().Step(Timer.DeltaF, 8, 3);
+            this.GetWorld().Step(Timer.DeltaF, 4);
         }
     }
 }

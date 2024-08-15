@@ -40,7 +40,7 @@ public class Camera2D : BaseCamera {
 
     public override void Dispose() {
         base.Dispose();
-        IsMain = false;
+        
         RenderTexture.Dispose();
     }
 

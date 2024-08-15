@@ -23,11 +23,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\NekoLib\NekoLib\NekoLib.csproj" />
+      <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
+      <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
       <ProjectReference Include="..\..\rlImGui-CSharp-Vinculum\rlImGui\rlImGui.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Box2D.NetStandard" Version="2.4.7-alpha" />
       <PackageReference Include="ImGui.NET" Version="1.90.9.1" />
       <PackageReference Include="Raylib-CSharp-Vinculum" Version="5.0.1" />
       <PackageReference Include="Tomlyn" Version="0.17.0" />

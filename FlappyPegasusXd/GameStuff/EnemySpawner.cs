@@ -1,9 +1,10 @@
 ﻿using System.Numerics;
-using Box2D.NetStandard.Dynamics.Bodies;
+using Box2D;
 using NekoLib.Core;
 using NekoRay;
 using NekoRay.Physics2D;
 using Timer = NekoRay.Timer;
+using Transform = NekoLib.Core.Transform;
 
 namespace FlappyPegasus.GameStuff; 
 
@@ -26,9 +27,9 @@ public class EnemySpawner : Behaviour {
         enemy.GameObject.Tags.Add("Danger");
         enemy.Score = Score;
         var collider = enemy.GameObject.AddComponent<CircleCollider>();
-        collider.Radius = 10f / Physics.MeterScale;
+        collider.Radius = 10f;
         enemy.Rigidbody = enemy.GameObject.AddComponent<Rigidbody2D>();
-        enemy.Rigidbody.BodyType = BodyType.Kinematic;
+        enemy.Rigidbody.Type = BodyType.Kinematic;
         enemy.Transform.Position = SpawnLocation.Position;
         enemy.Transform.Position += SpawnRadius * (random.NextSingle() - 0.5f) * Vector3.UnitY;
         var anim = enemy.GameObject.AddComponent<SimpleAnimation>();
