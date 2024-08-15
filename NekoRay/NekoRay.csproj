@@ -25,6 +25,7 @@
       <ProjectReference Include="..\..\NekoLib\NekoLib\NekoLib.csproj" />
       <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
       <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
+      <ProjectReference Include="..\..\rlImGui-CSharp-Vinculum\rlImGui\rlImGui.csproj" />
     </ItemGroup>
 
     <ItemGroup>

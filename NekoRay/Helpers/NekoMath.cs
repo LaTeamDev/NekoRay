@@ -15,24 +15,24 @@ public static class NekoMath {
 
     public static Vector2 Damp(Vector2 from, Vector2 to, ref Vector2 velocity, float smoothTime) {
         return new Vector2(Damp(from.X, to.X, ref velocity.X, smoothTime),
-            Damp(from.X, to.X, ref velocity.X, smoothTime));
+            Damp(from.Y, to.Y, ref velocity.Y, smoothTime));
     }
 
     public static Vector3 Damp(Vector3 from, Vector3 to, ref Vector3 velocity, float smoothTime) {
         return new Vector3(Damp(from.X, to.X, ref velocity.X, smoothTime),
-            Damp(from.X, to.X, ref velocity.X, smoothTime), Damp(from.Z, to.Z, ref velocity.Z, smoothTime));
+            Damp(from.Y, to.Y, ref velocity.Y, smoothTime), Damp(from.Z, to.Z, ref velocity.Z, smoothTime));
     }
     public static Vector4 Damp(Vector4 from, Vector4 to, ref Vector4 velocity, float smoothTime) {
         return new Vector4(
             Damp(from.X, to.X, ref velocity.X, smoothTime),
-            Damp(from.X, to.X, ref velocity.X, smoothTime), 
+            Damp(from.Y, to.Y, ref velocity.Y, smoothTime), 
             Damp(from.Z, to.Z, ref velocity.Z, smoothTime), 
             Damp(from.W, to.W, ref velocity.W, smoothTime));
     }
     public static Quaternion Damp (Quaternion from, Quaternion to, ref Vector4 velocity, float smoothTime) {
         return new Quaternion(
             Damp(from.X, to.X, ref velocity.X, smoothTime),
-            Damp(from.X, to.X, ref velocity.X, smoothTime), 
+            Damp(from.Y, to.Y, ref velocity.Y, smoothTime), 
             Damp(from.Z, to.Z, ref velocity.Z, smoothTime), 
             Damp(from.W, to.W, ref velocity.W, smoothTime));
     }

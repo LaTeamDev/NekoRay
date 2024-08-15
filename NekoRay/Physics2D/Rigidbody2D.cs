@@ -152,6 +152,16 @@ public class Rigidbody2D : Behaviour {
         }
     }
 
+    void OnEnabled() {
+        if (!_isReady) return;
+        _body.SetEnabled(true);
+    }
+
+    void OnDisabled() {
+        if (!_isReady) return;
+        _body.SetEnabled(false);
+    }
+
     void Update() {
         Transform.Position = new Vector3(Position.X, Position.Y, Transform.Position.Z);
         var old = Transform.Rotation.YawPitchRollAsVector3(); 

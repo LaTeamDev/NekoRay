@@ -1,0 +1,2 @@
+floor_textures = ["nothing.png", "dev_01.png", "dev_02.png", "dev_floor.png"]
+wall_textures = ["nothing.png", "dev_wall.png"]
