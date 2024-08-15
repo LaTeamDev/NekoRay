@@ -1,5 +1,4 @@
 using System.Numerics;
-using Box2D.NetStandard.Dynamics.Fixtures;
 using HotlineSPonyami.Tools;
 using NekoLib.Core;
 using NekoRay;
@@ -51,18 +50,18 @@ public class TiledScene : BaseScene
                 {
                     Rigidbody2D wall = new GameObject($"Wall_{x}_{y}").AddComponent<Rigidbody2D>();
                     PolygonCollider wallCollider = wall.GameObject.AddComponent<PolygonCollider>();
-                    wallCollider.Filter = new Filter();
-                    wallCollider.Filter.categoryBits = 1;
-                    wallCollider.SetAsBox(7f / Physics.MeterScale / 2f, 32f / Physics.MeterScale / 2f);
+                    //wallCollider.Filter = new Filter();
+                    //wallCollider.Filter.categoryBits = 1;
+                    //wallCollider.SetAsBox(7f / Physics.MeterScale / 2f, 32f / Physics.MeterScale / 2f);
                     wall.Transform.Position = new Vector3(x * 32 + 7f / 2f, y * 32 + 32f / 2f, 0);
                 }
                 if (img.GetColorAt(x, y).b > 0)
                 {
                     Rigidbody2D wall = new GameObject($"Wall_{x}_{y}").AddComponent<Rigidbody2D>();
                     PolygonCollider wallCollider = wall.GameObject.AddComponent<PolygonCollider>();
-                    wallCollider.Filter = new Filter();
-                    wallCollider.Filter.categoryBits = 1;
-                    wallCollider.SetAsBox(32f / Physics.MeterScale / 2f, 7f / Physics.MeterScale / 2f);
+                    //wallCollider.Filter = new Filter();
+                    //wallCollider.Filter.categoryBits = 1;
+                    //wallCollider.SetAsBox(32f / Physics.MeterScale / 2f, 7f / Physics.MeterScale / 2f);
                     wall.Transform.Position = new Vector3(x * 32 + 32f / 2f, (y + 1) * 32 - 7f / 2f, 0);
                 }
             }

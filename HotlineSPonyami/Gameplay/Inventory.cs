@@ -46,7 +46,7 @@ public class Inventory : Behaviour {
             var curPos = new Vector2((float) (c * up.X - s * up.Y), (float) (s * up.X + c * up.Y));
             var desiredPosition = Transform.Position.ToVector2();
             desiredPosition += curPos;
-            Items[i].RB.Position = NekoMath.Damp(Items[i].RB.Position, desiredPosition/ 64f, ref Items[i]._velocity, Smooth);
+            Items[i].RB.Position = NekoMath.Damp(Items[i].RB.Position, desiredPosition, ref Items[i]._velocity, Smooth);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using System.Reflection;
-using Box2D.NetStandard.Dynamics.Bodies;
-using Box2D.NetStandard.Dynamics.Fixtures;
+using Box2D;
 using HotlineSPonyami.Gameplay.DebugStuff;
 using HotlineSPonyami.Tools;
 using NekoLib;
@@ -28,23 +27,24 @@ public sealed class Commands {
             pl.Inventory = gameObject.AddComponent<Inventory>();
             pl.Inventory.Capacity = 1f;
             pl.RigidBody = gameObject.AddComponent<Rigidbody2D>();
-            pl.RigidBody.BodyType = BodyType.Dynamic;
+            pl.RigidBody.Type = BodyType.Dynamic;
+            pl.RigidBody.FixedRotation = true;
             var colliderPlayer = pl.GameObject.AddComponent<CircleCollider>();
-            colliderPlayer.Radius = 14f / Physics.MeterScale;
-            colliderPlayer.Filter = new Filter();
-            colliderPlayer.Filter.categoryBits = (ushort) PhysCategory.Player;
+            colliderPlayer.Radius = 14f;
+            //colliderPlayer.Filter = new Filter();
+            //colliderPlayer.Filter.categoryBits = (ushort) PhysCategory.Player;
             var collector = pl.GameObject.AddChild("CollectSensor").AddComponent<PlayerCollector>();
             collector.Player = pl;
             collector.Inventory = pl.Inventory;
             collector.rb = collector.GameObject.AddComponent<Rigidbody2D>();
-            collector.rb.BodyType = BodyType.Kinematic;
+            collector.rb.Type = BodyType.Kinematic;
             var collider = collector.GameObject.AddComponent<CircleCollider>();
-            collider.Radius = 16f/ Physics.MeterScale;
+            collider.Radius = 16f;
             collider.IsSensor = true;
-            collider.Filter = new Filter {
+            /*collider.Filter = new Filter {
                 categoryBits = (ushort) (PhysCategory.Trigger),
                 maskBits = (ushort)(PhysCategory.Prop)
-            };
+            };*/
             return gameObject;
         });
         AddEntity("camera2d", (gameObject) => {
@@ -54,13 +54,13 @@ public sealed class Commands {
         AddEntity("carryable", (gameObject) => {
             var carryable = gameObject.AddComponent<Carryable>();
             carryable.RB = gameObject.AddComponent<Rigidbody2D>();
-            carryable.RB.BodyType = BodyType.Dynamic;
+            carryable.RB.Type = BodyType.Dynamic;
             carryable.Weight = 0.125f;
             var collider = gameObject.AddComponent<CircleCollider>();
-            collider.Radius = 3f / Physics.MeterScale;
-            collider.Filter = new Filter();
+            collider.Radius = 3f;
+            /*collider.Filter = new Filter();
             collider.Filter.categoryBits = (ushort)(PhysCategory.Prop);
-            collider.Filter.maskBits = (ushort)(PhysCategory.Trigger | PhysCategory.LevelGeometry | PhysCategory.Prop);
+            collider.Filter.maskBits = (ushort)(PhysCategory.Trigger | PhysCategory.LevelGeometry | PhysCategory.Prop);*/
             return gameObject;
         });
     }

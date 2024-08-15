@@ -4,7 +4,7 @@ namespace NekoRay.Physics2D;
 
 public class PolygonCollider : Collider {
     public override ShapeType Type => ShapeType.Polygon;
-    public override void CreateShape(Body body) {
+    public override Shape CreateShape(Body body) {
         throw new NotImplementedException();
     }
 }

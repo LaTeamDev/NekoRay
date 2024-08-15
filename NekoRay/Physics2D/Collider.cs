@@ -71,5 +71,5 @@ public abstract class Collider : Component {
         set => ShapeDef.ForceContactCreation = value;
     }
 
-    public abstract void CreateShape(Body body);
+    public abstract Shape CreateShape(Body body);
 }

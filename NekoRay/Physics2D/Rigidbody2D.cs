@@ -148,18 +148,17 @@ public class Rigidbody2D : Behaviour {
             component => component.GetType().IsAssignableTo(typeof(Collider))
         ).Cast<Collider>();
         foreach (var collider in colliders) {
-            collider.CreateShape(_body);
+            var shape = collider.CreateShape(_body);
+            shape.UserData = collider;
         }
     }
 
     void OnEnabled() {
-        if (!_isReady) return;
-        _body.SetEnabled(true);
+        CurrentStuff.IsEnabled = true;
     }
 
     void OnDisabled() {
-        if (!_isReady) return;
-        _body.SetEnabled(false);
+        CurrentStuff.IsEnabled = true;
     }
 
     void Update() {

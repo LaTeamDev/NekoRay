@@ -8,8 +8,8 @@ public class BoxCollider : PolygonCollider {
 
     public float Width;
     public float Height;
-    public override void CreateShape(Body body) {
-        body.CreatePolygonShape(ShapeDef,
+    public override Shape CreateShape(Body body) {
+        return body.CreatePolygonShape(ShapeDef,
             Polygon.MakeBox(Width, Height, Vector2.Zero, 
                 Transform.Rotation.YawPitchRollAsVector3().Z));
     }

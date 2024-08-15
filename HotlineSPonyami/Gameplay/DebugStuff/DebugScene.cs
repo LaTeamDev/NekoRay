@@ -11,7 +11,7 @@ namespace HotlineSPonyami.Gameplay.DebugStuff;
 public class DebugScene : BaseScene {
     public override void Initialize() {
         this.CreateWorld();
-        this.GetWorld().SetAllowSleeping(false);
+        this.GetWorld().Sleeping = false;
         //this.GetWorld().Gravity = Vector2.UnitY*9.31f;
         #region Camera
         var camera = new GameObject("Camera").AddComponent<Camera2D>();
@@ -25,12 +25,14 @@ public class DebugScene : BaseScene {
         var reticleRenderer = reticle.GameObject.AddComponent<SpriteRenderer2D>();
         reticleRenderer.Sprite = new Sprite(Data.GetTexture("data/textures/gameui/reticle.png"), new Rectangle(0, 0, 9, 9));
         #endregion
+
+        new GameObject("Debug draw").AddComponent<DrawWorld>();
         
         base.Initialize();
     }
 
     public override void Update() {
         base.Update();
-        this.GetWorld().Step(Timer.DeltaF, 8, 3);
+        this.GetWorld().Step(Timer.DeltaF, 4);
     }
 }

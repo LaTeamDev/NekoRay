@@ -19,7 +19,7 @@ public static class Physics {
         scene.CreateWorld(DefaultGravity);
     }
 
-    public static RayCastResult RayCast(this World world, Vector2 start, Vector2 end ) {
+    /*public static RayCastResult RayCast(this World world, Vector2 start, Vector2 end ) {
         var result = new RayCastResult();
         world.RayCast((fixture, point, normal, fraction) => {
             result.Fixture = fixture;
@@ -28,7 +28,7 @@ public static class Physics {
             result.Fraction = fraction;
         }, start, end);
         return result;
-    }
+    }*/
 
     public static World GetWorld(this IScene scene) {
         if (_sceneWorlds.TryGetValue(scene, out var world)) return world;

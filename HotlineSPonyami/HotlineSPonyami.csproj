@@ -45,4 +45,13 @@
     <ItemGroup>
       <None Include="data\shaders\field_shader.frag" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Reference Include="Box2CSharp">
+        <HintPath>..\..\box2c-sharp\Box2D\bin\Debug\net7.0\Box2CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="Box2D.Interop">
+        <HintPath>..\..\box2c-sharp\Box2D.Interop\bin\Debug\net7.0\Box2D.Interop.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 </Project>

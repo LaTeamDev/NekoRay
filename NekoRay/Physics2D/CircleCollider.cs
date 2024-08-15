@@ -11,7 +11,7 @@ public class CircleCollider : Collider {
     }
 
     //TODO: Account for gameobject transform and stuff
-    public override void CreateShape(Body body) {
-        body.CreateCircleShape(ShapeDef, _circle);
+    public override Shape CreateShape(Body body) {
+        return body.CreateCircleShape(ShapeDef, _circle);
     }
 }

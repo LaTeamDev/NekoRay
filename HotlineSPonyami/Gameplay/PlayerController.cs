@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Box2D;
 using ImGuiNET;
 using NekoLib;
 using NekoLib.Core;
@@ -10,7 +11,7 @@ using Timer = NekoRay.Timer;
 namespace HotlineSPonyami.Gameplay; 
 
 public class PlayerController : Behaviour {
-    public float Speed = 100f/Physics.MeterScale;
+    public float Speed = 100f;
     private Animation _backLegForward;
     private Animation _frontLegForward;
     private Animation _backLegRight;
@@ -63,12 +64,14 @@ public class PlayerController : Behaviour {
         };*/
         RigidBody.LinearVelocity = _normalizedInput * Speed;
         var mousePos = BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition());
-        RigidBody.Rotation = MathF.Atan2(mousePos.X-Transform.Position.X, Transform.Position.Y-mousePos.Y);
+        RigidBody.Rotation = new Rotation(MathF.Atan2(mousePos.X-Transform.Position.X, Transform.Position.Y-mousePos.Y));
     }
 
     void DrawGui() {
         if (!Game.ToolsMode) return;
         if (ImGui.Begin("player")) {
+            ImGui.Text(BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition()).ToString());
+            ImGui.Text(Transform.Position.ToString());
             ImGui.Text(Transform.Rotation.GetEulerAngles().ToString());
             ImGui.Text($"Carrying {Inventory.Carrying}/{Inventory.Capacity}");
             foreach (var item in Inventory.Items) {

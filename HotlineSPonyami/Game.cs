@@ -2,6 +2,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using Box2D;
 using HotlineSPonyami.Tools;
 using HotlineSPonyami.Interop;
 using HotlineSPonyami.Tools;
@@ -15,6 +16,7 @@ using Serilog.Events;
 using ZeroElectric.Vinculum;
 using Console = HotlineSPonyami.Tools.Console;
 using Timer = NekoRay.Timer;
+using Wave = NekoRay.Wave;
 
 namespace HotlineSPonyami;
 
@@ -69,6 +71,7 @@ public class Game : GameBase {
     public static bool ToolsMode = false;
 
     public override void Load(string[] args) {
+        World.LengthUnitsPerMeter = 64f;
         Physics.DefaultGravity = Vector2.Zero;
         Console.Register<Input>();
         Console.Register<EditorScene>();
