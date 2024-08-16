@@ -15,6 +15,7 @@ namespace FlappyPegasus;
 public class Game : GameBase {
     public Server Server;
     public override void Load(string[] args) {
+        base.Load(args);
         Server = new Server();
         Raylib.SetWindowTitle("Flappy Pegasus xd");
         World.LengthUnitsPerMeter = 64f;

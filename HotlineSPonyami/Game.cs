@@ -14,7 +14,7 @@ using NekoRay.Physics2D;
 using Serilog;
 using Serilog.Events;
 using ZeroElectric.Vinculum;
-using Console = HotlineSPonyami.Tools.Console;
+using Console = NekoRay.Tools.Console;
 using Timer = NekoRay.Timer;
 using Wave = NekoRay.Wave;
 
@@ -48,50 +48,21 @@ public class Game : GameBase {
         }
     }
 
-    public unsafe void Initlogging() {
-        const string outputTemplate = "{Timestamp:HH:mm:ss} [{Level}] {Name}: {Message}{Exception}{NewLine}";
-        Log.Logger = new LoggerConfiguration()
-#if DEBUG
-            .MinimumLevel.Verbose()
-#else
-            .MinimumLevel.Information()
-#endif
-            .Enrich.FromLogContext()
-            .WriteTo.GameConsole()
-            .WriteTo.Console(LogEventLevel.Verbose, outputTemplate)
-            .WriteTo.File($"logs/nekoray{DateTime.Now:yy.MM.dd-hh.MM.ss}.log", LogEventLevel.Verbose, outputTemplate)
-            .CreateLogger()
-            .ForContext("Name", "NekoRay");
-
-
-        //Raylib.SetTraceLogCallback(&RaylibCallback);
-    }
-
-    public Console Console;
-    public static bool ToolsMode = false;
-
     public override void Load(string[] args) {
-        World.LengthUnitsPerMeter = 64f;
-        Physics.DefaultGravity = Vector2.Zero;
         Console.Register<Input>();
         Console.Register<EditorScene>();
         Console.Register<Gameplay.Commands>();
-        Initlogging();
+        
+        DevMode = args.Contains("--tools");
+        base.Load(args);
+        
+        World.LengthUnitsPerMeter = 64f;
+        Physics.DefaultGravity = Vector2.Zero;
         Raylib.SetWindowTitle("Hotline S Ponyami");
-        SceneManager.LoadScene(new PersistantScene());
-        ToolsMode = args.Contains("--tools");
-        Console = new GameObject("Console").AddComponent<Console>();
-        Console.Enabled = ToolsMode;
-        Console.ExecFile("autoexec");
-        if (!ToolsMode)
+        if (!DevMode)
         {
             SceneManager.LoadScene(new TiledScene());
         }
-        if (!ToolsMode && !args.Contains("--console")) return;
-        KeyPressed += (key, b) => {
-            if (key == KeyboardKey.KEY_F5)
-                Console.Enabled = !Console.Enabled;
-        };
     }
     public override void Draw() {
         base.Draw();

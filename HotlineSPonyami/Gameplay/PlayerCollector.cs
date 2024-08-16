@@ -52,7 +52,7 @@ public class PlayerCollector : Behaviour {
     }
 
     void Render() {
-        if (!Game.ToolsMode) return;
+        if (!Game.DevMode) return;
         foreach (var fixture in _shapeList) {
             var start = Player.RigidBody.Position;
             var end = fixture.Body.Position;

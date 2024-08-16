@@ -5,6 +5,6 @@ namespace FlappyPegasus.Gui;
 
 public class ImguiDemoWindow : Behaviour {
     void DrawGui() {
-        ImGui.ShowDemoWindow();
+        //ImGui.ShowDemoWindow();
     }
 }

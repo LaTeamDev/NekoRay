@@ -1,13 +1,54 @@
 using NekoLib.Scenes;
 using rlImGui_cs;
+using Serilog;
+using Serilog.Events;
 using ZeroElectric.Vinculum;
+using NekoRay.Tools;
+using Console = NekoRay.Tools.Console;
 
 namespace NekoRay; 
 
 public abstract class GameBase {
+    public static ILogger Log;
+    public unsafe virtual void Initlogging() {
+        var loggingCfg = ConfigureLogger(new LoggerConfiguration());
+        Serilog.Log.Logger = loggingCfg
+            .CreateLogger()
+            .ForContext("Name", "NekoRay");
+        Log = Serilog.Log.Logger.ForContext("Name", GetType().Name);
+
+        //Raylib.SetTraceLogCallback(&RaylibCallback);
+    }
+
+    public virtual LoggerConfiguration ConfigureLogger(LoggerConfiguration configuration) {
+        const string outputTemplate = "{Timestamp:HH:mm:ss} [{Level}] {Name}: {Message}{Exception}{NewLine}";
+        return configuration
+#if DEBUG
+            .MinimumLevel.Verbose()
+#else
+            .MinimumLevel.Information()
+#endif
+            .Enrich.FromLogContext()
+            .WriteTo.GameConsole()
+            .WriteTo.Console(LogEventLevel.Verbose, outputTemplate)
+            .WriteTo.File($"logs/nekoray{DateTime.Now:yy.MM.dd-hh.MM.ss}.log", LogEventLevel.Verbose, outputTemplate);
+    }
+    
+    public static bool DevMode = false;
+    public Console Console;
 
     public virtual void Load(string[] args) {
-        
+        InitConsole(args.Contains("--console"));
+        Console.Register<Input>();
+    }
+
+    public virtual void InitConsole(bool enable) {
+        SceneManager.LoadScene(new PersistantScene());
+        Console = new GameObject("Console").AddComponent<Console>();
+        Console.Enabled = DevMode;
+        Console.ExecFile("autoexec");
+        if (!(DevMode || enable)) return;
+        Input.BindCommand(KeyboardKey.KEY_F5, "toggleconsole");
     }
 
     public event Action? WindowResize;
@@ -35,6 +76,7 @@ public abstract class GameBase {
     public delegate void LoopFunction();
 
     public virtual LoopFunction Run(string[] args) {
+        Initlogging();
         Raylib.InitAudioDevice();
         rlImGui.Setup();
         Load(args);
@@ -42,6 +84,7 @@ public abstract class GameBase {
             Timer.Step();
             UpdateEvents();
             NekoLib.Core.Timer.Global.Update(Timer.DeltaF);
+            Input.Update();
             Update();
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.BLACK);
@@ -63,7 +106,7 @@ public abstract class GameBase {
 
     public virtual LoopFunction ErrorHandler(Exception msg) {
         var error = msg.ToString();
-        Console.WriteLine(error);
+        Log.Fatal(error);
 
         void Draw() {
             Raylib.ClearBackground(Raylib.RAYWHITE);

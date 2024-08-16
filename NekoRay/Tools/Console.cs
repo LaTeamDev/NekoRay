@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using HotlineSPonyami.Gameplay.DebugStuff;
 using ImGuiNET;
 using NekoLib.Core;
 using NekoLib.Scenes;
@@ -14,15 +13,20 @@ using ZeroElectric.Vinculum;
 using Shader = NekoRay.Shader;
 using Texture = NekoRay.Texture;
 
-namespace HotlineSPonyami.Tools; 
+namespace NekoRay.Tools; 
 
 public class Console : Behaviour {
+    internal static Console? Instance;
     public static int MaxMessageCount = 256;
 
     private static Queue<string> _messageLog = new();
 
     static Console() {
         Register<Console>();
+    }
+
+    public Console() {
+        Instance = this;
     }
 
     public static void Log(string message) {
@@ -167,12 +171,22 @@ public class Console : Behaviour {
     [ConCommand("exec")]
     [ConDescription("run commands from thefile")]
     public static void ExecFile(string path) {
+        //TODO: FIXME: handle stuff not in data
         var systemPath = Path.Combine("data", "cfg", path+".cfg");
         if (!File.Exists(systemPath)) {
             Serilog.Log.Error("No file {Path} found", path);
             return;
         }
         Submit(string.Join(";", File.ReadAllLines(systemPath)));
+    }
+
+    [ConCommand("toggleconsole")]
+    public static void ToggleConsole() {
+        if (Instance is null) {
+            Serilog.Log.Error("Attempt to toggle uninitialized console window");
+            return;
+        }
+        Instance.Enabled = !Instance.Enabled;
     }
 
     public static void Register<T>() {

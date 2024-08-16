@@ -33,7 +33,7 @@ public class PlayerController : Behaviour {
     public Inventory Inventory;
 
     void Render() {
-        if (!Game.ToolsMode) return;
+        if (!Game.DevMode) return;
         
         _body.Draw(
             Transform.Position.ToVector2(),
@@ -68,7 +68,7 @@ public class PlayerController : Behaviour {
     }
 
     void DrawGui() {
-        if (!Game.ToolsMode) return;
+        if (!Game.DevMode) return;
         if (ImGui.Begin("player")) {
             ImGui.Text(BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition()).ToString());
             ImGui.Text(Transform.Position.ToString());

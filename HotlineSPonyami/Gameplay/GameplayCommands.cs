@@ -8,6 +8,7 @@ using NekoLib.Core;
 using NekoLib.Scenes;
 using NekoRay;
 using NekoRay.Physics2D;
+using NekoRay.Tools;
 using Serilog;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;

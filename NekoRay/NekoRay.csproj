@@ -31,6 +31,9 @@
     <ItemGroup>
       <PackageReference Include="ImGui.NET" Version="1.90.9.1" />
       <PackageReference Include="Raylib-CSharp-Vinculum" Version="5.0.1" />
+      <PackageReference Include="Serilog" Version="4.0.1" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+      <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
       <PackageReference Include="Tomlyn" Version="0.17.0" />
     </ItemGroup>
 

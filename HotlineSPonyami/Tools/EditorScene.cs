@@ -4,6 +4,7 @@ using HotlineSPonyami.Tools.EditorTools;
 using NekoLib.Core;
 using NekoLib.Scenes;
 using NekoRay;
+using NekoRay.Tools;
 using ZeroElectric.Vinculum;
 using Texture = NekoRay.Texture;
 using Timer = NekoRay.Timer;

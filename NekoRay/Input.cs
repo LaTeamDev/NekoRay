@@ -1,17 +1,15 @@
-﻿using System.Data;
-using System.Reflection;
-using HotlineSPonyami.Tools;
+﻿using NekoRay.Tools;
 using Serilog;
-using ZeroElectric.Vinculum;
+using Console = NekoRay.Tools.Console;
 
-namespace HotlineSPonyami; 
+namespace NekoRay; 
 
 public sealed class Input {
     private Input() {}
     
     [ConCommand("bind")]
     [ConDescription("Bind action on a key")]
-    public static void BindCommand(string key, string action) {
+    public static void Bind(string key, string action) {
         if (Enum.TryParse<KeyboardKey>(key, out var kbKey)) {
             Bind(kbKey, action);
             return;
@@ -26,6 +24,16 @@ public sealed class Input {
         }
         Log.Error("Failed to bind {Action} to {Key}", action, key);
     }
+
+    [ConCommand("bindcommand")]
+    [ConDescription("Bind command on a key")]
+    public static void BindCommand(string key, string command) {
+        if (Enum.TryParse<KeyboardKey>(key, out var kbKey)) {
+            BindCommand(kbKey, command);
+            return;
+        }
+        Log.Error("Failed to bind {Command} to {Key}", command, key);
+    }
     
     private static Dictionary<KeyboardKey, string> _kbBinds = new();
     private static Dictionary<MouseButton, string> _mBinds = new();
@@ -35,21 +43,26 @@ public sealed class Input {
     private static Dictionary<string, bool> _released = new();
     private static Dictionary<string, bool> _up = new();
     private static Dictionary<string, bool> _pressedRepeat = new();
-    private static HashSet<string> bindList = new();
+    private static HashSet<string> _bindList = new();
+    private static List<Tuple<KeyboardKey, string>> _commandList = new();
 
     public static void Bind(KeyboardKey key, string action) {
         _kbBinds[key] = action;
-        bindList.Add(action);
+        _bindList.Add(action);
     }
     
     public static void Bind(MouseButton key, string action) {
         _mBinds[key] = action;
-        bindList.Add(action);
+        _bindList.Add(action);
     }
     
     public static void Bind(GamepadButton key, string action) {
         _gpBinds[key] = action;
-        bindList.Add(action);
+        _bindList.Add(action);
+    }
+    
+    public static void BindCommand(KeyboardKey key, string command) {
+        _commandList.Add(new Tuple<KeyboardKey, string>(key, command));
     }
 
     [ConCommand("unbind")]
@@ -58,13 +71,13 @@ public sealed class Input {
         _kbBinds.RemoveByValue(action);
         _mBinds.RemoveByValue(action);
         _gpBinds.RemoveByValue(action);
-        bindList.Remove(action);
+        _bindList.Remove(action);
     }
 
     [ConCommand("unbindall")]
     [ConDescription("Unbind all actions")]
     public static void UnbindAll() {
-        foreach (var action in bindList) {
+        foreach (var action in _bindList) {
             _kbBinds.RemoveByValue(action);
             _mBinds.RemoveByValue(action);
             _gpBinds.RemoveByValue(action);
@@ -79,6 +92,14 @@ public sealed class Input {
     }
     public static void Unbind(GamepadButton key) {
         _gpBinds.Remove(key);
+    }
+    
+    [ConCommand("unbindcommand")]
+    [ConDescription("Unbind command")]
+    public static void UnbindCommand(string command) {
+        foreach (var a in _commandList.Where(tuple => tuple.Item2 == command)) {
+            _commandList.Remove(a);
+        }
     }
 
     public static bool IsDown(string action) {
@@ -108,7 +129,11 @@ public sealed class Input {
     
 
     public static void Update() {
-        foreach (var bind in bindList) {
+        foreach (var commandBind in _commandList) {
+            if (Raylib.IsKeyPressed(commandBind.Item1)) Console.Submit(commandBind.Item2);
+        }
+        
+        foreach (var bind in _bindList) {
             _down[bind] = _pressed[bind] = _released[bind] = _up[bind] = _pressedRepeat[bind] = false;
         }
         foreach (var bind in _kbBinds) {
@@ -118,7 +143,7 @@ public sealed class Input {
             _up[bind.Value] |= Raylib.IsKeyUp(bind.Key);
             _pressedRepeat[bind.Value] |= Raylib.IsKeyPressedRepeat(bind.Key);
         }
-
+        
         foreach (var bind in _mBinds) {
             _down[bind.Value] |= Raylib.IsMouseButtonDown(bind.Key);
             _pressed[bind.Value] |= Raylib.IsMouseButtonPressed(bind.Key);
