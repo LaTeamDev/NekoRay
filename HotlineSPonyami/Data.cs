@@ -1,4 +1,5 @@
 
+using NekoLib.Filesystem;
 using NekoRay;
 using ZeroElectric.Vinculum;
 using Font = NekoRay.Font;
@@ -13,10 +14,18 @@ public static class Data
     private static Dictionary<string, Font> _fonts = new();
     private static Dictionary<string, Shader> _shaders = new();
 
+    public static Texture GetNoTexture() {
+        var path = "textures/notexture.png";
+        if (_textures.TryGetValue(path, out var texture))
+            return texture;
+        _textures[path] = Texture.Load(path);
+        return _textures[path];
+    }
+
     public static Texture GetTexture(string path) {
         if (_textures.TryGetValue(path, out var texture))
             return texture;
-        if (!File.Exists(path)) return GetTexture("data/textures/notexture.png");
+        if (!Files.FileExists(path)) return GetNoTexture(); // there was a possible infinite recursion, so i changed it
         _textures[path] = Texture.Load(path);
         return _textures[path];
     }

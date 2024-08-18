@@ -21,6 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\LamoonEngine\Lamoon.Filesystem\Lamoon.Filesystem.csproj" />
       <ProjectReference Include="..\NekoRay.Diagnostics\NekoRay.Diagnostics.csproj" />
       <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
     </ItemGroup>
@@ -53,5 +54,9 @@
       <Reference Include="Box2D.Interop">
         <HintPath>..\..\box2c-sharp\Box2D.Interop\bin\Debug\net7.0\Box2D.Interop.dll</HintPath>
       </Reference>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Remove="test.txt" />
     </ItemGroup>
 </Project>

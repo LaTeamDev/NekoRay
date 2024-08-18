@@ -17,10 +17,10 @@ public class TileRenderer : Behaviour
 
     void Start()
     {
-        _tileAtlas = Data.GetTexture("data/textures/texture_atlas.png");
-        _wallsAtlas = Data.GetTexture("data/textures/walls_atlas.png");
-        _mapShader = Data.GetShader("data/shaders/field_shader.frag", "data/shaders/field_shader.vert");
-        _wallShader = Data.GetShader("data/shaders/wall_shader.frag", "data/shaders/wall_shader.vert");
+        _tileAtlas = Data.GetTexture("textures/texture_atlas.png");
+        _wallsAtlas = Data.GetTexture("textures/walls_atlas.png");
+        _mapShader = Data.GetShader("shaders/field_shader.frag", "shaders/field_shader.vert");
+        _wallShader = Data.GetShader("shaders/wall_shader.frag", "shaders/wall_shader.vert");
     }
     
     void Render()

@@ -19,11 +19,11 @@ public class PlayerController : Behaviour {
     private Sprite _body;
 
     public PlayerController() {
-        _backLegForward = AsepriteLoader.Load("data/textures/entity/player/back_leg_forwad.json").ToAnimation();
-        _frontLegForward = AsepriteLoader.Load("data/textures/entity/player/front_leg_forwad.json").ToAnimation();
-        _backLegRight = AsepriteLoader.Load("data/textures/entity/player/back_leg_forwad.json").ToAnimation();
-        _frontLegRight = AsepriteLoader.Load("data/textures/entity/player/front_leg_forwad.json").ToAnimation();
-        _body = Data.GetSprite("data/textures/entity/player/body.png");
+        _backLegForward = AsepriteLoader.Load("textures/entity/player/back_leg_forwad.json").ToAnimation();
+        _frontLegForward = AsepriteLoader.Load("textures/entity/player/front_leg_forwad.json").ToAnimation();
+        _backLegRight = AsepriteLoader.Load("textures/entity/player/back_leg_forwad.json").ToAnimation();
+        _frontLegRight = AsepriteLoader.Load("textures/entity/player/front_leg_forwad.json").ToAnimation();
+        _body = Data.GetSprite("textures/entity/player/body.png");
     }
 
     void Awake() {

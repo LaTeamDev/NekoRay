@@ -22,6 +22,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\LamoonEngine\Lamoon.Filesystem\Lamoon.Filesystem.csproj" />
       <ProjectReference Include="..\..\NekoLib\NekoLib\NekoLib.csproj" />
       <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
       <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />

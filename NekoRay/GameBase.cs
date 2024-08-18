@@ -1,3 +1,4 @@
+using NekoLib.Filesystem;
 using NekoLib.Scenes;
 using rlImGui_cs;
 using Serilog;
@@ -38,8 +39,11 @@ public abstract class GameBase {
     public Console Console;
 
     public virtual void Load(string[] args) {
-        InitConsole(args.Contains("--console"));
         Console.Register<Input>();
+        InitConsole(args.Contains("--console"));
+        var assemblyFs = new AssemblyFilesystem(GetType().Assembly, GetType().Namespace);
+        assemblyFs.Mount();
+        RaylibNekoLibFilesystemCompat.Use();
     }
 
     public virtual void InitConsole(bool enable) {

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Numerics;
 using ImGuiNET;
+using NekoLib.Filesystem;
 using NekoRay;
 using Tomlyn;
 using Tomlyn.Model;
@@ -14,22 +15,22 @@ public static class UnpackedTextures
 
     private static void Initialize()
     {
-        if (File.Exists("data/textures.toml"))
+        if (Files.FileExists("textures.toml"))
         {
-            TomlTable table = Toml.ToModel(File.ReadAllText("data/textures.toml"));
+            TomlTable table = Toml.ToModel(Files.GetFile("textures.toml").Read());
             TomlArray paths = (TomlArray)table["floor_textures"];
             _floorTextures = new Texture[paths.Count()];
             for (int i = 0; i < paths.Count(); i++)
             {
-                string path = "data/textures/unpacked/floors/" + (string)paths[i];
-                _floorTextures[i] = Texture.Load(path);
+                string path = "textures/unpacked/floors/" + (string)paths[i];
+                _floorTextures[i] = Data.GetTexture(path);
             }
             TomlArray wallPaths = (TomlArray)table["wall_textures"];
             _wallTextures = new Texture[wallPaths.Count()];
             for (int i = 0; i < wallPaths.Count(); i++)
             {
-                string path = "data/textures/unpacked/walls/" + (string)wallPaths[i];
-                _wallTextures[i] = Texture.Load(path);
+                string path = "textures/unpacked/walls/" + (string)wallPaths[i];
+                _wallTextures[i] = Data.GetTexture(path);
             }
         }
         else
@@ -37,9 +38,9 @@ public static class UnpackedTextures
             TomlTable table = new TomlTable();
             table["floor_textures"] = new string[] { "dev_01.png" };
             table["wall_textures"] = new string[] { "dev_wall.png" };
-            File.WriteAllText("data/textures.toml",Toml.FromModel(table));
-            _floorTextures = new Texture[] { Data.GetTexture("data/textures/notexture.png") };
-            _wallTextures = new Texture[] { Data.GetTexture("data/textures/notexture.png") };
+            Files.GetWritableFilesystem().CreateFile("textures.toml").Write(Toml.FromModel(table));
+            _floorTextures = new Texture[] { Data.GetTexture("textures/notexture.png") };
+            _wallTextures = new Texture[] { Data.GetTexture("textures/notexture.png") };
         }
     }
 

@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ImGuiNET;
 using NekoLib.Core;
+using NekoLib.Filesystem;
 using NekoLib.Scenes;
 using Serilog;
 using Serilog.Configuration;
@@ -171,13 +172,12 @@ public class Console : Behaviour {
     [ConCommand("exec")]
     [ConDescription("run commands from thefile")]
     public static void ExecFile(string path) {
-        //TODO: FIXME: handle stuff not in data
-        var systemPath = Path.Combine("data", "cfg", path+".cfg");
-        if (!File.Exists(systemPath)) {
+        var virtualPath = Path.Combine("cfg", path+".cfg");
+        if (!Files.FileExists(virtualPath)) {
             Serilog.Log.Error("No file {Path} found", path);
             return;
         }
-        Submit(string.Join(";", File.ReadAllLines(systemPath)));
+        Submit(Files.GetFile(virtualPath).Read().Replace("\r\n", ";").Replace("\n", ";"));
     }
 
     [ConCommand("toggleconsole")]
@@ -189,6 +189,7 @@ public class Console : Behaviour {
         Instance.Enabled = !Instance.Enabled;
     }
 
+    ///TODO: this will crash if something was registered under the same name
     public static void Register<T>() {
         var methods = typeof(T).GetMethods(BindingFlags.Static | BindingFlags.Public)
             .Where(info => info.GetCustomAttribute<ConCommandAttribute>() is not null);

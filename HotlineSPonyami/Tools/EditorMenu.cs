@@ -58,7 +58,7 @@ public class EditorMenu : EditorWindow
                     Rectangle dest = new Rectangle(i * 32, 0, 32, 32);
                     finalImage.Draw(img, src, dest, Raylib.WHITE);
                 }
-                finalImage.Export("data/textures/texture_atlas.png");
+                finalImage.Export("textures/texture_atlas.png");
                 Image wallsImage = ImageGen.Color(UnpackedTextures.GetAllWallTextures().Count * 48, 48, Raylib.WHITE);
                 for (int i = 0; i < UnpackedTextures.GetAllWallTextures().Count; i++)
                 {
@@ -67,7 +67,7 @@ public class EditorMenu : EditorWindow
                     Rectangle dest1 = new Rectangle(i * 48, 0, 48, 48);
                     wallsImage.Draw(img, src1, dest1, Raylib.WHITE);
                 }
-                wallsImage.Export("data/textures/walls_atlas.png");
+                wallsImage.Export("textures/walls_atlas.png");
             }
 
             if (ImGui.MenuItem("Export Map"))

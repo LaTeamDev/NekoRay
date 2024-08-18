@@ -6,7 +6,7 @@ public class TestEntityTemplate : EntityTemplate
 {
     public TestEntityTemplate()
     {
-        _mainTexture = Data.GetTexture("data/textures/unpacked/floors/dev_floor.png");
+        _mainTexture = Data.GetTexture("textures/unpacked/floors/dev_floor.png");
     }
     
     public override GameObject CreateObject()

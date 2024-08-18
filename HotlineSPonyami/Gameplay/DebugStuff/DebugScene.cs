@@ -23,7 +23,7 @@ public class DebugScene : BaseScene {
         #region Reticle
         var reticle = new GameObject("Reticle").AddComponent<ReticleController>();
         var reticleRenderer = reticle.GameObject.AddComponent<SpriteRenderer2D>();
-        reticleRenderer.Sprite = new Sprite(Data.GetTexture("data/textures/gameui/reticle.png"), new Rectangle(0, 0, 9, 9));
+        reticleRenderer.Sprite = new Sprite(Data.GetTexture("textures/gameui/reticle.png"), new Rectangle(0, 0, 9, 9));
         #endregion
 
         new GameObject("Debug draw").AddComponent<DrawWorld>();

@@ -6,8 +6,10 @@ using Box2D;
 using HotlineSPonyami.Tools;
 using HotlineSPonyami.Interop;
 using HotlineSPonyami.Tools;
+using Lamoon.Filesystem;
 using MessagePack;
 using NekoLib.Core;
+using NekoLib.Filesystem;
 using NekoLib.Scenes;
 using NekoRay;
 using NekoRay.Physics2D;
@@ -49,13 +51,14 @@ public class Game : GameBase {
     }
 
     public override void Load(string[] args) {
-        Console.Register<Input>();
+        new FolderFilesystem("data").Mount();
         Console.Register<EditorScene>();
         Console.Register<Gameplay.Commands>();
         
         DevMode = args.Contains("--tools");
-        base.Load(args);
         
+        base.Load(args);
+
         World.LengthUnitsPerMeter = 64f;
         Physics.DefaultGravity = Vector2.Zero;
         Raylib.SetWindowTitle("Hotline S Ponyami");
@@ -70,7 +73,6 @@ public class Game : GameBase {
     }
 
     public override void Update() {
-        Input.Update();
         base.Update();
     }
 }

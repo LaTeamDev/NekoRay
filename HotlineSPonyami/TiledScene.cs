@@ -21,9 +21,9 @@ public class TiledScene : BaseScene
     
     public TiledScene()
     {
-        _tileAtlas = Data.GetTexture("data/textures/texture_atlas.png");
-        _wallsAtlas = Data.GetTexture("data/textures/walls_atlas.png");
-        _uvTexture = Data.GetTexture("data/test_map.png");
+        _tileAtlas = Data.GetTexture("textures/texture_atlas.png");
+        _wallsAtlas = Data.GetTexture("textures/walls_atlas.png");
+        _uvTexture = Data.GetTexture("test_map.png");
         _tileAtlas.Filter = TextureFilter.TEXTURE_FILTER_POINT;
         _uvTexture.Filter = TextureFilter.TEXTURE_FILTER_POINT;
         _wallsAtlas.Filter = TextureFilter.TEXTURE_FILTER_POINT;
