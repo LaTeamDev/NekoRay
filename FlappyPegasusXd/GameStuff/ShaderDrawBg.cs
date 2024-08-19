@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using NekoLib.Core;
 using ZeroElectric.Vinculum;
-using ZeroElectric.Vinculum.Extensions;
 using Shader = NekoRay.Shader;
 using Texture = NekoRay.Texture;
 using Timer = NekoRay.Timer;

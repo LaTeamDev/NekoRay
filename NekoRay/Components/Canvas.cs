@@ -1,5 +1,3 @@
-using NekoLib.Core;
-
 namespace NekoRay; 
 
 public class Canvas : Behaviour {

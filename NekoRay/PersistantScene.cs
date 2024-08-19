@@ -1,6 +1,4 @@
-﻿using NekoRay;
-
-namespace NekoRay; 
+﻿namespace NekoRay; 
 
 public class PersistantScene : BaseScene {
     public override string Name => "DontDestroyOnLoad";

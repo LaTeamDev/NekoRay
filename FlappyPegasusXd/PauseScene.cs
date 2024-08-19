@@ -1,5 +1,4 @@
 using FlappyPegasus.Gui;
-using NekoLib;
 using NekoLib.Core;
 using NekoLib.Scenes;
 using NekoRay;

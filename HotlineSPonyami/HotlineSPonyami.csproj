@@ -8,7 +8,6 @@
         <RootNamespace>HotlineSPonyami</RootNamespace>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <NekoRayProjectId>pony</NekoRayProjectId>
         <CopyAllData>true</CopyAllData>
     </PropertyGroup>
@@ -16,9 +15,9 @@
     <Import Project="../NekoRay/game.targets" />
 
     <ItemGroup>
-      <ProjectReference Include="..\..\LamoonEngine\Lamoon.Filesystem\Lamoon.Filesystem.csproj" />
-      <ProjectReference Include="..\NekoRay.Diagnostics\NekoRay.Diagnostics.csproj" />
-      <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
+        <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
+        <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
+        <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
     </ItemGroup>
     
     <ItemGroup>
@@ -26,22 +25,5 @@
       <PackageReference Include="Serilog" Version="4.0.1" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
       <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <None Include="pony\shaders\field_shader.frag" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Reference Include="Box2CSharp">
-        <HintPath>..\..\box2c-sharp\Box2D\bin\Debug\net7.0\Box2CSharp.dll</HintPath>
-      </Reference>
-      <Reference Include="Box2D.Interop">
-        <HintPath>..\..\box2c-sharp\Box2D.Interop\bin\Debug\net7.0\Box2D.Interop.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <None Remove="test.txt" />
     </ItemGroup>
 </Project>

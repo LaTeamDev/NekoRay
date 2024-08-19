@@ -1,18 +1,12 @@
 ﻿using System.Numerics;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using ImGuiNET;
-using NekoLib.Core;
 using NekoLib.Filesystem;
-using NekoLib.Scenes;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
-using ZeroElectric.Vinculum;
-using Shader = NekoRay.Shader;
-using Texture = NekoRay.Texture;
 
 namespace NekoRay.Tools; 
 

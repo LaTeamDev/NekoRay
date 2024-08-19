@@ -1,4 +1,3 @@
-using System.Numerics;
 using ZeroElectric.Vinculum;
 using Texture = NekoRay.Texture;
 

@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using Box2D.Interop;
 
 namespace NekoRay.Physics2D; 
 

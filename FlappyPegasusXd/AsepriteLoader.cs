@@ -1,7 +1,5 @@
 using System.Text.Json;
 using NekoRay;
-using System.Numerics;
-using System.Text.Json.Serialization;
 using ZeroElectric.Vinculum;
 
 namespace FlappyPegasus; 

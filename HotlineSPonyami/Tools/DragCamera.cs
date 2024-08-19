@@ -2,7 +2,6 @@ using System.Numerics;
 using NekoLib.Core;
 using NekoRay;
 using ZeroElectric.Vinculum;
-using Timer = NekoRay.Timer;
 
 namespace HotlineSPonyami.Tools;
 

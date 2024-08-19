@@ -1,12 +1,10 @@
 using System.Numerics;
-using HotlineSPonyami.Tools;
 using NekoLib.Core;
 using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
 using Image = NekoRay.Image;
-using Shader = NekoRay.Shader;
 using Texture = NekoRay.Texture;
 
 namespace HotlineSPonyami;

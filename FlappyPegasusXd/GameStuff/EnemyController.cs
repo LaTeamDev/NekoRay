@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Numerics;
-using NekoLib.Core;
+﻿using NekoLib.Core;
 using NekoRay.Physics2D;
 using Timer = NekoRay.Timer;
 

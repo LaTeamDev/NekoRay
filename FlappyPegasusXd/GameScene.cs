@@ -9,7 +9,6 @@ using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
-using Shader = NekoRay.Shader;
 using Timer = NekoRay.Timer;
 
 namespace FlappyPegasus; 

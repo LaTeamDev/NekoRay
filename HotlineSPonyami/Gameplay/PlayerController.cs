@@ -6,7 +6,6 @@ using NekoLib.Core;
 using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
-using Timer = NekoRay.Timer;
 
 namespace HotlineSPonyami.Gameplay; 
 

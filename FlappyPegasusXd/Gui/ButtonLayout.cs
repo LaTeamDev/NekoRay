@@ -1,4 +1,3 @@
-using System.Numerics;
 using NekoLib.Core;
 
 namespace FlappyPegasus.Gui; 

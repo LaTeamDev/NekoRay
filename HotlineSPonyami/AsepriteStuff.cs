@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace HotlineSPonyami; 
+﻿namespace HotlineSPonyami; 
 
 public class AsepriteAnimationFrame {
     public class Rect {

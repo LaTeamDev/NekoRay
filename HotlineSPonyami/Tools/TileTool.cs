@@ -1,5 +1,3 @@
-using System.Numerics;
-using ImGuiNET;
 using ZeroElectric.Vinculum;
 using Texture = NekoRay.Texture;
 

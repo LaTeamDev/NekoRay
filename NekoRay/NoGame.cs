@@ -1,5 +1,3 @@
-using ZeroElectric.Vinculum;
-
 namespace NekoRay; 
 
 public class NoGame : GameBase {

@@ -1,15 +1,11 @@
 using System.Numerics;
 using FlappyPegasus.GameStuff;
 using FlappyPegasus.Gui;
-using MessagePack;
 using NekoLib.Core;
 using NekoLib.Scenes;
 using NekoRay;
-using NekoRay.Diagnostics.Model;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
-using Font = NekoRay.Font;
-using Music = NekoRay.Music;
 
 namespace FlappyPegasus; 
 
@@ -97,13 +93,12 @@ public class MenuScene : BaseScene {
 
         layout.Calculate();
         
+        //TODO: Fix Audio (use openal instead?)
         //var audio = new GameObject("Level Music").AddComponent<AudioPlayer>();
         //audio.AudioClip = Music.Load("TownTheme.mp3");
         //audio.Loop = true;
         //audio.Play();
         
         base.Initialize();
-        var bin = MessagePackSerializer.Serialize(new SerializedScene(SceneManager.ActiveScene));
-        File.WriteAllBytes("test.bin", bin);
     }
 }

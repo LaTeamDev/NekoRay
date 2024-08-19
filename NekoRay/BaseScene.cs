@@ -1,9 +1,4 @@
 using System.Numerics;
-using ImGuiNET;
-using NekoLib.Core;
-using NekoLib.Scenes;
-using rlImGui_cs;
-using ZeroElectric.Vinculum;
 
 namespace NekoRay; 
 

@@ -1,5 +1,4 @@
 using System.Numerics;
-using ZeroElectric.Vinculum;
 using ZeroElectric.Vinculum.Extensions;
 
 namespace NekoRay; 

@@ -1,13 +1,8 @@
 using System.Numerics;
-using Microsoft.VisualBasic;
 using NekoLib.Core;
 using NekoLib.Scenes;
-using NekoLib;
 using ZeroElectric.Vinculum;
 using NekoRay;
-using Image = NekoRay.Image;
-using RenderTexture = NekoRay.RenderTexture;
-using Texture = NekoRay.Texture;
 
 namespace FlappyPegasus; 
 

@@ -1,8 +1,5 @@
-﻿using System.Numerics;
-using System.Reflection;
-using Box2D;
+﻿using Box2D;
 using HotlineSPonyami.Gameplay.DebugStuff;
-using HotlineSPonyami.Tools;
 using NekoLib;
 using NekoLib.Core;
 using NekoLib.Scenes;

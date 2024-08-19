@@ -1,10 +1,8 @@
 ﻿using Box2D;
 using ImGuiNET;
 using NekoLib.Core;
-using NekoLib.Scenes;
 using NekoRay;
 using NekoRay.Physics2D;
-using Serilog;
 using ZeroElectric.Vinculum;
 
 namespace HotlineSPonyami.Gameplay; 

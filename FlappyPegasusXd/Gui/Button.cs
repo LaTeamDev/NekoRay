@@ -1,5 +1,4 @@
 using NekoLib.Core;
-using NekoLib.Scenes;
 using ZeroElectric.Vinculum;
 
 namespace FlappyPegasus.Gui; 
