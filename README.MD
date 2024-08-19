@@ -70,8 +70,8 @@ also autoexec.cfg is launched automaticly (great place to handle user binds)
 #### Custom console command
 ```csharp
 public class Commands { //NOTE: it does not need to be it's own class, but it NEEDS to be a non static one
-    [ConsoleCommand("console_name")]
-    [ConsoleDescription("Description text to show in help")]
+    [ConCommand("console_name")]
+    [ConDescription("Description text to show in help")]
     public static void SampleCommand(string arg1, int arg2) {
     }
 }

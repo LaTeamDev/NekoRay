@@ -1,7 +1,10 @@
-﻿using System.Numerics;
+﻿using System.ComponentModel;
+using System.Numerics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using ImGuiNET;
+using JetBrains.Annotations;
 using NekoLib.Filesystem;
 using Serilog;
 using Serilog.Configuration;
@@ -33,6 +36,7 @@ public class Console : Behaviour {
 
     private string _inputBuffer = "";
     private static Dictionary<string, MethodInfo> _commands = new();
+    private static Dictionary<string, PropertyInfo> _convars = new();
 
     void DrawGui() {
         var opened = Enabled;
@@ -86,37 +90,87 @@ public class Console : Behaviour {
             if (args.Count <= 0) continue;
             var commandName = args[0];
             args.RemoveAt(0);
+            if (_convars.ContainsKey(commandName)) {
+                if (args.Count <= 0) {
+                    PrintVariable(commandName);
+                    return;
+                }
+                SubmitVariable(commandName, args[0]);
+                return;
+            }
             SubmitCommand(commandName, args.Cast<object>().ToArray());
         }
     }
 
+    public static void PrintVariable(string variable) {
+        if (!_convars.TryGetValue(variable, out var value)) {
+            Serilog.Log.Error("Unknown variable {Variable}", variable);
+            return;
+        }
+        if (value.GetMethod is null) {
+            Serilog.Log.Error("{Variable} does not have getter", variable);
+            return;
+        }
+        Serilog.Log.Information("{Variable} is set to {Value}", 
+            variable, 
+            value.GetValue(null));
+    }
+
+    public static void SubmitVariable(string variable, object? arg) {
+        if (!_convars.TryGetValue(variable, out var convar)) {
+            Serilog.Log.Error("Unknown variable {Variable}", variable);
+            return;
+        }
+        if (convar.SetMethod is null) {
+            Serilog.Log.Error("{Variable} does not have setter", variable);
+            return;
+        }
+        arg = ConvertValue(arg, convar.PropertyType);
+        convar.SetValue(null, arg);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static object? ConvertValue(object? obj, Type type) {
+        ArgumentNullException.ThrowIfNull(type);
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            if (obj is null)
+                return null;
+            type = new NullableConverter(type).UnderlyingType;
+        }
+        return Convert.ChangeType(obj, type);
+    }
+
     public static void SubmitCommand(string command, params object?[]? args) {
-        if (!_commands.ContainsKey(command)) {
+        if (!_commands.TryGetValue(command, out var conCommand)) {
             Serilog.Log.Error("Unknown command {CommandName}", command);
             return;
         }
-        if (args is null) _commands[command].Invoke(null, args);
-        var param = _commands[command].GetParameters();
+
+        var argList = (args??Array.Empty<object?>()).ToList();
+        var param = conCommand.GetParameters();
+        if (argList.Count > param.Length) {
+            Serilog.Log.Error("Parameter count mismatch in {CommandName}. Too Many Arguments", command);
+            return;
+        }
         for (var index = 0; index < param.Length; index++) {
             var parameter = param[index];
-            if (args.Length <= index) {
-                Serilog.Log.Error("Parameter count mismatch in {CommandName}", command);
+            if (index >= argList.Count) {
+                if (parameter.IsOptional) {
+                    argList.Add(parameter.DefaultValue);
+                    continue;
+                }
+                Serilog.Log.Error("Parameter count mismatch in {CommandName}. Missing {Parameter}", command, parameter);
                 return;
             }
-            if (parameter.ParameterType == args[index].GetType()) continue;
-            if (args[index].GetType() != typeof(string)) continue;
-            var parseMethod = parameter.ParameterType.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static);
-            if (parseMethod is null)
-                throw new ArgumentException("the type is wrong and i cant parse it", parameter.Name);
-            args[index] = parseMethod.Invoke(null, new object?[] { args[index]});
+            argList[index] = ConvertValue(argList[index], parameter.ParameterType);
         }
 
-        _commands[command].Invoke(null, args);
+        conCommand.Invoke(null, argList.ToArray());
     }
 
     [ConCommand("echo")]
     [ConDescription("prints text in the console")]
-    //TODO: Support params
     public static void Echo(string meow) {
         Serilog.Log.Information(meow);
     }
@@ -130,12 +184,25 @@ public class Console : Behaviour {
         Serilog.Log.Information("{0}", hehe);
     }
     
+    [ConVariable("test_variable")]
+    public static bool TestVariable { get; set; }
+    
     [ConCommand("help")]
     [ConDescription("List all available commands and it's description")]
     public static void Help() {
         var list = "Available commands: ";
         foreach (var command in _commands) {
-            list += "\n" + command.Key + " - ";
+            list += "\n" + command.Key + "(";
+            var parameters = command.Value.GetParameters();
+            for (var index = 0; index < parameters.Length; index++) {
+                var parameter = parameters[index];
+                var notLast = (index + 1 < parameters.Length);
+                list += $"{parameter.ParameterType} {parameter.Name}";
+                if (parameter.IsOptional) list += $" = {parameter.DefaultValue}";
+                if (notLast) list += ", ";
+            }
+            
+            list += ")\n\t";
             var desc = command.Value.GetCustomAttribute<ConDescriptionAttribute>();
             if (desc is not null) 
                 list += desc.Description;
@@ -191,6 +258,13 @@ public class Console : Behaviour {
             var conComName = method.GetCustomAttribute<ConCommandAttribute>()!.Name;
             _commands.Add(conComName, method);
         }
+        
+        var properties = typeof(T).GetProperties(BindingFlags.Static | BindingFlags.Public)
+            .Where(info => info.GetCustomAttribute<ConVariableAttribute>() is not null);
+        foreach (var property in properties) {
+            var conComName = property.GetCustomAttribute<ConVariableAttribute>()!.Name;
+            _convars.Add(conComName, property);
+        }
     }
 }
 
@@ -204,7 +278,17 @@ public class ConCommandAttribute : Attribute {
     }
 }
 
-[AttributeUsage(AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.Property)]
+public class ConVariableAttribute : Attribute {
+    private string _name;
+    public string Name => _name;
+
+    public ConVariableAttribute(string name) {
+        _name = name;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Parameter)]
 public class ConDescriptionAttribute : Attribute {
     private string _description;
     public string Description => _description;
