@@ -1,6 +1,0 @@
-identity = "pony"
-width = 1024
-height = 576
-
-[window]
-resizable = true

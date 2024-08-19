@@ -51,7 +51,6 @@ public class Game : GameBase {
     }
 
     public override void Load(string[] args) {
-        new FolderFilesystem("data").Mount();
         Console.Register<EditorScene>();
         Console.Register<Gameplay.Commands>();
         

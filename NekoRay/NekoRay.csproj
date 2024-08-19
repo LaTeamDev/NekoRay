@@ -8,19 +8,18 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Company>VanderCat</Company>
         <Product>NekoRay Silly Engine</Product>
-        <AssemblyVersion>1.1</AssemblyVersion>
+        <AssemblyVersion>2.0</AssemblyVersion>
         <LangVersion>default</LangVersion>
         <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
+        <NekoRayDefaultGameId>default</NekoRayDefaultGameId>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>../bin/Debug/</OutputPath>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>../bin/Release/</OutputPath>
-    </PropertyGroup>
-
+    <ItemGroup> 
+        <AssemblyAttribute Include="NekoRay.DefaultGameIdAttribute">
+            <_Parameter1>$(NekoRayDefaultGameId)</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+    
     <ItemGroup>
       <ProjectReference Include="..\..\LamoonEngine\Lamoon.Filesystem\Lamoon.Filesystem.csproj" />
       <ProjectReference Include="..\..\NekoLib\NekoLib\NekoLib.csproj" />
@@ -40,7 +39,6 @@
 
     <ItemGroup>
       <None Remove="default.conf.toml" />
-      <EmbeddedResource Include="default.conf.toml" />
       <None Remove="licenses.txt" />
       <EmbeddedResource Include="licenses.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

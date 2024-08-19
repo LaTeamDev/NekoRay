@@ -5,35 +5,20 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AssemblyName>pony</AssemblyName>
         <RootNamespace>HotlineSPonyami</RootNamespace>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <NekoRayProjectId>pony</NekoRayProjectId>
+        <CopyAllData>true</CopyAllData>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>../bin/Debug/</OutputPath>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>../bin/Release/</OutputPath>
-    </PropertyGroup>
+    
+    <Import Project="../NekoRay/game.targets" />
 
     <ItemGroup>
       <ProjectReference Include="..\..\LamoonEngine\Lamoon.Filesystem\Lamoon.Filesystem.csproj" />
       <ProjectReference Include="..\NekoRay.Diagnostics\NekoRay.Diagnostics.csproj" />
       <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="data\**" CopyToOutputDirectory="PreserveNewest" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="pony.conf.toml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
     
     <ItemGroup>
@@ -44,7 +29,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <None Include="data\shaders\field_shader.frag" />
+      <None Include="pony\shaders\field_shader.frag" />
     </ItemGroup>
     
     <ItemGroup>

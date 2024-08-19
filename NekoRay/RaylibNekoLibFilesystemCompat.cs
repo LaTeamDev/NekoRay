@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 using NekoLib.Filesystem;
 using Serilog;
 using ZeroElectric.Vinculum.Extensions;
@@ -86,7 +87,8 @@ public static class RaylibNekoLibFilesystemCompat {
             Log.Error("Failed to read text file {File}", filepath);
             return text;
         }
-        text = str.MarshalUtf8().AsPtr();
+
+        text = (sbyte*)Marshal.StringToCoTaskMemUTF8(str);
 
         if (text is null)
         {

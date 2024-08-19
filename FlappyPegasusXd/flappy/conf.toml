@@ -1,0 +1,9 @@
+name = "Flappy Pegasus Xd"
+
+[meta]
+developers = ["VanderCat"]
+website = "https://github.com/LaTeamDev/NekoRay"
+
+[filesystem]
+bin = ["{{this}}/bin/"]
+mount = ["{{this}}", "{{this}}/custom/*"]

@@ -15,7 +15,7 @@ public class ShaderDrawBg : Behaviour {
     
     
     void Awake() {
-        Shader = Data.GetShader("Data/shader/movetexture.frag");
+        Shader = Data.GetShader("shader/movetexture.frag");
         Shader.SetVector2("direction", -Vector2.UnitX);
     }
 

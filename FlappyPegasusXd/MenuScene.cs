@@ -23,8 +23,8 @@ public class MenuScene : BaseScene {
         camera.BackgroundColor = new Color(203, 219, 252, 255);
         var textObject = new GameObject("Text");
         var text = textObject.AddComponent<ShadowedText>();
-        text.Font = Data.GetFont("Data/texture/scorefont.png", "0123456789xm.");
-        text.ShadowFont = Data.GetFont("Data/texture/scorefont_s.png", "0123456789xm.");
+        text.Font = Data.GetFont("texture/scorefont.png", "0123456789xm.");
+        text.ShadowFont = Data.GetFont("texture/scorefont_s.png", "0123456789xm.");
         text.TextString = SaveData.BestScore+"m";
         text.ShadowColor = Raylib.BLACK;
         textObject.Transform.LocalScale = new Vector3(2f, 2f, 0f);
@@ -35,26 +35,26 @@ public class MenuScene : BaseScene {
         background.Transform.Position = new Vector3(-256f, -144f, 0f);
         
         var cloudsB = background.AddChild("CloudsB").AddComponent<ShaderDrawBg>();
-        cloudsB.Texture = Data.GetTexture("Data/texture/clouds2.png");
+        cloudsB.Texture = Data.GetTexture("texture/clouds2.png");
         cloudsB.Transform.LocalPosition = new Vector3(0f, 32f, 0f);
 
         var cloudsA = background.AddChild("CloudsA").AddComponent<ShaderDrawBg>();
-        cloudsA.Texture = Data.GetTexture("Data/texture/clouds1.png");
+        cloudsA.Texture = Data.GetTexture("texture/clouds1.png");
         
         var groundA = background.AddChild("GroundA").AddComponent<ShaderDrawBg>();
-        groundA.Texture = Data.GetTexture("Data/texture/Mountains_A.png");
+        groundA.Texture = Data.GetTexture("texture/Mountains_A.png");
         groundA.Transform.LocalPosition = new Vector3(0f, 288f - groundA.Texture.Height - 16f, 0f);
         
         var groundB = background.AddChild("GroundB").AddComponent<ShaderDrawBg>();
-        groundB.Texture = Data.GetTexture("Data/texture/Mountains_B.png");
+        groundB.Texture = Data.GetTexture("texture/Mountains_B.png");
         groundB.Transform.LocalPosition = new Vector3(0f, 288f - groundB.Texture.Height, 0f);
         
         var groundC = background.AddChild("GroundC").AddComponent<ShaderDrawBg>();
-        groundC.Texture = Data.GetTexture("Data/texture/Tree_A.png");
+        groundC.Texture = Data.GetTexture("texture/Tree_A.png");
         groundC.Transform.LocalPosition = new Vector3(0f, 288f - groundC.Texture.Height, 0f);
         
         var groundD = background.AddChild("GroundC").AddComponent<ShaderDrawBg>();
-        groundD.Texture = Data.GetTexture("Data/texture/Ground_A.png");
+        groundD.Texture = Data.GetTexture("texture/Ground_A.png");
         groundD.Transform.LocalPosition = new Vector3(0f, 288f - groundD.Texture.Height, 0f);
         
         cloudsA.Speed = 2f;
@@ -66,7 +66,7 @@ public class MenuScene : BaseScene {
         #endregion
 
         var logo = new GameObject("Logo").AddComponent<SpriteRenderer2D>();
-        logo.Sprite = Data.GetSprite("Data/texture/logo.png");
+        logo.Sprite = Data.GetSprite("texture/logo.png");
         logo.Transform.Position = new Vector3(240f, -144f + 32f, 0f);
         logo.Origin = new Vector2(1f, 0f);
 
@@ -97,10 +97,10 @@ public class MenuScene : BaseScene {
 
         layout.Calculate();
         
-        var audio = new GameObject("Level Music").AddComponent<AudioPlayer>();
-        audio.AudioClip = Music.Load("Data/TownTheme.mp3");
-        audio.Loop = true;
-        audio.Play();
+        //var audio = new GameObject("Level Music").AddComponent<AudioPlayer>();
+        //audio.AudioClip = Music.Load("TownTheme.mp3");
+        //audio.Loop = true;
+        //audio.Play();
         
         base.Initialize();
         var bin = MessagePackSerializer.Serialize(new SerializedScene(SceneManager.ActiveScene));
