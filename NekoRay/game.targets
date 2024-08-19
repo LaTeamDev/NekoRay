@@ -1,0 +1,31 @@
+﻿<Project>
+    <PropertyGroup>
+        <AssemblyName>client</AssemblyName> <!--TODO: add support for server-->
+        <CopyLocalLockFileAssemblies Condition="'$(NekoRayProjectId)' != ''">true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(NekoRayProjectId)' != ''">
+        <ProjectReference Include="..\..\Lamoon.Engine\Lamoon.Engine.csproj" />
+        <None 
+                Update="$(NekoRayProjectId)\**"  
+                CopyToOutputDirectory="PreserveNewest"
+                Condition="'$(CopyAllData)' == 'true'"
+        />
+    </ItemGroup>
+
+    <Target Name="SetupDirAfterBuild" AfterTargets="Build" Condition="'$(NekoRayProjectId)' != ''">
+        <ItemGroup>
+            <_BinItems Include="$(OutDir)\client.dll" /> <!--TODO: add support for server-->
+        </ItemGroup>
+        <Move SourceFiles="@(_BinItems)" DestinationFolder="$(OutDir)\$(NekoRayProjectId)\bin\" />
+        <ItemGroup>
+            <_DllItems Include="$(OutDir)\*.dll" />
+            <_DllItems Include="$(OutDir)\*.pdb" />
+        </ItemGroup>
+        <Move SourceFiles="@(_DllItems)" DestinationFolder="$(OutDir)\bin\" />
+        <ItemGroup>
+            <_EngineItems Include="$(OutDir)\bin\NekoRay.dll" />
+        </ItemGroup>
+        <Move SourceFiles="@(_EngineItems)" DestinationFolder="$(OutDir)\" />
+    </Target>
+</Project>

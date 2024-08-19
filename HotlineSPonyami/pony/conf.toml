@@ -1,0 +1,9 @@
+name = "Hotline Ponyami"
+
+[meta]
+developers = ["VanderCat", "Mr.Yabloko"]
+website = "https://github.com/LaTeamDev/NekoRay"
+
+[filesystem]
+bin = ["{{this}}/bin/"]
+mount = ["{{this}}", "{{this}}/custom/*"]

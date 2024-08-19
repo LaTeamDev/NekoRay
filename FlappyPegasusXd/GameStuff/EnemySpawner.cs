@@ -18,8 +18,8 @@ public class EnemySpawner : Behaviour {
     private List<AnimationFrame[]> EnemyAnimations = new();
 
     void Awake() {
-        EnemyAnimations.Add(AsepriteLoader.Load("Data/texture/T228.json"));
-        EnemyAnimations.Add(AsepriteLoader.Load("Data/texture/bladhead.json"));
+        EnemyAnimations.Add(AsepriteLoader.Load("texture/T228.json"));
+        EnemyAnimations.Add(AsepriteLoader.Load("texture/bladhead.json"));
     }
     
     void Spawn() {

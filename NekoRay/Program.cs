@@ -1,63 +1,39 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using Tomlyn;
+﻿using System.Reflection;
 
-namespace NekoRay;
+namespace NekoRay; 
 
-public static class Program {
+public class Program {
     private static bool _shouldQuit = false;
     public static bool ShouldQuit => _shouldQuit;
     public static void Quit() => _shouldQuit = true;
     
-    private static NekoRayConf ReadConf(string id = "default") {
-        Stream fileStream;
-        if (File.Exists($"./{id}.conf.toml"))
-            fileStream = new FileStream($"./{id}.conf.toml", FileMode.Open, FileAccess.Read);
-        else
-            fileStream = Assembly.GetAssembly(typeof(Program)).GetManifestResourceStream("NekoRay.default.conf.toml");
-        var streamReader = new StreamReader(fileStream);
-        return Toml.ToModel<NekoRayConf>(streamReader.ReadToEnd());
-    }
-
-    private static GameBase GetGame(string Identity) {
-        GameBase gameBase;
-        if (!File.Exists(Identity + ".dll")) return new NoGame();
-        var gameDll = Assembly.LoadFrom(Identity+".dll");
-        var gameType = gameDll.GetTypes().FirstOrDefault(type => typeof(GameBase).IsAssignableFrom(type));
-        if (gameType is null)
-            gameBase = new NoGame();
-        else
-            gameBase = (GameBase)Activator.CreateInstance(gameType);
-        return gameBase;
-    }
+    public static string GamePath { get; set; }
+	
+    public static string DllPath { get; set; }
+	
     
-    [DebuggerStepThrough]
-    public static int Main(string[] args) {
-        Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-        var gameId = "default";
-        for (int i = 0; i < args.Length; i++) {
-            if (args[i] != "-game") continue;
-            gameId = args[i + 1];
-            break;
-        }
-        var conf = ReadConf(gameId);
-        var game = GetGame(conf.Identity);
-        Raylib.SetWindowState(conf.GetFlags());
-        Raylib.InitWindow(conf.Width, conf.Height, "NekoRay");
-        try {
-            var loopFunction = game.Run(args);
-            while (!(Raylib.WindowShouldClose() || _shouldQuit)) {
-                loopFunction();
-            }
-            game.Shutdown();
-        }
-        catch (Exception e) when (!Debugger.IsAttached){
-            var loopFunction = game.ErrorHandler(e);
-            while (!(Raylib.WindowShouldClose() || _shouldQuit)) {
-                loopFunction();
-            }
-        }
-        Raylib.CloseWindow();
-        return 0;
+    public static void Init()
+    {
+        AppDomain currentDomain = AppDomain.CurrentDomain;
+        currentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        GamePath = Path.GetDirectoryName(Environment.ProcessPath);
+        DllPath = Path.Join(GamePath, "\\bin\\");
+        Environment.CurrentDirectory = GamePath;
+        var path = Environment.GetEnvironmentVariable("PATH");
+        path = DllPath + ";" + path;
+        Environment.SetEnvironmentVariable("PATH", path);
+    }
+	
+    private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+    {
+        var name = args.Name.Split(',')[0];
+        var path = DllPath + "\\" + name + ".dll";
+        if (!File.Exists(path)) return null;
+        return Assembly.LoadFrom(path);
+    }
+		
+    public static void Main(string[] args) {
+        Init();
+        Bootstrapper.Start(args);
     }
 }
