@@ -21,7 +21,6 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\..\LamoonEngine\Lamoon.Filesystem\Lamoon.Filesystem.csproj" />
       <ProjectReference Include="..\..\NekoLib\NekoLib\NekoLib.csproj" />
       <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
       <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
@@ -30,6 +29,7 @@
 
     <ItemGroup>
       <PackageReference Include="ImGui.NET" Version="1.90.9.1" />
+      <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
       <PackageReference Include="Raylib-CSharp-Vinculum" Version="5.0.1" />
       <PackageReference Include="Serilog" Version="4.0.1" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
