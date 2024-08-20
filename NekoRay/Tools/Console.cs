@@ -33,6 +33,7 @@ public class Console : Behaviour {
     private string _inputBuffer = "";
     private static Dictionary<string, MethodInfo> _commands = new();
     private static Dictionary<string, PropertyInfo> _convars = new();
+    private static Dictionary<string, MethodInfo> _tagHandlers = new();
 
     void DrawGui() {
         var opened = Enabled;
@@ -117,6 +118,19 @@ public class Console : Behaviour {
             Serilog.Log.Error("Unknown variable {Variable}", variable);
             return;
         }
+        
+        List<string> commandTags = new();
+        if (Attribute.IsDefined(convar, typeof(ConTagsAttribute))) {
+            commandTags = convar.GetCustomAttribute<ConTagsAttribute>()!.Tags;
+        }
+
+        foreach (var tag in commandTags) {
+            if (!_tagHandlers.TryGetValue(tag, out var tagHandler)) continue;
+            if (!(bool) (tagHandler.Invoke(null, null) ?? true)) {
+                return;
+            }
+        }
+        
         if (convar.SetMethod is null) {
             Serilog.Log.Error("{Variable} does not have setter", variable);
             return;
@@ -146,6 +160,17 @@ public class Console : Behaviour {
             return;
         }
 
+        List<string> commandTags = new();
+        if (Attribute.IsDefined(conCommand, typeof(ConTagsAttribute))) {
+            commandTags = conCommand.GetCustomAttribute<ConTagsAttribute>()!.Tags;
+        }
+
+        foreach (var tag in commandTags) {
+            if (!_tagHandlers.TryGetValue(tag, out var tagHandler)) continue;
+            if (!(bool) (tagHandler.Invoke(null, null) ?? true)) {
+                return;
+            }
+        }
         var argList = (args??Array.Empty<object?>()).ToList();
         var param = conCommand.GetParameters();
         for (var index = 0; index < param.Length; index++) {
@@ -185,7 +210,7 @@ public class Console : Behaviour {
     
     [ConCommand("test_cmd")]
     [ConDescription("meow")]
-    //TODO: Support params
+    [ConTags("test")]
     public static void TestCommand(string meow, float wow = 12f, int hehe = 33, params string[]? columnthree) {
         Serilog.Log.Information(meow);
         Serilog.Log.Information("{0}", wow);
@@ -196,6 +221,7 @@ public class Console : Behaviour {
     }
     
     [ConVariable("test_variable")]
+    [ConTags("test")]
     public static bool TestVariable { get; set; }
     
     [ConCommand("help")]
@@ -260,21 +286,53 @@ public class Console : Behaviour {
         }
         Instance.Enabled = !Instance.Enabled;
     }
+    public static bool CheatsWasEnabled { get; private set; }
+    private static bool _cheatsEnabled;
+
+    [ConVariable("sv_cheats")]
+    [ConDescription("Enable cheats")]
+    public static bool CheatsEnabled {
+        get => _cheatsEnabled;
+        set {
+            CheatsWasEnabled = value || CheatsWasEnabled;
+            _cheatsEnabled = value;
+        }
+    }
+    
+    [ConVariable("test_cheatvar")]
+    [ConTags("cheat", "test")]
+    public static bool TestCheatVar { get; set; }
+
+    [ConCommand("test_cheat")]
+    [ConTags("cheat", "test")]
+    public static void TestCheat() {
+        Echo("cheat :3");
+    }
+
+    [ConTagHandler("cheat")]
+    public static bool HandleCheat() => CheatsEnabled;
 
     ///TODO: this will crash if something was registered under the same name
     public static void Register<T>() {
         var methods = typeof(T).GetMethods(BindingFlags.Static | BindingFlags.Public)
-            .Where(info => info.GetCustomAttribute<ConCommandAttribute>() is not null);
+            .Where(info => Attribute.IsDefined(info, typeof(ConCommandAttribute)));
         foreach (var method in methods) {
             var conComName = method.GetCustomAttribute<ConCommandAttribute>()!.Name;
             _commands.Add(conComName, method);
         }
         
         var properties = typeof(T).GetProperties(BindingFlags.Static | BindingFlags.Public)
-            .Where(info => info.GetCustomAttribute<ConVariableAttribute>() is not null);
+            .Where(info => Attribute.IsDefined(info, typeof(ConVariableAttribute)));
         foreach (var property in properties) {
-            var conComName = property.GetCustomAttribute<ConVariableAttribute>()!.Name;
-            _convars.Add(conComName, property);
+            var conVarName = property.GetCustomAttribute<ConVariableAttribute>()!.Name;
+            _convars.Add(conVarName, property);
+        }
+        
+        var tagHandlers = typeof(T).GetMethods(BindingFlags.Static | BindingFlags.Public)
+            .Where(info => Attribute.IsDefined(info, typeof(ConTagHandlerAttribute)));
+        foreach (var tagHandler in tagHandlers) {
+            var contag = tagHandler.GetCustomAttribute<ConTagHandlerAttribute>()!.Tag;
+            _tagHandlers.Add(contag, tagHandler);
         }
     }
 }
