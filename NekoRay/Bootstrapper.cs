@@ -79,12 +79,14 @@ public static class Bootstrapper {
             var conf = ReadConf(gameId);
             MountPaths(conf, gameId);
             game = GetGame(conf.Filesystem.Bin, gameId);
+            game.Initlogging();
             Raylib.SetWindowState(WindowSettings.Instance.GetFlags());
             Raylib.InitWindow(WindowSettings.Instance.Width, WindowSettings.Instance.Height, conf.Name);
         }
         catch (Exception e) {
             Console.WriteLine("Abort loading game due to {0}", e);
             game = new NoGame();
+            game.Initlogging();
             Raylib.InitWindow(800, 600, "NekoRay");
         }
        

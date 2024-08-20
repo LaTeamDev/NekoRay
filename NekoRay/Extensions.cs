@@ -26,4 +26,7 @@ public static class Extensions {
             dictionary.Remove(kv.Key);
         }
     }
+
+    public static bool IsNullable(this Type type) =>
+        type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 }

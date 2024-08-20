@@ -29,7 +29,7 @@ public class WindowSettings {
         }
         catch (Exception e) {
             Log.Error("Failed to save video settings");
-            Log.Verbose("{Exception}", e);
+            Log.Verbose(e, "Failed to save video settings");
             throw;
         }
     }

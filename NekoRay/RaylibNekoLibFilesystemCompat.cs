@@ -113,7 +113,7 @@ public static class RaylibNekoLibFilesystemCompat {
             Files.GetWritableFilesystem().CreateFile(filepath).Write(data.ToArray());
         }
         catch (Exception e) {
-            Log.Error("Failed to write file with an exception {Exception}", e);
+            Log.Error(e, "Failed to write file with an exception");
             return false;
         }
         Log.Information("File {File} was written to successfully", filepath);
@@ -137,7 +137,7 @@ public static class RaylibNekoLibFilesystemCompat {
             if (text is not null) file.Write(text);
         }
         catch (Exception e) {
-            Log.Error("Failed to write file with an exception {Exception}", e);
+            Log.Error(e, "Failed to write file with an exception");
             return false;
         }
         Log.Information("File {File} was written to successfully", filepath);

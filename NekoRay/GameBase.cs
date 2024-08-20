@@ -78,7 +78,6 @@ public abstract class GameBase {
     public delegate void LoopFunction();
 
     public virtual LoopFunction Run(string[] args) {
-        Initlogging();
         Raylib.InitAudioDevice();
         rlImGui.Setup();
         Load(args);
@@ -108,7 +107,7 @@ public abstract class GameBase {
 
     public virtual LoopFunction ErrorHandler(Exception msg) {
         var error = msg.ToString();
-        Log.Fatal(error);
+        Log.Fatal(msg, "An error occured");
 
         void Draw() {
             Raylib.ClearBackground(Raylib.RAYWHITE);

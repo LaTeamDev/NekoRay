@@ -1,15 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System.Collections;
+using System.ComponentModel;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using ImGuiNET;
-using JetBrains.Annotations;
 using NekoLib.Filesystem;
-using Serilog;
-using Serilog.Configuration;
-using Serilog.Core;
-using Serilog.Events;
 
 namespace NekoRay.Tools; 
 
@@ -76,7 +72,7 @@ public class Console : Behaviour {
             Submit(_inputBuffer);
         }
         catch (Exception e) {
-            Serilog.Log.Error("Command failed with error {Exception}", e.ToString());
+            Serilog.Log.Error(e, "Command failed with error");
         }
         _inputBuffer = "";
     }
@@ -132,7 +128,7 @@ public class Console : Behaviour {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static object? ConvertValue(object? obj, Type type) {
         ArgumentNullException.ThrowIfNull(type);
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        if (type.IsNullable())
         {
             if (obj is null)
                 return null;
@@ -140,6 +136,9 @@ public class Console : Behaviour {
         }
         return Convert.ChangeType(obj, type);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static T? ConvertValue<T>(object? obj, Type type) => (T?)ConvertValue(obj, type);
 
     public static void SubmitCommand(string command, params object?[]? args) {
         if (!_commands.TryGetValue(command, out var conCommand)) {
@@ -149,18 +148,27 @@ public class Console : Behaviour {
 
         var argList = (args??Array.Empty<object?>()).ToList();
         var param = conCommand.GetParameters();
-        if (argList.Count > param.Length) {
-            Serilog.Log.Error("Parameter count mismatch in {CommandName}. Too Many Arguments", command);
-            return;
-        }
         for (var index = 0; index < param.Length; index++) {
             var parameter = param[index];
+            if (Attribute.IsDefined(parameter, typeof(ParamArrayAttribute))) {
+                var newArgList = argList[..index];
+                var paramsArg = argList[index..].ToArray();
+                var typedParamsArg = Array.CreateInstance(parameter.ParameterType.GetElementType(), paramsArg.Length);
+                Array.Copy(paramsArg, typedParamsArg, paramsArg.Length);
+                newArgList.Add(typedParamsArg);
+                argList = newArgList;
+                break;
+            }
             if (index >= argList.Count) {
                 if (parameter.IsOptional) {
                     argList.Add(parameter.DefaultValue);
                     continue;
                 }
                 Serilog.Log.Error("Parameter count mismatch in {CommandName}. Missing {Parameter}", command, parameter);
+                return;
+            }
+            if (argList.Count > param.Length && !Attribute.IsDefined(param[^1], typeof(ParamArrayAttribute))) {
+                Serilog.Log.Error("Parameter count mismatch in {CommandName}. Too Many Arguments", command);
                 return;
             }
             argList[index] = ConvertValue(argList[index], parameter.ParameterType);
@@ -171,17 +179,20 @@ public class Console : Behaviour {
 
     [ConCommand("echo")]
     [ConDescription("prints text in the console")]
-    public static void Echo(string meow) {
-        Serilog.Log.Information(meow);
+    public static void Echo(params string[] meow) {
+        Serilog.Log.Information(string.Join(' ', meow));
     }
     
     [ConCommand("test_cmd")]
     [ConDescription("meow")]
     //TODO: Support params
-    public static void TestCommand(string meow, float wow = 12f, int hehe = 33) {
+    public static void TestCommand(string meow, float wow = 12f, int hehe = 33, params string[]? columnthree) {
         Serilog.Log.Information(meow);
         Serilog.Log.Information("{0}", wow);
         Serilog.Log.Information("{0}", hehe);
+        if (columnthree is not null) {
+            Serilog.Log.Information("params is working uwu {Params}", columnthree);
+        }
     }
     
     [ConVariable("test_variable")]
@@ -265,59 +276,5 @@ public class Console : Behaviour {
             var conComName = property.GetCustomAttribute<ConVariableAttribute>()!.Name;
             _convars.Add(conComName, property);
         }
-    }
-}
-
-[AttributeUsage(AttributeTargets.Method)]
-public class ConCommandAttribute : Attribute {
-    private string _name;
-    public string Name => _name;
-
-    public ConCommandAttribute(string name) {
-        _name = name;
-    }
-}
-
-[AttributeUsage(AttributeTargets.Property)]
-public class ConVariableAttribute : Attribute {
-    private string _name;
-    public string Name => _name;
-
-    public ConVariableAttribute(string name) {
-        _name = name;
-    }
-}
-
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Parameter)]
-public class ConDescriptionAttribute : Attribute {
-    private string _description;
-    public string Description => _description;
-
-    public ConDescriptionAttribute(string name) {
-        _description = name;
-    }
-}
-public class ConsoleSink : ILogEventSink
-{
-    private readonly IFormatProvider _formatProvider;
-
-    public ConsoleSink(IFormatProvider formatProvider)
-    {
-        _formatProvider = formatProvider;
-    }
-
-    public void Emit(LogEvent logEvent)
-    {
-        var message = logEvent.RenderMessage(_formatProvider);
-        Console.Log(message);
-    }
-}
-public static class ConsoleSinkExtensions
-{
-    public static LoggerConfiguration GameConsole(
-        this LoggerSinkConfiguration loggerConfiguration,
-        IFormatProvider formatProvider = null)
-    {
-        return loggerConfiguration.Sink(new ConsoleSink(formatProvider));
     }
 }
