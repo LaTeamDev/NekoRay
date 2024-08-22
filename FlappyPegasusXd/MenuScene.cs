@@ -4,8 +4,10 @@ using FlappyPegasus.Gui;
 using NekoLib.Core;
 using NekoLib.Scenes;
 using NekoRay;
+using Serilog;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
+using Console = NekoRay.Tools.Console;
 
 namespace FlappyPegasus; 
 
@@ -75,19 +77,20 @@ public class MenuScene : BaseScene {
             
         var guiPlay = gameButtons.AddChild("PlayButton").AddComponent<Button>();
         guiPlay.Text = "Play";
-        guiPlay.OnClick += () => SceneManager.LoadScene(new GameScene());
+        guiPlay.OnClick += () => Console.Submit("start");
         guiPlay.Width = 120f;
         guiPlay.Height = 30f;
         
         var guiShop = gameButtons.AddChild("ShopButton").AddComponent<Button>();
         guiShop.Text = "Shop";
         guiShop.Disabled = true;
+        guiShop.OnClick += () => Console.Submit("shop_open");
         guiShop.Width = 120f;
         guiShop.Height = 30f;
         
         var guiExit = gameButtons.AddChild("ExitButton").AddComponent<Button>();
         guiExit.Text = "Exit";
-        guiExit.OnClick += Program.Quit;
+        guiExit.OnClick += () => Console.Submit("quit");
         guiExit.Width = 120f;
         guiExit.Height = 30f;
 

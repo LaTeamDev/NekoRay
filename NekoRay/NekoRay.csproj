@@ -10,8 +10,6 @@
         <Product>NekoRay Silly Engine</Product>
         <AssemblyVersion>2.0</AssemblyVersion>
         <LangVersion>default</LangVersion>
-        <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
-        <NekoRayDefaultGameId>default</NekoRayDefaultGameId>
     </PropertyGroup>
 
     <ItemGroup> 
@@ -38,11 +36,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="default.conf.toml" />
-      <None Remove="licenses.txt" />
       <EmbeddedResource Include="licenses.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="bundeledassets\**" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bundeledassets\" />
     </ItemGroup>
 
 </Project>

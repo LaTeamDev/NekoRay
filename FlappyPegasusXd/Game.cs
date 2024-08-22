@@ -1,4 +1,5 @@
 using Box2D;
+using FlappyPegasus.GameStuff;
 using NekoLib.Scenes;
 using NekoRay;
 using ZeroElectric.Vinculum;
@@ -7,6 +8,7 @@ namespace FlappyPegasus;
 
 public class Game : GameBase {
     public override void Load(string[] args) {
+        NekoRay.Tools.Console.Register<Commands>();
         base.Load(args);
         World.LengthUnitsPerMeter = 64f;
         KeyPressed += OnKeyPressed;

@@ -8,28 +8,33 @@ public class Program {
     public static void Quit() => _shouldQuit = true;
     
     public static string GamePath { get; set; }
-	
-    public static string DllPath { get; set; }
+
+    private static List<string> _dllPaths = new();
+    private static string OldPath = Environment.GetEnvironmentVariable("PATH");
+    private static string NewPath => OldPath + ";" + string.Join(";", _dllPaths);
+
+    public static void AddPath(string path) {
+        _dllPaths.Add(path);
+        Environment.SetEnvironmentVariable("PATH", NewPath);
+    }
 	
     
     public static void Init()
     {
-        AppDomain currentDomain = AppDomain.CurrentDomain;
-        currentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         GamePath = Path.GetDirectoryName(Environment.ProcessPath);
-        DllPath = Path.Join(GamePath, "\\bin\\");
+        _dllPaths.Add(Path.Join(GamePath, "\\bin\\"));
         Environment.CurrentDirectory = GamePath;
-        var path = Environment.GetEnvironmentVariable("PATH");
-        path = DllPath + ";" + path;
-        Environment.SetEnvironmentVariable("PATH", path);
     }
 	
     private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
     {
         var name = args.Name.Split(',')[0];
-        var path = DllPath + "\\" + name + ".dll";
-        if (!File.Exists(path)) return null;
-        return Assembly.LoadFrom(path);
+        foreach (var dllPath in _dllPaths) {
+            var path = Path.Join(dllPath, name + ".dll");
+            if (File.Exists(path)) return Assembly.LoadFrom(path);
+        }
+        return null;
     }
 		
     public static void Main(string[] args) {

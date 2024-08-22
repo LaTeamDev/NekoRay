@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using ImGuiNET;
 using NekoLib.Filesystem;
@@ -35,7 +36,91 @@ public class Console : Behaviour {
     private static Dictionary<string, PropertyInfo> _convars = new();
     private static Dictionary<string, MethodInfo> _tagHandlers = new();
 
-    void DrawGui() {
+    public static List<string> CommandList {
+        get {
+            var candidates = _commands.Keys.ToList();
+            candidates.AddRange(_convars.Keys);
+            return candidates;
+        }
+    }
+
+
+    private static void CompletitionCallback(ImGuiInputTextCallbackDataPtr data) {
+        // Locate beginning of current word
+        var str = Marshal.PtrToStringUTF8(data.Buf)??"";
+        var last = Math.Max(str.LastIndexOf(' '), str.LastIndexOf(';'))+1;
+        var size = str.Length - last;
+
+        // Build a list of candidates
+        var candidates = CommandList.Where(s => s.StartsWith(str??"")).ToList();
+
+        if (candidates.Count == 0) return;
+        //if (candidates.Count <= 1)
+        //{
+            // Single match. Delete the beginning of the word and replace it entirely so we've got nice casing.
+            data.DeleteChars(last, size);
+            data.InsertChars(data.CursorPos, candidates[0]);
+            //data.InsertChars(data.CursorPos, " ");
+            return;
+        //}
+        // Multiple matches. Complete as much as we can..
+        //TODO:
+    }
+
+    private static int _historyPos = -1;
+    private static List<string> _history = new();
+    private static string? _historyBuffer = null;
+    
+    //todo: fix
+    private static void HistoryCallback(ImGuiInputTextCallbackDataPtr data) {
+        _historyBuffer ??= Marshal.PtrToStringUTF8(data.Buf);
+        //Log($"{_historyBuffer}\nthe history is \n{string.Join('\n', _history)}");
+        if (_history.Count == 0) return;
+        var prevHistoryPos = _historyPos;
+        if (data.EventKey == ImGuiKey.UpArrow) {
+            for (var i = _history.Count - 1; i >= 0; i--) {
+                _historyPos--;
+                if (_historyPos <= -1)
+                    _historyPos = _history.Count - 1;
+                if (_history[i].StartsWith(_historyBuffer)) break;
+            }
+
+        }
+        else if (data.EventKey == ImGuiKey.DownArrow) {
+            for (var i = 0; i < _history.Count; i++) {
+                _historyPos++;
+                if (_historyPos >= _history.Count)
+                    _historyPos = 0;
+                if (_history[i].StartsWith(_historyBuffer)) break;
+            }
+        }
+        
+        if (prevHistoryPos != _historyPos)
+        {
+            var historyStr = (_historyPos >= 0) ? _history[_historyPos] : "";
+            data.DeleteChars(0, data.BufTextLen);
+            data.InsertChars(0, historyStr);
+        }
+    }
+    
+    private static unsafe int TextEditCallback(ImGuiInputTextCallbackData* data)
+    {
+        switch (data->EventFlag) {
+            case ImGuiInputTextFlags.CallbackCompletion:
+                CompletitionCallback(data); 
+                break;
+            case ImGuiInputTextFlags.CallbackHistory: 
+                HistoryCallback(data);
+                break;
+            case ImGuiInputTextFlags.CallbackEdit:
+                _historyPos = -1;
+                _historyBuffer = null;
+                break;
+        }
+        return 0;
+    }
+
+    unsafe void DrawGui() {
         var opened = Enabled;
         if (ImGui.Begin("Console", ref opened)) {
             ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0,0,0, 0.1f));
@@ -50,9 +135,12 @@ public class Console : Behaviour {
             ImGui.BeginGroup();
             var inputTextFlags =
                 ImGuiInputTextFlags.EnterReturnsTrue |
-                ImGuiInputTextFlags.EscapeClearsAll;
+                ImGuiInputTextFlags.EscapeClearsAll | 
+                ImGuiInputTextFlags.CallbackHistory | 
+                ImGuiInputTextFlags.CallbackCompletion |
+                ImGuiInputTextFlags.CallbackEdit;
             //TODO: callback for completition
-            if (ImGui.InputText("", ref _inputBuffer, 255, inputTextFlags)) {
+            if (ImGui.InputText("", ref _inputBuffer, 255, inputTextFlags, TextEditCallback)) {
                 SubmitBuffer();
             }
             ImGui.SameLine();
@@ -69,6 +157,8 @@ public class Console : Behaviour {
 
     void SubmitBuffer() {
         try {
+            _historyPos = 0;
+            _history.Add(_inputBuffer);
             _messageLog.Enqueue("> "+ _inputBuffer);
             Submit(_inputBuffer);
         }
@@ -311,6 +401,30 @@ public class Console : Behaviour {
 
     [ConTagHandler("cheat")]
     public static bool HandleCheat() => CheatsEnabled;
+
+    [ConCommand("quit")]
+    public static void Quit() {
+        Program.Quit();
+    }
+
+    [ConCommand("imgui_demo_toggle")]
+    public static void ToggleImGuiDemoWindow() {
+        var scene = SceneManager.GetScene<PersistantScene>();
+        using (scene.UseTemporarily()) {
+            var demoWinGO = scene.GetGameObjectByName("Demo Window");
+            if (demoWinGO is not null) {
+                demoWinGO.ActiveSelf = !demoWinGO.ActiveSelf;
+                return;
+            }
+            demoWinGO = new GameObject("Demo Window");
+            demoWinGO.AddComponent<ImguiDemoWindow>();
+        }
+    }
+    
+    [ConCommand("history")]
+    public static void PrintHistory() {
+        Serilog.Log.Information("History:\n"+string.Join('\n', _history));
+    }
 
     ///TODO: this will crash if something was registered under the same name
     public static void Register<T>() {

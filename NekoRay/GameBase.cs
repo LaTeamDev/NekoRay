@@ -1,3 +1,4 @@
+using ImGuiNET;
 using NekoLib.Filesystem;
 using rlImGui_cs;
 using Serilog;
@@ -77,8 +78,17 @@ public abstract class GameBase {
 
     public delegate void LoopFunction();
 
+    public unsafe virtual void SetupImGuiFonts(ImGuiIOPtr io) {
+        var cfg = new ImFontConfigPtr(ImGuiNative.ImFontConfig_ImFontConfig());
+        cfg.OversampleH = 1;
+        cfg.OversampleV = 1;
+
+        var firaFont = io.Fonts.AddFontFromFilesystemTTF("fonts/Lpix.ttf", 7, cfg);
+    }
+
     public virtual LoopFunction Run(string[] args) {
         Raylib.InitAudioDevice();
+        rlImGui.SetupUserFonts = SetupImGuiFonts;
         rlImGui.Setup();
         Load(args);
         return () => {

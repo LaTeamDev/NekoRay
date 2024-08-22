@@ -15,7 +15,6 @@
     <Import Project="../NekoRay/game.targets" />
 
     <ItemGroup>
-        <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
         <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
         <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
     </ItemGroup>

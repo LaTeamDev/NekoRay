@@ -1,6 +1,9 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Box2D.Interop;
+using ImGuiNET;
+using NekoLib.Filesystem;
 
 namespace NekoRay; 
 
@@ -29,4 +32,28 @@ public static class Extensions {
 
     public static bool IsNullable(this Type type) =>
         type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+    public static unsafe ImFontPtr AddFontFromFilesystemTTF(this ImFontAtlasPtr fontAtlas, string filename, float size_pixels) {
+        var file = Files.GetFile(filename).ReadBinary();
+        var ptr = Marshal.AllocHGlobal(file.Length);
+        var span = new Span<byte>((void*)ptr, file.Length);
+        file.CopyTo(span);
+        return fontAtlas.AddFontFromMemoryTTF(ptr, span.Length, size_pixels);
+    }
+    
+    public static unsafe ImFontPtr AddFontFromFilesystemTTF(this ImFontAtlasPtr fontAtlas, string filename, float size_pixels, ImFontConfigPtr font_cfg) {
+        var file = Files.GetFile(filename).ReadBinary();
+        var ptr = Marshal.AllocHGlobal(file.Length);
+        var span = new Span<byte>((void*)ptr, file.Length);
+        file.CopyTo(span);
+        return fontAtlas.AddFontFromMemoryTTF(ptr, span.Length, size_pixels, font_cfg);
+    }
+
+    public static AttachMode UseTemporarily(this IScene scene) {
+        var prev = SceneManager.ActiveScene;
+        SceneManager.SetSceneActive(scene);
+        return new AttachMode(() => {
+            SceneManager.SetSceneActive(prev);
+        });
+    }
 }

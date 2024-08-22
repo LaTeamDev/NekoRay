@@ -77,6 +77,7 @@ public sealed class Commands {
     }
 
     [ConCommand("ent_spawn")]
+    [ConTags("cheat")]
     public static GameObject? EntitySpawn(string name) {
         if (!_ents.TryGetValue(name, out var builder)) {
             Log.Error("No registered entity builder found");
@@ -98,6 +99,7 @@ public sealed class Commands {
     }
     
     [ConCommand("cam_track_gameObject")]
+    [ConTags("cheat")]
     public static void CameraTarget(string name) {
         var target = SceneManager.ActiveScene.GetGameObjectByName(name);
         if (target is null) {
@@ -121,6 +123,7 @@ public sealed class Commands {
     }
 
     [ConCommand("cam_track_stop")]
+    [ConTags("cheat")]
     public static void CameraTarget() {
         if (BaseCamera.Main is null) {
             Log.Error("There is no camera in scene");
@@ -135,6 +138,7 @@ public sealed class Commands {
 
     [ConCommand("load_scene")]
     [ConDescription("Try to load scene under specified name. the scene should be able to be instantiated with parameterless constructor!!")]
+    [ConTags("cheat")]
     public static void LoadScene(string typeName) {
         var type = Type.GetType(typeName);
         if (type is null) {
@@ -151,6 +155,7 @@ public sealed class Commands {
     
     [ConCommand("load_scene_debug")]
     [ConDescription("load debug scene")]
+    [ConTags("cheat")]
     public static void LoadDebugScene() {
         SceneManager.LoadScene(new DebugScene());
     }

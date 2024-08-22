@@ -47,6 +47,10 @@ public static class Bootstrapper {
     }
 
     private static void MountPaths(NekoRayConf conf, string gameId) {
+        foreach (var rawPath in conf.Filesystem.Bin) {
+            var path = rawPath.Replace("{{this}}",gameId);
+            Program.AddPath(path);
+        }
         foreach (var rawPath in conf.Filesystem.Mount) {
             var path = rawPath.Replace("{{this}}",gameId); //does toml have metadata like yaml we can use?
             if (!path.EndsWith("*")) {
@@ -65,6 +69,7 @@ public static class Bootstrapper {
     }
     
     public static int Start(string[] args) {
+        new AssemblyFilesystem(typeof(Bootstrapper).Assembly).Mount();
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
         var gameAttr = typeof(Bootstrapper).Assembly.GetCustomAttribute<DefaultGameIdAttribute>();
         var gameId = gameAttr?.GameId??"default";

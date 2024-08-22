@@ -153,7 +153,7 @@ public class GameScene : BaseScene {
             groundD.Speed = 64f * player.Score._speed;
         };
 
-        new GameObject("DebugWorldDraw").AddComponent<DrawWorld>();
+        //new GameObject("DebugWorldDraw").AddComponent<DrawWorld>();
 
         base.Initialize();
     }
@@ -165,7 +165,7 @@ public class GameScene : BaseScene {
     }
 
     public override void Draw() {
-        if (!SceneManager.ActiveScene.GetType().IsAssignableTo(typeof(OverlayScene))) base.Draw();
+       if (!SceneManager.ActiveScene.GetType().IsAssignableTo(typeof(OverlayScene))) base.Draw();
     }
 
     public override void Update() {
