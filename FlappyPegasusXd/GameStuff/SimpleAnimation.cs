@@ -1,6 +1,5 @@
 using NekoLib.Core;
 using NekoRay;
-using Timer = NekoRay.Timer;
 
 namespace FlappyPegasus.GameStuff; 
 
@@ -15,7 +14,7 @@ public class SimpleAnimation : Behaviour {
     void UpdateAnimation() {
         _spriteRenderer.Sprite = CurrentFrame.Sprite;
         if (_animationFrameIndex == FreezeFrame) return;
-        _animationTime += Timer.DeltaF;
+        _animationTime += Time.DeltaF;
         while (_animationTime >= CurrentFrame.Time) {
             _animationTime -= CurrentFrame.Time;
             _animationFrameIndex++;
@@ -28,7 +27,7 @@ public class SimpleAnimation : Behaviour {
     }
     void Update() {
         UpdateAnimation();
-        _time += Timer.DeltaF;
+        _time += Time.DeltaF;
         /*Transform.LocalPosition = 
             new Vector3(MathF.Sin(_time)*128f, MathF.Cos(_time)*128f, 0);*/
     }

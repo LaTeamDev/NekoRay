@@ -58,7 +58,6 @@ public class Game : GameBase {
     }
     public override void Draw() {
         base.Draw();
-        Raylib.DrawFPS(0, 0);
     }
 
     public override void Update() {

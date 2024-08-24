@@ -3,7 +3,6 @@ using Box2D;
 using NekoLib.Core;
 using NekoRay;
 using NekoRay.Physics2D;
-using Timer = NekoRay.Timer;
 using Transform = NekoLib.Core.Transform;
 
 namespace FlappyPegasus.GameStuff; 
@@ -13,7 +12,7 @@ public class EnemySpawner : Behaviour {
     public Transform SpawnLocation;
     public float SpawnRate = 1f;
     private float _time;
-    private Random random = new((int)Timer.Time);
+    private Random random = new((int)Time.CurrentTime);
     private float SpawnRadius = 288f;
     private List<AnimationFrame[]> EnemyAnimations = new();
 
@@ -39,7 +38,7 @@ public class EnemySpawner : Behaviour {
     }
 
     void Update() {
-        _time += Timer.DeltaF;
+        _time += Time.DeltaF;
         while (_time >= SpawnRate) {
             _time -= SpawnRate;
             Spawn();

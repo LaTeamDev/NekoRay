@@ -5,10 +5,10 @@ namespace NekoRay;
 public static class NekoMath {
     public static float Damp(float from, float to, ref float velocity, float smoothTime) {
         var omega = 2f / smoothTime;
-        var x = omega * Timer.DeltaF;
+        var x = omega * Time.DeltaF;
         var exp = 1f / (1f + x + .48f * x * x + .235f * x * x * x);
         var change = from - to;
-        var temp = (velocity * omega * change)*Timer.DeltaF;
+        var temp = (velocity * omega * change)*Time.DeltaF;
         velocity = exp * (velocity - omega * temp);
         return to + exp* (change + temp);
     }

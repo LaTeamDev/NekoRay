@@ -1,5 +1,8 @@
-﻿namespace NekoRay.Tools; 
+﻿using JetBrains.Annotations;
 
+namespace NekoRay.Tools; 
+
+[MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Property)]
 public class ConVariableAttribute : Attribute {
     private string _name;

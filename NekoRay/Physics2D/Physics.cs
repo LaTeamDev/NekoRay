@@ -34,6 +34,14 @@ public static class Physics {
         if (_sceneWorlds.TryGetValue(scene, out var world)) return world;
         throw new Exception($"There is no world for scene {scene.Name}");
     }
+    
+    public static bool TryGetWorld(this IScene scene, out World? world) {
+        return _sceneWorlds.TryGetValue(scene, out world);
+    }
+    
+    public static bool HasWorld(this IScene scene) {
+        return _sceneWorlds.ContainsKey(scene);
+    }
 
     public static AABB ToAABB(this Rectangle rectangle) =>
         new AABB {

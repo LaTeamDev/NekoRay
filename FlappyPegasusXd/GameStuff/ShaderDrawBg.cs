@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 using NekoLib.Core;
+using NekoRay;
 using ZeroElectric.Vinculum;
 using Shader = NekoRay.Shader;
 using Texture = NekoRay.Texture;
-using Timer = NekoRay.Timer;
 
 namespace FlappyPegasus.GameStuff; 
 
@@ -24,7 +24,7 @@ public class ShaderDrawBg : Behaviour {
         var position = new Vector2(Transform.Position.X, Transform.Position.Y);
         var renderScale = Raylib.GetRenderHeight() / 288f;
         Shader.SetFloat("speed", Speed);
-        Shader.SetFloat("time", (float)Timer.Time);
+        Shader.SetFloat("time", (float)Time.CurrentTime);
         using (Shader.Attach()) {
             Texture.Draw(
                 new Rectangle(0, 0,   Raylib.GetRenderWidth()/renderScale, Texture.Height), 

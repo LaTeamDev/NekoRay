@@ -14,7 +14,7 @@ public class Animation {
     
    void UpdateAnimation() {
         if (_animationFrameIndex == FreezeFrame) return;
-        _animationTime += NekoRay.Timer.DeltaF;
+        _animationTime += NekoRay.Time.DeltaF;
         while (_animationTime >= CurrentFrame.Duration) {
             _animationTime -= CurrentFrame.Duration;
             _animationFrameIndex++;
@@ -24,7 +24,7 @@ public class Animation {
    
    public void Update() {
         UpdateAnimation();
-        _time += NekoRay.Timer.DeltaF;
+        _time += NekoRay.Time.DeltaF;
         /*Transform.LocalPosition = 
             new Vector3(MathF.Sin(_time)*128f, MathF.Cos(_time)*128f, 0);*/
     }

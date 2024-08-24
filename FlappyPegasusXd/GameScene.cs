@@ -9,7 +9,6 @@ using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
-using Timer = NekoRay.Timer;
 
 namespace FlappyPegasus; 
 
@@ -173,7 +172,7 @@ public class GameScene : BaseScene {
         
         if (!SceneManager.ActiveScene.GetType().IsAssignableTo(typeof(OverlayScene))) {
             base.Update();
-            this.GetWorld().Step(Timer.DeltaF, 4);
+            this.GetWorld().Step(Time.DeltaF, 4);
         }
     }
 }

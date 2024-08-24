@@ -139,7 +139,6 @@ public class Console : Behaviour {
                 ImGuiInputTextFlags.CallbackHistory | 
                 ImGuiInputTextFlags.CallbackCompletion |
                 ImGuiInputTextFlags.CallbackEdit;
-            //TODO: callback for completition
             if (ImGui.InputText("", ref _inputBuffer, 255, inputTextFlags, TextEditCallback)) {
                 SubmitBuffer();
             }
@@ -180,10 +179,10 @@ public class Console : Behaviour {
             if (_convars.ContainsKey(commandName)) {
                 if (args.Count <= 0) {
                     PrintVariable(commandName);
-                    return;
+                    continue;
                 }
                 SubmitVariable(commandName, args[0]);
-                return;
+                continue;
             }
             SubmitCommand(commandName, args.Cast<object>().ToArray());
         }
@@ -427,26 +426,29 @@ public class Console : Behaviour {
     }
 
     ///TODO: this will crash if something was registered under the same name
-    public static void Register<T>() {
-        var methods = typeof(T).GetMethods(BindingFlags.Static | BindingFlags.Public)
+    public static void Register(Type type) {
+        var bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+
+    var methods = type.GetMethods(bindingFlags)
             .Where(info => Attribute.IsDefined(info, typeof(ConCommandAttribute)));
         foreach (var method in methods) {
             var conComName = method.GetCustomAttribute<ConCommandAttribute>()!.Name;
             _commands.Add(conComName, method);
         }
         
-        var properties = typeof(T).GetProperties(BindingFlags.Static | BindingFlags.Public)
+        var properties = type.GetProperties(bindingFlags)
             .Where(info => Attribute.IsDefined(info, typeof(ConVariableAttribute)));
         foreach (var property in properties) {
             var conVarName = property.GetCustomAttribute<ConVariableAttribute>()!.Name;
             _convars.Add(conVarName, property);
         }
         
-        var tagHandlers = typeof(T).GetMethods(BindingFlags.Static | BindingFlags.Public)
+        var tagHandlers = type.GetMethods(bindingFlags)
             .Where(info => Attribute.IsDefined(info, typeof(ConTagHandlerAttribute)));
         foreach (var tagHandler in tagHandlers) {
             var contag = tagHandler.GetCustomAttribute<ConTagHandlerAttribute>()!.Tag;
             _tagHandlers.Add(contag, tagHandler);
         }
     }
+    public static void Register<T>() => Register(typeof(T));
 }

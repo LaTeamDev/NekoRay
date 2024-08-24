@@ -12,7 +12,7 @@ public abstract class Collider : Component {
     private IShape CurrentStuff {
         get {
             if (Shape is not null) return Shape;
-            return CurrentStuff;
+            return ShapeDef;
         }
     }
     
@@ -31,7 +31,7 @@ public abstract class Collider : Component {
         set => CurrentStuff.Density = value;
     }
 
-    public b2Filter Filter {
+    public Filter Filter {
         get => CurrentStuff.Filter;
         set => CurrentStuff.Filter = value;
     }

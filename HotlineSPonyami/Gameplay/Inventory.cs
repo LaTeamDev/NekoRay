@@ -2,7 +2,6 @@
 using NekoLib.Core;
 using NekoRay;
 using Serilog;
-using Timer = NekoRay.Timer;
 
 namespace HotlineSPonyami.Gameplay; 
 
@@ -35,7 +34,7 @@ public class Inventory : Behaviour {
     }
 
     void Update() {
-        Time += Timer.DeltaF;
+        Time += NekoRay.Time.DeltaF;
         var fullPi = Math.PI * 2;
         var slotCount = _items.Count;
         var slotAngle = fullPi / slotCount;

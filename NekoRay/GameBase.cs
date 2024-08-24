@@ -1,5 +1,6 @@
 using ImGuiNET;
 using NekoLib.Filesystem;
+using NekoRay.Physics2D;
 using rlImGui_cs;
 using Serilog;
 using Serilog.Events;
@@ -39,6 +40,8 @@ public abstract class GameBase {
 
     public virtual void Load(string[] args) {
         Console.Register<Input>();
+        Console.Register<DebugDraw>();
+        Console.Register(typeof(Time));
         InitConsole(args.Contains("--console"));
         var assemblyFs = new AssemblyFilesystem(GetType().Assembly, GetType().Namespace);
         assemblyFs.Mount();
@@ -74,6 +77,11 @@ public abstract class GameBase {
 
     public virtual void Draw() {
         SceneManager.Draw();
+        if (Time.DrawFps) Raylib.DrawFPS(0, 0);
+    }
+
+    public virtual void FixedUpdate() {
+        SceneManager.InvokeScene("FixedUpdate");
     }
 
     public delegate void LoopFunction();
@@ -85,22 +93,27 @@ public abstract class GameBase {
 
         var firaFont = io.Fonts.AddFontFromFilesystemTTF("fonts/Lpix.ttf", 7, cfg);
     }
-
     public virtual LoopFunction Run(string[] args) {
         Raylib.InitAudioDevice();
         rlImGui.SetupUserFonts = SetupImGuiFonts;
         rlImGui.Setup();
         Load(args);
         return () => {
-            Timer.Step();
+            Time.Step();
             UpdateEvents();
-            NekoLib.Core.Timer.Global.Update(Timer.DeltaF);
+            NekoLib.Core.Timer.Global.Update(Time.DeltaF);
             Input.Update();
             Update();
+            while (Time._fixedTime > Time.FixedDeltaF) {
+                Time.IsInFixed = true;
+                FixedUpdate();
+                Time.IsInFixed = false;
+                Time._fixedTime -= Time.FixedDeltaF;
+            }
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.BLACK);
             Draw();
-            rlImGui.Begin(Timer.DeltaF);
+            rlImGui.Begin(Time.DeltaF);
             DrawGui();
             rlImGui.End();
             Raylib.EndDrawing();

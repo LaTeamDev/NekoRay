@@ -3,7 +3,6 @@ using NekoRay;
 using NekoRay.Physics2D;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
-using Timer = NekoRay.Timer;
 
 namespace HotlineSPonyami.Gameplay.DebugStuff; 
 
@@ -25,13 +24,11 @@ public class DebugScene : BaseScene {
         reticleRenderer.Sprite = new Sprite(Data.GetTexture("textures/gameui/reticle.png"), new Rectangle(0, 0, 9, 9));
         #endregion
 
-        new GameObject("Debug draw").AddComponent<DrawWorld>();
-        
         base.Initialize();
     }
 
-    public override void Update() {
-        base.Update();
-        this.GetWorld().Step(Timer.DeltaF, 4);
+    public override void FixedUpdate() {
+        base.FixedUpdate();
+        this.GetWorld().Step(Time.FixedDeltaF, 4);
     }
 }

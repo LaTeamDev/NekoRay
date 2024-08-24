@@ -1,6 +1,5 @@
 ﻿using NekoLib.Core;
 using NekoRay;
-using Timer = NekoRay.Timer;
 
 namespace FlappyPegasus.GameStuff; 
 
@@ -21,8 +20,8 @@ public class ScoreController : Behaviour {
         _speed = StartSpeed;
     }
     void Update() {
-        _speed = _speed + Velocity*Timer.DeltaF;
-        _score = _score + _speed*Timer.DeltaF;
+        _speed = _speed + Velocity*Time.DeltaF;
+        _score = _score + _speed*Time.DeltaF;
     }
 
     void LateUpdate() {

@@ -1,5 +1,8 @@
-﻿namespace NekoRay.Tools; 
+﻿using JetBrains.Annotations;
 
+namespace NekoRay.Tools; 
+
+[MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
 public class ConCommandAttribute : Attribute {
     private string _name;

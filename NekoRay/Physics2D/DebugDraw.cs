@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using NekoRay.Tools;
 
 namespace NekoRay.Physics2D; 
 
@@ -10,6 +11,87 @@ public class DebugDraw : Box2D.DebugDraw {
             return _instance;
         }
     }
+    [ConVariable("phys_draw")]
+    [ConTags("cheat")]
+    public static bool ConvarDraw { get; set; }
+
+    [ConVariable("phys_drawbounds")]
+    [ConTags("cheat")]
+    public static bool ConvarUseDrawingBounds {
+        get => Instance.UseDrawingBounds;
+        set => Instance.UseDrawingBounds = value;
+    }
+
+    [ConVariable("phys_drawshapes")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawShapes {
+        get => Instance.DrawShapes;
+        set => Instance.DrawShapes = value;
+    }
+
+    [ConVariable("phys_drawcontacts")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawContacts {
+        get => Instance.DrawContacts;
+        set => Instance.DrawContacts = value;
+    }
+
+    [ConVariable("phys_drawjoints")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawJoints {
+        get => Instance.DrawJoints;
+        set => Instance.DrawJoints = value;
+    }
+
+    [ConVariable("phys_drawmass")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawMass {
+        get => Instance.DrawMass;
+        set => Instance.DrawMass = value;
+    }
+
+    [ConVariable("phys_drawcontactimpulses")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawContactImpulses {
+        get => Instance.DrawContactImpulses;
+        set => Instance.DrawContactImpulses = value;
+    }
+
+    [ConVariable("phys_drawcontactnormals")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawContactNormals {
+        get => Instance.DrawContactNormals;
+        set => Instance.DrawContactNormals = value;
+    }
+
+    [ConVariable("phys_drawfrictionimpulses")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawFrictionImpulses {
+        get => Instance.DrawFrictionImpulses;
+        set => Instance.DrawFrictionImpulses = value;
+    }
+
+    [ConVariable("phys_drawgraphcolors")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawGraphColors {
+        get => Instance.DrawGraphColors;
+        set => Instance.DrawGraphColors = value;
+    }
+
+    [ConVariable("phys_drawjointextras")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawJointExtras {
+        get => Instance.DrawJointExtras;
+        set => Instance.DrawJointExtras = value;
+    }
+
+    [ConVariable("phys_drawaabbs")]
+    [ConTags("cheat")]
+    public static bool ConvarDrawAABBs {
+        get => Instance.DrawAABBs;
+        set => Instance.DrawAABBs = value;
+    }
+
     private DebugDraw() {
         DrawString = DebugDrawDrawString;
         DrawCircle = DebugDrawDrawCircle;

@@ -1,7 +1,7 @@
 ﻿namespace HotlineSPonyami;
 
 [Flags]
-public enum PhysCategory {
+public enum PhysCategory : int {
     LevelGeometry = 1 << 0,
     Entity = 1 << 2,
     Player = 1 << 3,
@@ -9,5 +9,5 @@ public enum PhysCategory {
     Prop = 1 << 5,
     Attackable = 1 << 6,
     Trigger = 1 << 15,
-    All = ushort.MaxValue
+    All = LevelGeometry | Entity | Player | Enemy | Prop | Attackable | Trigger
 }

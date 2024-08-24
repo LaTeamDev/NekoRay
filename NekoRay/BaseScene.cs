@@ -1,4 +1,5 @@
 using System.Numerics;
+using NekoRay.Physics2D;
 
 namespace NekoRay; 
 
@@ -39,8 +40,15 @@ public abstract class BaseScene : IScene {
         foreach (var gameObject in currentGameObjects) {
             gameObject.SendMessage("Draw");
         }
-
         DrawCameraTexture();
+    }
+
+    public virtual void FixedUpdate() {
+        var currentGameObjects = new GameObject[GameObjects.Count];
+        GameObjects.CopyTo(currentGameObjects);
+        foreach (var gameObject in currentGameObjects) {
+            gameObject.SendMessage("FixedUpdate");
+        }
     }
 
     public virtual void DrawGui() {

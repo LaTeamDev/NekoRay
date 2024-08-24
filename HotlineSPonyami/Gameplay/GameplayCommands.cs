@@ -29,8 +29,9 @@ public sealed class Commands {
             pl.RigidBody.FixedRotation = true;
             var colliderPlayer = pl.GameObject.AddComponent<CircleCollider>();
             colliderPlayer.Radius = 14f;
-            //colliderPlayer.Filter = new Filter();
-            //colliderPlayer.Filter.categoryBits = (ushort) PhysCategory.Player;
+            colliderPlayer.Filter = new Filter<PhysCategory> {
+                Category = PhysCategory.Player
+            };
             var collector = pl.GameObject.AddChild("CollectSensor").AddComponent<PlayerCollector>();
             collector.Player = pl;
             collector.Inventory = pl.Inventory;
@@ -39,10 +40,10 @@ public sealed class Commands {
             var collider = collector.GameObject.AddComponent<CircleCollider>();
             collider.Radius = 16f;
             collider.IsSensor = true;
-            /*collider.Filter = new Filter {
-                categoryBits = (ushort) (PhysCategory.Trigger),
-                maskBits = (ushort)(PhysCategory.Prop)
-            };*/
+            collider.Filter = new Filter<PhysCategory> {
+                Category = PhysCategory.Trigger,
+                Mask = PhysCategory.Prop
+            };
             return gameObject;
         });
         AddEntity("camera2d", (gameObject) => {
@@ -56,9 +57,11 @@ public sealed class Commands {
             carryable.Weight = 0.125f;
             var collider = gameObject.AddComponent<CircleCollider>();
             collider.Radius = 3f;
-            /*collider.Filter = new Filter();
-            collider.Filter.categoryBits = (ushort)(PhysCategory.Prop);
-            collider.Filter.maskBits = (ushort)(PhysCategory.Trigger | PhysCategory.LevelGeometry | PhysCategory.Prop);*/
+            collider.Filter = new Filter<PhysCategory> {
+                Category = PhysCategory.Prop,
+                Mask = PhysCategory.Trigger | PhysCategory.LevelGeometry | PhysCategory.Prop
+            };
+            var huh = collider.Filter;
             return gameObject;
         });
     }

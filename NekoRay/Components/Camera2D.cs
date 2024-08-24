@@ -1,4 +1,5 @@
 using System.Numerics;
+using NekoRay.Physics2D;
 using ZeroElectric.Vinculum.Extensions;
 
 namespace NekoRay;
@@ -30,6 +31,7 @@ public class Camera2D : BaseCamera {
                     gameObject.AllTags.Contains("SkipRender")) continue;
                 gameObject.SendMessage("Render");
             }
+            if (DebugDraw.ConvarDraw && GameObject.Scene.TryGetWorld(out var world)) world?.Draw(DebugDraw.Instance);
             Raylib.EndMode2D();
         }
         CurrentCamera = null;

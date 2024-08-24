@@ -29,7 +29,9 @@ public class PlayerCollector : Behaviour {
             if (Inventory.Items.Contains(carryable)) continue;
             if (Inventory.Add(carryable)) {
                 collider.GameObject.GetComponent<Rigidbody2D>().Type = BodyType.Kinematic;
-                //collider.Filter.maskBits = (ushort)(((PhysCategory)collider.Filter.maskBits) & ~PhysCategory.Prop);
+                var oldFilter = collider.Filter.For<PhysCategory>();
+                oldFilter.Mask &= ~PhysCategory.Prop;
+                collider.Filter = oldFilter; 
             }
         }
     }
