@@ -338,6 +338,24 @@ public class Console : Behaviour {
             if (declType is not null)
                 list += " (From "+ declType.FullName+")";
         }
+
+        list += "\nAvailable convars: ";
+        foreach (var convars in _convars) {
+            list += "\n" + convars.Key + " = ";
+            try {
+                list += convars.Value.GetValue(null);
+            }
+            catch (Exception e) { }
+            list += "\n\t";
+            var desc = convars.Value.GetCustomAttribute<ConDescriptionAttribute>();
+            if (desc is not null) 
+                list += desc.Description;
+            else
+                list += "No description.";
+            var declType = convars.Value.DeclaringType;
+            if (declType is not null)
+                list += " (From "+ declType.FullName+")";
+        }
         Serilog.Log.Information(list);
     }
     

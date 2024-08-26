@@ -39,6 +39,7 @@ public abstract class GameBase {
     public Console Console;
 
     public virtual void Load(string[] args) {
+        Raylib.SetExitKey(0);
         Console.Register<Input>();
         Console.Register<DebugDraw>();
         Console.Register(typeof(Time));
