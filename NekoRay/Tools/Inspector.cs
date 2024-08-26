@@ -5,6 +5,7 @@ namespace NekoRay.Tools;
 
 public class Inspector : Object {
     public object? Target;
+    public Type? TargetType => Target?.GetType();
 
     public virtual void DrawGui() {
         if (Target is null) return;
