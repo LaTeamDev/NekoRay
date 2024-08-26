@@ -10,6 +10,18 @@ using Console = NekoRay.Tools.Console;
 namespace NekoRay; 
 
 public abstract class GameBase {
+    private static GameBase? _instance;
+    public static GameBase Instance {
+        get {
+            ArgumentNullException.ThrowIfNull(_instance, nameof(_instance));
+            return _instance;
+        }
+    }
+
+    public GameBase() {
+        _instance = this;
+    }
+
     public static ILogger Log;
     public unsafe virtual void Initlogging() {
         var loggingCfg = ConfigureLogger(new LoggerConfiguration());
@@ -42,6 +54,7 @@ public abstract class GameBase {
         Raylib.SetExitKey(0);
         Console.Register<Input>();
         Console.Register<DebugDraw>();
+        Console.Register<SceneViewer>();
         Console.Register(typeof(Time));
         InitConsole(args.Contains("--console"));
         var assemblyFs = new AssemblyFilesystem(GetType().Assembly, GetType().Namespace);

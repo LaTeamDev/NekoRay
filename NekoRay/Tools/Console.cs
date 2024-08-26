@@ -423,20 +423,6 @@ public class Console : Behaviour {
     public static void Quit() {
         Program.Quit();
     }
-
-    [ConCommand("imgui_demo_toggle")]
-    public static void ToggleImGuiDemoWindow() {
-        var scene = SceneManager.GetScene<PersistantScene>();
-        using (scene.UseTemporarily()) {
-            var demoWinGO = scene.GetGameObjectByName("Demo Window");
-            if (demoWinGO is not null) {
-                demoWinGO.ActiveSelf = !demoWinGO.ActiveSelf;
-                return;
-            }
-            demoWinGO = new GameObject("Demo Window");
-            demoWinGO.AddComponent<ImguiDemoWindow>();
-        }
-    }
     
     [ConCommand("history")]
     public static void PrintHistory() {
