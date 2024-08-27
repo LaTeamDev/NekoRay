@@ -4,9 +4,9 @@ namespace NekoRay.Tools;
 
 [MeansImplicitUse]
 public class CustomInspectorAttribute : Attribute {
-    public Type InspectType;
+    public Type InspectorType;
 
-    public CustomInspectorAttribute(Type inspectType) {
-        InspectType = inspectType;
+    public CustomInspectorAttribute(Type inspectorType) {
+        InspectorType = inspectorType;
     }
 }

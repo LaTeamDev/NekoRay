@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using NekoLib.Core;
 using NekoRay;
+using NekoRay.Tools;
 using Serilog;
 
 namespace HotlineSPonyami.Gameplay; 

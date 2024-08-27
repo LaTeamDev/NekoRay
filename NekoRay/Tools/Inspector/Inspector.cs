@@ -23,12 +23,12 @@ public class Inspector : Object {
             ).Where(type => {
                 var attr = type.GetCustomAttribute<CustomInspectorAttribute>();
                 if (attr is null) return false;
-                return target.GetType().IsAssignableTo(attr.InspectType);
+                return target.GetType().IsAssignableTo(attr.InspectorType);
             });
         var b = a.FirstOrDefault(type => {
             var attr = type.GetCustomAttribute<CustomInspectorAttribute>();
             if (attr is null) return false;
-            return target.GetType() == attr.InspectType;
+            return target.GetType() == attr.InspectorType;
         })??a.First();
         var instance = Activator.CreateInstance(b);
         if (instance is null) return null;

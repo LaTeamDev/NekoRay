@@ -1,4 +1,5 @@
 using System.Numerics;
+using NekoRay.Tools;
 
 namespace NekoRay; 
 
@@ -20,7 +21,8 @@ public abstract class BaseCamera : Behaviour {
             Main = this;
         }
     }
-
+    
+    [HideInInspector]
     public RenderTexture RenderTexture = RenderTexture.Load(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
 
     public abstract Vector2 WorldToScreen(Vector3 position);

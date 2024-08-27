@@ -29,7 +29,7 @@ public class GameObjectInspector : Inspector {
             if (ImGui.CollapsingHeader((icon??MaterialIcons.Insert_drive_file)+ component.GetType().Name+"##"+component.Id)) {
                 ImGui.TextDisabled($"ID:{component.Id}");
                 if (!__cache.TryGetValue(component.Id, out var inspector)) {
-                    inspector = GetInspectorFor(component);
+                    __cache[component.Id] = inspector = GetInspectorFor(component);
                 }
                 inspector?.DrawGui();
             }

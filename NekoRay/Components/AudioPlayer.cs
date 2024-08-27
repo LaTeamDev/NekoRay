@@ -1,11 +1,17 @@
+using NekoRay.Tools;
+
 namespace NekoRay; 
 
 public class AudioPlayer : Behaviour {
     public IPlayable? AudioClip;
 
+    [ShowInInspector]
     public void Play() => AudioClip?.Play();
+    [ShowInInspector]
     public void Stop() => AudioClip?.Stop();
+    [ShowInInspector]
     public void Pause() => AudioClip?.Pause();
+    [ShowInInspector]
     public void Resume() => AudioClip?.Resume();
 
     public void Seek(float seconds) => AudioClip?.Seek(seconds);

@@ -37,6 +37,17 @@ public static class Time {
 
     [ConVariable("host_fixedtimestep")] 
     public static float FixedFps { get; set; } = 60f;
+
+    private static int _targetFps = 0;
+    
+    [ConVariable("r_targetfps")]
+    public static int TargetFps {
+        get => _targetFps;
+        set {
+            _targetFps = value;
+            Raylib.SetTargetFPS(value);
+        }
+    }
     
     public static double FixedDelta => 1d / FixedFps;
     public static float FixedDeltaF => (float) FixedDelta;

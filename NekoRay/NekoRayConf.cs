@@ -7,6 +7,7 @@ public class NekoRayConf {
         public string? License { get; set; }
     }
 
+    
     public class FilesystemPaths {
         public List<string> Bin { get; set; } = new();
         public List<string> Mount { get; set; } = new();
