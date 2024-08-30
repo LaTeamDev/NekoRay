@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using ImGuiNET;
+using Serilog;
 
 namespace NekoRay.Tools;
 
@@ -27,27 +28,28 @@ public abstract class SimpleDrawer<T> : Drawer {
         ImGui.TextDisabled($"{info.Name}: null");
     }
     
-    public virtual void DrawGui(FieldInfo info, object? obj)
-    {
+    public virtual void DrawGui(FieldInfo info, object? obj) {
+        var name = info.Name;
         if (obj == null) DrawNull(info);
 
         var value = (T)info.GetValue(obj);
         var range = info.GetCustomAttribute<RangeAttribute>();
         if (range is null) {
-            if (DrawInput(info.Name, ref value))
+            if (DrawInput(name, ref value))
             {
                 info.SetValue(obj, value);
             }
             return;
         }
         
-        if (DrawRange(info.Name, ref value, range.Min, range.Max))
+        if (DrawRange(name, ref value, range.Min, range.Max))
         {
             info.SetValue(obj, value);
         }
     }
     //this is basically the same implementation and i'm sure it is possible to fix it
     public virtual void DrawGui(PropertyInfo info, object? obj) {
+        var name = info.Name;
         var disabled = info.GetSetMethod() is null;
         if (disabled) ImGui.BeginDisabled();
         if (obj == null) DrawNull(info);
@@ -55,7 +57,7 @@ public abstract class SimpleDrawer<T> : Drawer {
         var value = (T)info.GetValue(obj);
         var range = info.GetCustomAttribute<RangeAttribute>();
         if (range is null) {
-            if (DrawInput(info.Name, ref value))
+            if (DrawInput(name, ref value))
             {
                 info.SetValue(obj, value);
             }
@@ -63,7 +65,7 @@ public abstract class SimpleDrawer<T> : Drawer {
             return;
         }
         
-        if (DrawRange(info.Name, ref value, range.Min, range.Max))
+        if (DrawRange(name, ref value, range.Min, range.Max))
         {
             info.SetValue(obj, value);
         }

@@ -1,5 +1,6 @@
 using System.Numerics;
 using NekoRay.Physics2D;
+using Serilog;
 
 namespace NekoRay; 
 
@@ -41,6 +42,15 @@ public abstract class BaseScene : IScene {
             gameObject.SendMessage("Draw");
         }
         DrawCameraTexture();
+    }
+
+    public virtual void OnWindowResize() {
+        var currentGameObjects = new GameObject[GameObjects.Count];
+        GameObjects.CopyTo(currentGameObjects);
+        Log.Verbose("Window resized");
+        foreach (var gameObject in currentGameObjects) {
+            gameObject.SendMessage("OnWindowResize");
+        }
     }
 
     public virtual void FixedUpdate() {

@@ -23,7 +23,20 @@ public abstract class BaseCamera : Behaviour {
     }
     
     [HideInInspector]
-    public RenderTexture RenderTexture = RenderTexture.Load(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
+    public RenderTexture? RenderTexture;
+
+    public BaseCamera() {
+        RecreateRenderTexture();
+    }
+    
+    public void RecreateRenderTexture() {
+        if (RenderTexture is not null) RenderTexture.Dispose(); 
+        RenderTexture = RenderTexture.Load(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
+    }
+
+    protected void OnWindowResize() {
+        RecreateRenderTexture();
+    }
 
     public abstract Vector2 WorldToScreen(Vector3 position);
     public abstract Vector3 ScreenToWorld(Vector2 position);

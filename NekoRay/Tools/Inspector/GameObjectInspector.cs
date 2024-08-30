@@ -31,7 +31,9 @@ public class GameObjectInspector : Inspector {
                 if (!__cache.TryGetValue(component.Id, out var inspector)) {
                     __cache[component.Id] = inspector = GetInspectorFor(component);
                 }
+                ImGui.PushID(component.Id.ToString());
                 inspector?.DrawGui();
+                ImGui.PopID();
             }
         }
     }

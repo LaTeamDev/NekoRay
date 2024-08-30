@@ -56,6 +56,7 @@ public abstract class GameBase {
         Console.Register<DebugDraw>();
         Console.Register<SceneViewer>();
         Console.Register(typeof(Time));
+        Console.Register<ImguiDemoWindow>();
         InitConsole(args.Contains("--console"));
         var assemblyFs = new AssemblyFilesystem(GetType().Assembly, GetType().Namespace);
         assemblyFs.Mount();
@@ -75,8 +76,10 @@ public abstract class GameBase {
     public event Action<KeyboardKey, bool>? KeyPressed;
 
     public virtual void UpdateEvents() {
-        if (Raylib.IsWindowResized())
+        if (Raylib.IsWindowResized()) {
             WindowResize?.Invoke();
+            SceneManager.InvokeScene("OnWindowResize");
+        }
         foreach (var key in Enum.GetValues<KeyboardKey>()) {
             var keyPressed = Raylib.IsKeyPressed(key);
             var keyPressedRepeat = Raylib.IsKeyPressedRepeat(key);

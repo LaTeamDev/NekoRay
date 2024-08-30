@@ -31,50 +31,8 @@ public class ComponentInspector : Inspector {
 
     public MemberInfo[] Members;
 
-    private static Dictionary<Type, Drawer> _drawers;
-
-    private static bool TryGetDrawer(Type t, [MaybeNullWhen(false)] out Drawer? value) {
-        var searchType = t;
-        while (true) {
-            if (_drawers.TryGetValue(searchType, out value)) {
-                return true;
-            }
-
-            if (searchType.BaseType is not null) {
-                searchType = searchType.BaseType;
-                continue;
-            }
-
-            foreach (var interfaceType in searchType.GetInterfaces()) {
-                if (_drawers.TryGetValue(interfaceType, out value)) {
-                    return true;
-                }
-            }
-
-            return _drawers.TryGetValue(typeof(object), out value);
-        }
-    }
-
-    static ComponentInspector() {
-        UpdateFieldPropDrawers();
-        HotReloadService.OnUpdateApplication += _ => {
-            UpdateFieldPropDrawers();
-        };
-    }
-
-    public static void UpdateFieldPropDrawers() {
-        _drawers = new();
-        var allCustomDrawers = AppDomain.CurrentDomain
-            .GetAssemblies()
-            .SelectMany(domainAssembly => domainAssembly.GetTypes()
-            ).Where(type => type.IsDefined(typeof(CustomDrawerAttribute)));
-        foreach (var customDrawer in allCustomDrawers) {
-            var who = customDrawer.GetCustomAttribute<CustomDrawerAttribute>();
-            _drawers[who!.DrawerType] = (Drawer)Activator.CreateInstance(customDrawer);
-        }
-    }
-
     public virtual void RenderMember(MemberInfo memberInfo) {
+        ImGui.Text(memberInfo.Name);
         switch (memberInfo.MemberType) {
             case MemberTypes.Event: RenderEvent((EventInfo) memberInfo); break;
             case MemberTypes.Property: RenderProperty((PropertyInfo) memberInfo); break;
@@ -89,12 +47,12 @@ public class ComponentInspector : Inspector {
     }
     
     public virtual void RenderProperty(PropertyInfo property) {
-        if (TryGetDrawer(property.PropertyType, out var value))
+        if (Drawer.TryGet(property.PropertyType, out var value))
             value.DrawGui(property, Target);
     }
 
     public virtual void RenderField(FieldInfo field) {
-        if (TryGetDrawer(field.FieldType, out var value))
+        if (Drawer.TryGet(field.FieldType, out var value))
             value.DrawGui(field, Target);
     }
 
