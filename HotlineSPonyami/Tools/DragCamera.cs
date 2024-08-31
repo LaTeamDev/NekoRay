@@ -38,11 +38,11 @@ public class DragCamera : Behaviour
 
         if (Raylib.IsMouseButtonPressed(1))
         {
-            _mouseStart = ScreenToWorld(Raylib.GetMousePosition());
+            _mouseStart = ScreenToWorld(Input.MousePosition);
         }
         if (Raylib.IsMouseButtonDown(1))
         {
-            Vector2 difference = ScreenToWorld(Raylib.GetMousePosition()) - _mouseStart;
+            Vector2 difference = ScreenToWorld(Input.MousePosition) - _mouseStart;
             Transform.Position -= new Vector3(difference, 0f);
         }
     }

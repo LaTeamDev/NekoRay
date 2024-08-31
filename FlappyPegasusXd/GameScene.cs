@@ -157,8 +157,8 @@ public class GameScene : BaseScene {
         base.Initialize();
     }
 
-    void OnKeyPressed(KeyboardKey key) {
-        if (key != KeyboardKey.KEY_ENTER) return;
+    void HandlePause() {
+        if (!Input.IsPressed("pause")) return;
         if (GameOverScene.Active) return;
         OverlayScene.Toggle();
     }
@@ -168,6 +168,7 @@ public class GameScene : BaseScene {
     }
 
     public override void Update() {
+        HandlePause();
         UpdateBg();
         
         if (!SceneManager.ActiveScene.GetType().IsAssignableTo(typeof(OverlayScene))) {

@@ -8,17 +8,10 @@ namespace FlappyPegasus;
 
 public class Game : GameBase {
     public override void Load(string[] args) {
-        NekoRay.Tools.Console.Register<Commands>();
         base.Load(args);
         World.LengthUnitsPerMeter = 64f;
-        KeyPressed += OnKeyPressed;
         SaveData.Load();
         SceneManager.LoadScene(new MenuScene());
-    }
-
-    private void OnKeyPressed(KeyboardKey key, bool repeat) {
-        if (repeat) return;
-        SceneManager.InvokeScene("OnKeyPressed", key);
     }
 
     public override void Draw() {

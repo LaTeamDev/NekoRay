@@ -29,7 +29,7 @@ public class PlayerMove : Behaviour {
     }
 
     private void ProcessTouch() {
-        var jump = Raylib.IsKeyPressed(KeyboardKey.KEY_Z) || Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT);
+        var jump = Input.IsPressed("attack");
         if (!jump)
             return;
         rb2D.LinearVelocity = -Vector2.UnitY * jumpPower* World.LengthUnitsPerMeter;
@@ -41,8 +41,8 @@ public class PlayerMove : Behaviour {
     
     private void TouchJump() {
         ProcessTouch();
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT))
-            rb2D.Position = BaseCamera.Main?.ScreenToWorld(Raylib.GetMousePosition()).ToVector2()??rb2D.Position;
+        if (Input.IsDown("attack2"))
+            rb2D.Position = BaseCamera.Main?.ScreenToWorld(Input.MousePosition).ToVector2()??rb2D.Position;
 
         Sprite.Transform.Rotation = NekoMath.Damp(
             Sprite.Transform.Rotation, 

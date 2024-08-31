@@ -30,10 +30,12 @@ public class Program {
     private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
     {
         var name = args.Name.Split(',')[0];
-        foreach (var dllPath in _dllPaths) {
+        for (var index = _dllPaths.Count - 1; index >= 0; index--) {
+            var dllPath = _dllPaths[index];
             var path = Path.Join(dllPath, name + ".dll");
             if (File.Exists(path)) return Assembly.LoadFrom(path);
         }
+
         return null;
     }
 		

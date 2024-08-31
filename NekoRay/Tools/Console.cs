@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -10,28 +11,27 @@ using NekoLib.Filesystem;
 
 namespace NekoRay.Tools; 
 
-public class Console : Behaviour {
-    internal static Console? Instance;
-    public static int MaxMessageCount = 256;
+public static class Console {
+    [ConVariable("max_messages")]
+    public static int MaxMessageCount { get; set; } = 256;
 
-    private static Queue<string> _messageLog = new();
+    public static Queue<string> MessageLog { get; } = new();
 
     static Console() {
-        Register<Console>();
+        HotReloadService.OnUpdateApplication += _ => RegisterAll();
     }
 
-    public Console() {
-        Instance = this;
+    public static void Init() {
+        RegisterAll();
     }
 
     public static void Log(string message) {
-        while (_messageLog.Count > MaxMessageCount) {
-            _messageLog.Dequeue();
+        while (MessageLog.Count > MaxMessageCount) {
+            MessageLog.Dequeue();
         }
-        _messageLog.Enqueue(message);
+        MessageLog.Enqueue(message);
     }
-
-    private string _inputBuffer = "";
+    
     private static Dictionary<string, MethodInfo> _commands = new();
     private static Dictionary<string, PropertyInfo> _convars = new();
     private static Dictionary<string, MethodInfo> _tagHandlers = new();
@@ -43,130 +43,7 @@ public class Console : Behaviour {
             return candidates;
         }
     }
-
-
-    private static void CompletitionCallback(ImGuiInputTextCallbackDataPtr data) {
-        // Locate beginning of current word
-        var str = Marshal.PtrToStringUTF8(data.Buf)??"";
-        var last = Math.Max(str.LastIndexOf(' '), str.LastIndexOf(';'))+1;
-        var size = str.Length - last;
-
-        // Build a list of candidates
-        var candidates = CommandList.Where(s => s.StartsWith(str??"")).ToList();
-
-        if (candidates.Count == 0) return;
-        //if (candidates.Count <= 1)
-        //{
-            // Single match. Delete the beginning of the word and replace it entirely so we've got nice casing.
-            data.DeleteChars(last, size);
-            data.InsertChars(data.CursorPos, candidates[0]);
-            //data.InsertChars(data.CursorPos, " ");
-            return;
-        //}
-        // Multiple matches. Complete as much as we can..
-        //TODO:
-    }
-
-    private static int _historyPos = -1;
-    private static List<string> _history = new();
-    private static string? _historyBuffer = null;
     
-    //todo: fix
-    private static void HistoryCallback(ImGuiInputTextCallbackDataPtr data) {
-        _historyBuffer ??= Marshal.PtrToStringUTF8(data.Buf);
-        //Log($"{_historyBuffer}\nthe history is \n{string.Join('\n', _history)}");
-        if (_history.Count == 0) return;
-        var prevHistoryPos = _historyPos;
-        if (data.EventKey == ImGuiKey.UpArrow) {
-            for (var i = _history.Count - 1; i >= 0; i--) {
-                _historyPos--;
-                if (_historyPos <= -1)
-                    _historyPos = _history.Count - 1;
-                if (_history[i].StartsWith(_historyBuffer)) break;
-            }
-
-        }
-        else if (data.EventKey == ImGuiKey.DownArrow) {
-            for (var i = 0; i < _history.Count; i++) {
-                _historyPos++;
-                if (_historyPos >= _history.Count)
-                    _historyPos = 0;
-                if (_history[i].StartsWith(_historyBuffer)) break;
-            }
-        }
-        
-        if (prevHistoryPos != _historyPos)
-        {
-            var historyStr = (_historyPos >= 0) ? _history[_historyPos] : "";
-            data.DeleteChars(0, data.BufTextLen);
-            data.InsertChars(0, historyStr);
-        }
-    }
-    
-    private static unsafe int TextEditCallback(ImGuiInputTextCallbackData* data)
-    {
-        switch (data->EventFlag) {
-            case ImGuiInputTextFlags.CallbackCompletion:
-                CompletitionCallback(data); 
-                break;
-            case ImGuiInputTextFlags.CallbackHistory: 
-                HistoryCallback(data);
-                break;
-            case ImGuiInputTextFlags.CallbackEdit:
-                _historyPos = -1;
-                _historyBuffer = null;
-                break;
-        }
-        return 0;
-    }
-
-    unsafe void DrawGui() {
-        var opened = Enabled;
-        if (ImGui.Begin("Console", ref opened)) {
-            ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0,0,0, 0.1f));
-            if (ImGui.BeginChild("MessageLog", new Vector2(ImGui.GetWindowWidth(), 
-                    ImGui.GetWindowHeight()-ImGui.GetFrameHeightWithSpacing()-ImGui.GetTextLineHeightWithSpacing()-18f))) {
-                foreach (var message in _messageLog) {
-                    ImGui.TextWrapped(message);
-                }
-            }
-            ImGui.EndChild();
-            ImGui.PopStyleColor();
-            ImGui.BeginGroup();
-            var inputTextFlags =
-                ImGuiInputTextFlags.EnterReturnsTrue |
-                ImGuiInputTextFlags.EscapeClearsAll | 
-                ImGuiInputTextFlags.CallbackHistory | 
-                ImGuiInputTextFlags.CallbackCompletion |
-                ImGuiInputTextFlags.CallbackEdit;
-            if (ImGui.InputText("", ref _inputBuffer, 255, inputTextFlags, TextEditCallback)) {
-                SubmitBuffer();
-            }
-            ImGui.SameLine();
-            if (ImGui.Button("Send")) {
-                SubmitBuffer();
-            }
-            ImGui.EndGroup();
-        }
-        ImGui.End();
-        if (Enabled != opened) {
-            Enabled = opened;
-        }
-    }
-
-    void SubmitBuffer() {
-        try {
-            _historyPos = 0;
-            _history.Add(_inputBuffer);
-            _messageLog.Enqueue("> "+ _inputBuffer);
-            Submit(_inputBuffer);
-        }
-        catch (Exception e) {
-            Serilog.Log.Error(e, "Command failed with error");
-        }
-        _inputBuffer = "";
-    }
-
     public static void Submit(string commandline) {
         var regex = new Regex("(?<!\\\\);");
         var commands = regex.Split(commandline).Select(com => com.Replace("\\;", ";")).ToArray();
@@ -231,12 +108,12 @@ public class Console : Behaviour {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static object? ConvertValue(object? obj, Type type) {
         ArgumentNullException.ThrowIfNull(type);
-        if (type.IsNullable())
-        {
-            if (obj is null)
-                return null;
-            type = new NullableConverter(type).UnderlyingType;
-        }
+        
+        if (!type.IsNullable()) return Convert.ChangeType(obj, type);
+        
+        if (obj is null) return null;
+        
+        type = new NullableConverter(type).UnderlyingType;
         return Convert.ChangeType(obj, type);
     }
 
@@ -300,6 +177,7 @@ public class Console : Behaviour {
     [ConCommand("test_cmd")]
     [ConDescription("meow")]
     [ConTags("test")]
+    [Conditional("DEBUG")]
     public static void TestCommand(string meow, float wow = 12f, int hehe = 33, params string[]? columnthree) {
         Serilog.Log.Information(meow);
         Serilog.Log.Information("{0}", wow);
@@ -362,37 +240,21 @@ public class Console : Behaviour {
     [ConCommand("clear")]
     [ConDescription("Clears Console")]
     public static void Clear() {
-        _messageLog.Clear();
+        MessageLog.Clear();
     }
-    
-    [ConCommand("ls")]
-    [ConDescription("list gameobjects in scene by index")]
-    public static void LoadDebugScene(string index) {
-        int idx = int.Parse(index);
-        foreach (var rootGameObject in SceneManager.Scenes[idx].RootGameObjects) {
-            Serilog.Log.Information(rootGameObject.Name);
-        }
-    }
-    
+
     [ConCommand("exec")]
     [ConDescription("run commands from thefile")]
     public static void ExecFile(string path) {
-        var virtualPath = Path.Combine("cfg", path+".cfg");
+        var virtualPath = Path.Combine("cfg", path + ".cfg");
         if (!Files.FileExists(virtualPath)) {
             Serilog.Log.Error("No file {Path} found", path);
             return;
         }
+
         Submit(Files.GetFile(virtualPath).Read().Replace("\r\n", ";").Replace("\n", ";"));
     }
 
-    [ConCommand("toggleconsole")]
-    public static void ToggleConsole() {
-        if (Instance is null) {
-            Serilog.Log.Error("Attempt to toggle uninitialized console window");
-            return;
-        }
-        Instance.Enabled = !Instance.Enabled;
-    }
     public static bool CheatsWasEnabled { get; private set; }
     private static bool _cheatsEnabled;
 
@@ -412,6 +274,7 @@ public class Console : Behaviour {
 
     [ConCommand("test_cheat")]
     [ConTags("cheat", "test")]
+    [Conditional("DEBUG")]
     public static void TestCheat() {
         Echo("cheat :3");
     }
@@ -423,13 +286,66 @@ public class Console : Behaviour {
     public static void Quit() {
         Program.Quit();
     }
-    
+
+    public static List<string> History { get; } = new();
+
     [ConCommand("history")]
     public static void PrintHistory() {
-        Serilog.Log.Information("History:\n"+string.Join('\n', _history));
+        Serilog.Log.Information("History:\n"+string.Join('\n', History));
+    }
+
+    private static void RegisterAll() {
+        _commands = new();
+        _convars = new();
+        _tagHandlers = new();
+        
+        var bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        
+        var assemblyTypes = AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(domainAssembly => domainAssembly.GetTypes());
+
+        var allMethods = assemblyTypes.SelectMany(type => 
+            type
+                .GetMethods(bindingFlags)
+                .Where(
+                    info => Attribute.IsDefined(info, typeof(ConCommandAttribute))
+                )
+            );
+        foreach (var method in allMethods) {
+            var conComName = method.GetCustomAttribute<ConCommandAttribute>()!.Name;
+            _commands.Add(conComName, method);
+        }
+        
+        var allHandlers = assemblyTypes.SelectMany(type => 
+            type
+                .GetMethods(bindingFlags)
+                .Where(
+                    info => Attribute.IsDefined(info, typeof(ConTagHandlerAttribute))
+                )
+        );
+        foreach (var method in allHandlers) {
+            var tag = method.GetCustomAttribute<ConTagHandlerAttribute>()!.Tag;
+            _tagHandlers.Add(tag, method);
+        }
+        
+        var allProperties = assemblyTypes.SelectMany(type => 
+            type
+                .GetProperties(bindingFlags)
+                .Where(
+                    info => Attribute.IsDefined(info, typeof(ConVariableAttribute))
+                )
+        );
+        foreach (var property in allProperties) {
+            var tag = property.GetCustomAttribute<ConVariableAttribute>()!.Name;
+            _convars.Add(tag, property);
+        }
+        
+        Serilog.Log.Verbose("Console commands successfully registered");
     }
 
     ///TODO: this will crash if something was registered under the same name
+    [Obsolete("All commands are now registered automatically and refreshed on hot reload")]
     public static void Register(Type type) {
         var bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -437,22 +353,23 @@ public class Console : Behaviour {
             .Where(info => Attribute.IsDefined(info, typeof(ConCommandAttribute)));
         foreach (var method in methods) {
             var conComName = method.GetCustomAttribute<ConCommandAttribute>()!.Name;
-            _commands.Add(conComName, method);
+            _commands[conComName] =  method;
         }
         
         var properties = type.GetProperties(bindingFlags)
             .Where(info => Attribute.IsDefined(info, typeof(ConVariableAttribute)));
         foreach (var property in properties) {
             var conVarName = property.GetCustomAttribute<ConVariableAttribute>()!.Name;
-            _convars.Add(conVarName, property);
+            _convars[conVarName] = property;
         }
         
         var tagHandlers = type.GetMethods(bindingFlags)
             .Where(info => Attribute.IsDefined(info, typeof(ConTagHandlerAttribute)));
         foreach (var tagHandler in tagHandlers) {
             var contag = tagHandler.GetCustomAttribute<ConTagHandlerAttribute>()!.Tag;
-            _tagHandlers.Add(contag, tagHandler);
+            _tagHandlers[contag] = tagHandler;
         }
     }
+    [Obsolete("All commands are now registered automatically and refreshed on hot reload")]
     public static void Register<T>() => Register(typeof(T));
 }

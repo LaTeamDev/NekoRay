@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using NekoRay.Tools;
 
@@ -31,7 +32,25 @@ public abstract class BaseCamera : Behaviour {
     
     public void RecreateRenderTexture() {
         if (RenderTexture is not null) RenderTexture.Dispose(); 
-        RenderTexture = RenderTexture.Load(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
+        RenderTexture = RenderTexture.Load(RenderWidth,RenderHeight);
+    }
+
+    private int? _renderWidth;
+    public int RenderWidth {
+        get => _renderWidth ?? Raylib.GetRenderWidth();
+        set {
+            if (value < 1) _renderWidth = null;
+            else _renderWidth = value;
+        }
+    }
+
+    private int? _renderHeight;
+    public int RenderHeight {
+        get => _renderHeight ?? Raylib.GetRenderHeight();
+        set {
+            if (value < 1) _renderHeight = null;
+            else _renderHeight = value;
+        }
     }
 
     protected void OnWindowResize() {

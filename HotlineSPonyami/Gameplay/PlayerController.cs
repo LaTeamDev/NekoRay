@@ -62,14 +62,14 @@ public class PlayerController : Behaviour {
             Y = Transform.Position.Y + _normalizedInput.Y * Timer.DeltaF * Speed
         };*/
         RigidBody.LinearVelocity = _normalizedInput * Speed;
-        var mousePos = BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition());
+        var mousePos = BaseCamera.Main.ScreenToWorld(Input.MousePosition);
         RigidBody.Rotation = new Rotation(MathF.Atan2(mousePos.X-Transform.Position.X, Transform.Position.Y-mousePos.Y));
     }
 
     void DrawGui() {
         if (!Game.DevMode) return;
         if (ImGui.Begin("player")) {
-            ImGui.Text(BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition()).ToString());
+            ImGui.Text(BaseCamera.Main.ScreenToWorld(Input.MousePosition).ToString());
             ImGui.Text(Transform.Position.ToString());
             ImGui.Text(Transform.Rotation.GetEulerAngles().ToString());
             ImGui.Text($"Carrying {Inventory.Carrying}/{Inventory.Capacity}");

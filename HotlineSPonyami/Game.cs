@@ -41,16 +41,11 @@ public class Game : GameBase {
     }
 
     public override void Load(string[] args) {
-        Console.Register<EditorScene>();
-        Console.Register<Gameplay.Commands>();
-        
-        DevMode = args.Contains("--tools");
         
         base.Load(args);
 
         World.LengthUnitsPerMeter = 64f;
         Physics.DefaultGravity = Vector2.Zero;
-        Raylib.SetWindowTitle("Hotline S Ponyami");
         if (!DevMode)
         {
             SceneManager.LoadScene(new TiledScene());

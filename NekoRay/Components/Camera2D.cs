@@ -16,7 +16,7 @@ public class Camera2D : BaseCamera {
 
     void LateUpdate() {
         _camera.target = new Vector2(Transform.Position.X, Transform.Position.Y);
-        _camera.offset = new Vector2(Raylib.GetRenderWidth() / 2f, Raylib.GetRenderHeight() / 2f);
+        _camera.offset = new Vector2(RenderWidth / 2f, RenderHeight / 2f);
         _camera.rotation = Transform.Rotation.YawPitchRollAsVector3().Z;
         if (Zoom <= 0f) Zoom = 1f;
     }

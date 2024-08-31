@@ -61,7 +61,7 @@ public class EditorScene : BaseScene, IBinarySavable
 
     public void GetCurrentCell(out int x, out int y)
     {
-        Vector2 mousePos = _camera.ScreenToWorld(Raylib.GetMousePosition());
+        Vector2 mousePos = _camera.ScreenToWorld(Input.MousePosition);
         mousePos /= (float)TileField.TextureSize;
         x = (int)MathF.Floor(mousePos.X);
         y = (int)MathF.Floor(mousePos.Y);
@@ -69,7 +69,7 @@ public class EditorScene : BaseScene, IBinarySavable
 
     public void GetCurrentCorner(out int x, out int y)
     {
-        Vector2 mousePos = _camera.ScreenToWorld(Raylib.GetMousePosition());
+        Vector2 mousePos = _camera.ScreenToWorld(Input.MousePosition);
         mousePos /= (float)TileField.TextureSize;
         x = (int)MathF.Round(mousePos.X);
         y = (int)MathF.Round(mousePos.Y);

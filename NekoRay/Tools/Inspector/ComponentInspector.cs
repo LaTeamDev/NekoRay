@@ -32,7 +32,7 @@ public class ComponentInspector : Inspector {
     public MemberInfo[] Members;
 
     public virtual void RenderMember(MemberInfo memberInfo) {
-        ImGui.Text(memberInfo.Name);
+        //ImGui.Text(memberInfo.Name);
         switch (memberInfo.MemberType) {
             case MemberTypes.Event: RenderEvent((EventInfo) memberInfo); break;
             case MemberTypes.Property: RenderProperty((PropertyInfo) memberInfo); break;

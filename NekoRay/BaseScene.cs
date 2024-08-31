@@ -26,6 +26,7 @@ public abstract class BaseScene : IScene {
     }
 
     public virtual void DrawCameraTexture() {
+        if (CliOptions.Instance.DevMode) return;
         if (BaseCamera.Main is null) return;
         if (this != BaseCamera.Main.GameObject.Scene) return;
         

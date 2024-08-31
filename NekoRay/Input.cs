@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using System.Numerics;
+using ImGuiNET;
 using NekoRay.Tools;
 using rlImGui_cs;
 using Serilog;
@@ -128,7 +129,43 @@ public sealed class Input {
         if (!_pressedRepeat.TryGetValue(action, out var value)) return false;
         return value;
     }
+
+    internal static Vector2 _lastMousePos;
+    public static Vector2 MousePosition {
+        get => _lastMousePos;
+        internal set => _lastMousePos = value;
+    }
     
+    internal static void UpdateMouseBinds() {
+        foreach (var bind in _mBinds) {
+            _down[bind.Value] |= Raylib.IsMouseButtonDown(bind.Key);
+            _pressed[bind.Value] |= Raylib.IsMouseButtonPressed(bind.Key);
+            _released[bind.Value] |= Raylib.IsMouseButtonReleased(bind.Key);
+            _up[bind.Value] |= Raylib.IsMouseButtonUp(bind.Key);
+        }
+    }
+
+    internal static void UpdateKeyboardBinds() {
+        foreach (var bind in _kbBinds) {
+            _down[bind.Value] |= Raylib.IsKeyDown(bind.Key);
+            _pressed[bind.Value] |= Raylib.IsKeyPressed(bind.Key);
+            _released[bind.Value] |= Raylib.IsKeyReleased(bind.Key);
+            _up[bind.Value] |= Raylib.IsKeyUp(bind.Key);
+            _pressedRepeat[bind.Value] |= Raylib.IsKeyPressedRepeat(bind.Key);
+        }
+    }
+
+    internal static void UpdateGamepadBinds() {
+        foreach (var bind in _gpBinds) {
+            _down[bind.Value] |= Raylib.IsGamepadButtonDown(0, bind.Key);
+            _pressed[bind.Value] |= Raylib.IsGamepadButtonPressed(0, bind.Key);
+            _released[bind.Value] |= Raylib.IsGamepadButtonReleased(0, bind.Key);
+            _up[bind.Value] |= Raylib.IsGamepadButtonUp(0, bind.Key);
+        }
+    }
+
+    public static bool ForceUpdate = false;
+
 
     public static void Update() {
         var io = ImGui.GetIO();
@@ -139,28 +176,18 @@ public sealed class Input {
         foreach (var bind in _bindList) {
             _down[bind] = _pressed[bind] = _released[bind] = _up[bind] = _pressedRepeat[bind] = false;
         }
-        if (!io.WantCaptureKeyboard)
-            foreach (var bind in _kbBinds) {
-                _down[bind.Value] |= Raylib.IsKeyDown(bind.Key);
-                _pressed[bind.Value] |= Raylib.IsKeyPressed(bind.Key);
-                _released[bind.Value] |= Raylib.IsKeyReleased(bind.Key);
-                _up[bind.Value] |= Raylib.IsKeyUp(bind.Key);
-                _pressedRepeat[bind.Value] |= Raylib.IsKeyPressedRepeat(bind.Key);
-            }
+        
+        if (!io.WantCaptureKeyboard || ForceUpdate)
+            UpdateKeyboardBinds();
+
+        if (!io.WantCaptureMouse || ForceUpdate) {
+            UpdateMouseBinds();
+        }
         
         if (!io.WantCaptureMouse)
-            foreach (var bind in _mBinds) {
-                _down[bind.Value] |= Raylib.IsMouseButtonDown(bind.Key);
-                _pressed[bind.Value] |= Raylib.IsMouseButtonPressed(bind.Key);
-                _released[bind.Value] |= Raylib.IsMouseButtonReleased(bind.Key);
-                _up[bind.Value] |= Raylib.IsMouseButtonUp(bind.Key);
-            }
+            MousePosition = Raylib.GetMousePosition();
+        
         if (Raylib.IsGamepadAvailable(0)) return;
-        foreach (var bind in _gpBinds) {
-            _down[bind.Value] |= Raylib.IsGamepadButtonDown(0, bind.Key);
-            _pressed[bind.Value] |= Raylib.IsGamepadButtonPressed(0, bind.Key);
-            _released[bind.Value] |= Raylib.IsGamepadButtonReleased(0, bind.Key);
-            _up[bind.Value] |= Raylib.IsGamepadButtonUp(0, bind.Key);
-        }
+        UpdateGamepadBinds();
     }
 }

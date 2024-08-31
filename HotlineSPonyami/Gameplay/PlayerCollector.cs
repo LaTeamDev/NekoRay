@@ -15,7 +15,7 @@ public class PlayerCollector : Behaviour {
     private HashSet<Collider> _colliderList => _shapeList.Select(shape => (Collider) shape.UserData).ToHashSet();
 
     void Update() {
-        var _mousePos = BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition());
+        var _mousePos = BaseCamera.Main.ScreenToWorld(Input.MousePosition);
         rb.Position = _mousePos.ToVector2();
         if (Input.IsPressed("attack1")) Gameplay.Commands.EntitySpawn("carryable");
         Collect();

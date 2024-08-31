@@ -46,28 +46,26 @@ public abstract class GameBase {
             .WriteTo.Console(LogEventLevel.Verbose, outputTemplate)
             .WriteTo.File($"logs/nekoray{DateTime.Now:yy.MM.dd-hh.MM.ss}.log", LogEventLevel.Verbose, outputTemplate);
     }
+
+    [ConVariable("devmode_enabled")] 
+    public static bool DevMode => CliOptions.Instance.DevMode;
     
-    public static bool DevMode = false;
-    public Console Console;
+    public ConsoleWindow ConsoleWindow;
 
     public virtual void Load(string[] args) {
-        Raylib.SetExitKey(0);
-        Console.Register<Input>();
-        Console.Register<DebugDraw>();
-        Console.Register<SceneViewer>();
-        Console.Register(typeof(Time));
-        Console.Register<ImguiDemoWindow>();
-        InitConsole(args.Contains("--console"));
-        var assemblyFs = new AssemblyFilesystem(GetType().Assembly, GetType().Namespace);
-        assemblyFs.Mount();
+        new AssemblyFilesystem(GetType().Assembly, GetType().Namespace).Mount();
         RaylibNekoLibFilesystemCompat.Use();
+        Console.ExecFile("autoexec");
+        InitConsoleWindow(CliOptions.Instance.ConsoleOnStart);
     }
 
-    public virtual void InitConsole(bool enable) {
+    public virtual void InitConsoleWindow(bool enable) {
         SceneManager.LoadScene(new PersistantScene());
-        Console = new GameObject("Console").AddComponent<Console>();
-        Console.Enabled = DevMode;
-        Console.ExecFile("autoexec");
+        ConsoleWindow = ConsoleWindow.ToggleConsole();
+        ConsoleWindow.Enabled = false;
+        ConsoleWindow.Enabled |= DevMode;
+        ConsoleWindow.Enabled |= enable;
+        
         if (!(DevMode || enable)) return;
         Input.BindCommand(KeyboardKey.KEY_F5, "toggleconsole");
     }
@@ -107,13 +105,13 @@ public abstract class GameBase {
         var cfg = new ImFontConfigPtr(ImGuiNative.ImFontConfig_ImFontConfig());
         cfg.OversampleH = 1;
         cfg.OversampleV = 1;
-
+        io.ConfigWindowsMoveFromTitleBarOnly = true;
         var firaFont = io.Fonts.AddFontFromFilesystemTTF("fonts/Lpix.ttf", 7, cfg);
     }
     public virtual LoopFunction Run(string[] args) {
         Raylib.InitAudioDevice();
         rlImGui.SetupUserFonts = SetupImGuiFonts;
-        rlImGui.Setup();
+        rlImGui.Setup(true, true);
         Load(args);
         return () => {
             Time.Step();
@@ -131,6 +129,7 @@ public abstract class GameBase {
             Raylib.ClearBackground(Raylib.BLACK);
             Draw();
             rlImGui.Begin(Time.DeltaF);
+            if (DevMode) ImGui.DockSpaceOverViewport(0, ImGui.GetMainViewport());
             DrawGui();
             rlImGui.End();
             Raylib.EndDrawing();

@@ -37,6 +37,7 @@ public class WindowSettings {
     public bool Resizable { get; set; } = false;
 
     public bool Undecorated { get; set; } = false;
+    public float AspectRatio => (float)Width / Height;
 
     /// <summary>
     /// Requires restart

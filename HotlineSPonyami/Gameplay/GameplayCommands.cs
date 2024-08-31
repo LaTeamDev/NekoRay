@@ -89,7 +89,7 @@ public sealed class Commands {
         var gameObject = builder.Invoke(new GameObject(name));
         
         InitializeTree(gameObject);
-        gameObject.Transform.Position = BaseCamera.Main.ScreenToWorld(Raylib.GetMousePosition());
+        gameObject.Transform.Position = BaseCamera.Main.ScreenToWorld(Input.MousePosition);
         
         return gameObject;
     }

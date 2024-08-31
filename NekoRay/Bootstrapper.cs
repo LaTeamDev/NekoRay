@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using CommandLine;
 using NekoLib.Filesystem;
 using Serilog;
 using Tomlyn;
@@ -68,16 +69,16 @@ public static class Bootstrapper {
         }
     }
     
+    [DebuggerHidden]
     public static int Start(string[] args) {
         new AssemblyFilesystem(typeof(Bootstrapper).Assembly).Mount();
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
         var gameAttr = typeof(Bootstrapper).Assembly.GetCustomAttribute<DefaultGameIdAttribute>();
-        var gameId = gameAttr?.GameId??"default";
-        for (int i = 0; i < args.Length; i++) {
-            if (args[i] != "-game") continue;
-            gameId = args[i + 1];
-            break;
-        }
+        
+        var parser = new Parser(with => with.HelpWriter = null);
+        parser.ParseArguments<CliOptions>(args).WithParsed(opt => CliOptions._instance = opt);
+        
+        var gameId = CliOptions.Instance.Game??"default";
 
         GameBase game; 
         try {
@@ -94,6 +95,9 @@ public static class Bootstrapper {
             game.Initlogging();
             Raylib.InitWindow(800, 600, "NekoRay");
         }
+        Raylib.SetExitKey(0);
+
+        NekoRay.Tools.Console.Init();
        
         try {
             var loopFunction = game.Run(args);
