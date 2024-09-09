@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Library</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <NekoRayProjectId>towerdefence</NekoRayProjectId>
+        <CopyAllData>true</CopyAllData>
+    </PropertyGroup>
+
+    <Import Project="../NekoRay/game.targets" />
+
+    <ItemGroup>
+      <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="towerdefence\textures\notexture.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

@@ -17,6 +17,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
         <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
+        <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
     </ItemGroup>
     
     <ItemGroup>

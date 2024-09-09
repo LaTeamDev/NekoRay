@@ -9,7 +9,7 @@
         <Company>VanderCat</Company>
         <Product>NekoRay Silly Engine</Product>
         <AssemblyVersion>2.0</AssemblyVersion>
-        <LangVersion>default</LangVersion>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <ItemGroup> 
@@ -23,7 +23,6 @@
       <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
       <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
       <ProjectReference Include="..\..\rlImGui-CSharp-Vinculum\rlImGui\rlImGui.csproj" />
-      <Analyzer Include="..\..\NekoLib\NekoLib.Analyzers\bin\Release\netstandard2.1\NekoLib.Analyzers.dll" />
     </ItemGroup>
 
     <ItemGroup>

@@ -22,6 +22,10 @@ public class Inspect : ToolBehaviour {
     [ConDescription("inspect SceneName/Path/To/GameObject(.ComponentType)")]
     [ConTags("cheat")]
     public static void OpenInspect(params string[] pathArgs) {
+        if (pathArgs.Length < 1) {
+            Toggle();
+            return;
+        }
         var path = string.Join(" ", pathArgs);
         var stuff = Regex.Split(path, "(?<!\\\\)\\/").ToList();
         if (stuff.Count < 2) {

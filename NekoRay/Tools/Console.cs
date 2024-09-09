@@ -53,15 +53,22 @@ public static class Console {
             if (args.Count <= 0) continue;
             var commandName = args[0];
             args.RemoveAt(0);
-            if (_convars.ContainsKey(commandName)) {
-                if (args.Count <= 0) {
-                    PrintVariable(commandName);
+            try {
+                if (_convars.ContainsKey(commandName)) {
+                    if (args.Count <= 0) {
+                        PrintVariable(commandName);
+                        continue;
+                    }
+
+                    SubmitVariable(commandName, args[0]);
                     continue;
                 }
-                SubmitVariable(commandName, args[0]);
-                continue;
+
+                SubmitCommand(commandName, args.Cast<object>().ToArray());
             }
-            SubmitCommand(commandName, args.Cast<object>().ToArray());
+            catch (Exception e) {
+                Serilog.Log.Error(e, "Command failed with error");
+            }
         }
     }
 
