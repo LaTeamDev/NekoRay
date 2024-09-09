@@ -7,7 +7,7 @@ public class Player : Entity {
     public IController? Controller;
     public Rigidbody2D Rigidbody;
     public CircleCollider Collider;
-    public float Speed = 1f;
+    public float Speed = 64f;
 
     public Player() {
         Name = "Player";
@@ -18,7 +18,8 @@ public class Player : Entity {
         Collider = AddComponent<CircleCollider>();
         Collider.Radius = 16f;
         Rigidbody = AddComponent<Rigidbody2D>();
-        Rigidbody.LinearDamping = 1f;
+        Rigidbody.Type = BodyType.Kinematic;
+        //Rigidbody.LinearDamping = 4f;
         base.Initialize();
     }
 

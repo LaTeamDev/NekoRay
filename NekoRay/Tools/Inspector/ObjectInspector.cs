@@ -9,7 +9,7 @@ using Serilog;
 
 namespace NekoRay.Tools; 
 
-[CustomInspector(typeof(NekoLib.Core.Object))]
+[CustomInspector(typeof(object))]
 public class ObjectInspector : Inspector {
     public override void Initialize() {
         var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
@@ -63,7 +63,6 @@ public class ObjectInspector : Inspector {
     }
 
     public override void DrawGui() {
-        var target = (object)Target;
         foreach (var member in Members) {
             RenderMember(member);
         }
