@@ -10,11 +10,14 @@ public class Entity : GameObject {
     [ConTags("cheat")]
     public static bool DrawEntityPosition { get; set; }
 
-    public float Hp = 1f;
+    public Entity(string name = "Entity") : base(name) {
+        AddComponent<EntityRenderer>();
+    }
 
-    public override void Draw() {
-        base.Draw();
-        if (DrawEntityPosition) Raylib.DrawText("player", Transform.Position.X, Transform.Position.Y, 10, Raylib.BLACK);
+    public float Hp = 1f;
+    
+    public virtual void Render() {
+        if (DrawEntityPosition) Raylib.DrawText("entity", Transform.Position.X, Transform.Position.Y, 10, Raylib.BLACK);
     }
     
 }

@@ -13,8 +13,20 @@ public class GameView : ToolBehaviour {
     private int _renderHeight;
     private bool _autoSize = true;
     private bool _fill = false;
-    private int _displayWidth;
-    private int _displayHeight;
+    private static int _displayWidth;
+    private static int _displayHeight;
+
+    [ConVariable("r_gameview_width")]
+    public static int DisplayWidth {
+        get => _displayWidth;
+        set => _displayWidth = value;
+    }
+
+    [ConVariable("r_gameview_height")]
+    public static int DisplayHeight {
+        get => _displayHeight;
+        set => _displayHeight = value;
+    }
 
     private bool DrawSize(string id, ref int width, ref int height) {
         ImGui.SetNextItemWidth(64f);
@@ -76,7 +88,7 @@ public class GameView : ToolBehaviour {
             ImGui.BeginChild("GameRenderer");
             var aspectRatio = _renderWidth/_renderHeight;
             Vector2 wsize;
-            if (!_fill) wsize = new Vector2(_displayWidth, _displayHeight);
+            if (!_fill) wsize = new Vector2(DisplayWidth, DisplayHeight);
             else wsize = new Vector2(_renderWidth, _renderHeight);
             var mousePosScalingFactor = _renderWidth / wsize.X;
             var startPos = ImGui.GetCursorScreenPos();

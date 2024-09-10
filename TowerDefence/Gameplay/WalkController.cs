@@ -35,5 +35,6 @@ public class WalkController : IController {
     public void Update() {
         UpdateInputDirection();
         Player.Rigidbody.LinearVelocity = Player.Speed*_normalizedInput;
+        if (Input.IsPressed("attack1")) Player.Attack();
     }
 }
