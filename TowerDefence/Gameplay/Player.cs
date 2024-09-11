@@ -46,7 +46,7 @@ public class Player : Entity {
         object? context = null;
         Rigidbody.World.OverlapAABB(
             new AABB(pos-HitboxSize, pos+HitboxSize), 
-            new b2QueryFilter(),
+            new QueryFilter<PhysicsCategory> {Mask = PhysicsCategory.Buildings, Category = PhysicsCategory.Trigger},
             static (Shape shape, ref object? ctx) => {
             Log.Verbose("hit {rb}", ((Rigidbody2D)shape.Body.UserData).GameObject.Name);
             return true;
