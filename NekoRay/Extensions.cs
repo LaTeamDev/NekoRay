@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -19,8 +20,8 @@ public static class Extensions {
 
     public static Vector2 ToVector2(this Vector3 vector) => new(vector.X, vector.Y);
     
-    public unsafe static Color ToRaylib(this b2HexColor color) {
-        return *(Color*)Unsafe.AsPointer(ref color) with { a = 255}; //hope this will be stable enough
+    public unsafe static RayColor ToRaylib(this b2HexColor color) {
+        return *(RayColor*)Unsafe.AsPointer(ref color) with { a = 255}; //hope this will be stable enough
     }
     
     public static void RemoveByValue<T, T2>(this Dictionary<T, T2> dictionary, T2 value) where T : notnull {
@@ -56,4 +57,10 @@ public static class Extensions {
             SceneManager.SetSceneActive(prev);
         });
     }
+
+    public static Vector2 ToVector2(this Point point) => new(point.X, point.Y);
+    public static Vector2 ToVector2(this Size point) => new(point.Width, point.Height);
+    public static Point ToPoint(this Vector2 vector) => new((int)vector.X, (int)vector.Y);
+    public static Size ToSize(this Vector2 vector) => new((int)vector.X, (int)vector.Y);
+    
 }

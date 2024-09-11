@@ -23,6 +23,7 @@ public class DebugScene : BaseScene {
     }
 
     public override void FixedUpdate() {
+        base.FixedUpdate();
         _world.Step(Time.FixedDeltaF, 4);
     }
 }

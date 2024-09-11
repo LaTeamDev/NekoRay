@@ -27,5 +27,6 @@ public static partial class Commands {
 
     public static void DefualtScenes() {
         SceneAdd("debug", () => new DebugScene());
+        SceneAdd("game", () => new GameScene());
     }
 }
