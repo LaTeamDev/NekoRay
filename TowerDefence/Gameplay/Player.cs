@@ -41,16 +41,16 @@ public class Player : Entity {
     [ConTags("cheat")]
     public static bool DrawPlayerAttackHitbox { get; set; }
 
-    public void Attack() {
+    public unsafe void Attack() {
         var pos = HitboxPosition.Position.ToVector2();
         object? context = null;
         Rigidbody.World.OverlapAABB(
-            new AABB(pos+HitboxSize, pos-HitboxSize), 
-            new b2QueryFilter(), 
-            (Shape shape, ref object? ctx) => {
-                Log.Verbose("hit {rb}", ((Rigidbody2D)shape.Body.UserData).GameObject.Name);
-                return true;
-            }, ref context);
+            new AABB(pos-HitboxSize, pos+HitboxSize), 
+            new b2QueryFilter(),
+            static (Shape shape, ref object? ctx) => {
+            Log.Verbose("hit {rb}", ((Rigidbody2D)shape.Body.UserData).GameObject.Name);
+            return true;
+        }, ref context);
     }
 
     public override void Update() {

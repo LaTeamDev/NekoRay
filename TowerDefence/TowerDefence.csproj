@@ -8,6 +8,7 @@
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <NekoRayProjectId>towerdefence</NekoRayProjectId>
         <CopyAllData>true</CopyAllData>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <Import Project="../NekoRay/game.targets" />
