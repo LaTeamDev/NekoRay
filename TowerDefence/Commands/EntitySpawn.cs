@@ -50,5 +50,14 @@ public partial class Commands {
             camera.BackgroundColor = Raylib.RAYWHITE;
             return gameObject;
         });
+        EntAdd("test_anim", () => {
+            var gameObject = new GameObject("test_anim");
+            var sprite = gameObject.AddComponent<SpriteRenderer2D>();
+            sprite.Sprite = Data.GetSprite("textures/enemy/medium.png");
+            var animator = gameObject.AddComponent<Animator2D>();
+            animator.Animation = Data.GetAnimation("animations/enemy/medium.toml");
+            animator.AnimationName = "idle";
+            return gameObject;
+        });
     }
 }

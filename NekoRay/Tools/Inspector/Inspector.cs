@@ -8,7 +8,7 @@ public class Inspector : Object {
     public Type? TargetType => Target?.GetType();
 
     public virtual void DrawGui() {
-        if (Target is null) return;
+        
     }
 
     public virtual void Initialize() {

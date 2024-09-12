@@ -2,6 +2,8 @@ using NekoLib.Filesystem;
 using NekoRay;
 using NekoRay.Tools;
 using Serilog;
+using Tomlyn;
+using TowerDefence.Objects;
 using ZeroElectric.Vinculum;
 using Font = NekoRay.Font;
 using Shader = NekoRay.Shader;
@@ -82,4 +84,7 @@ public static class Data
         _shaders[pathFs+fragVert] = Shader.FromFiles(pathFs, fragVert);
         return _shaders[pathFs+fragVert];
     }
+
+    public static AnimationsDefenition GetAnimation(string path) =>
+        Toml.ToModel<AnimationsDefenition>(Raylib.LoadFileText(path));
 }
