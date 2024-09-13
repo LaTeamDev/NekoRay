@@ -26,6 +26,7 @@ public abstract class EnemyAi : Behaviour {
     public virtual void Idle() {}
     public virtual void Death() {}
     public virtual void Attack() {}
+    public virtual void AttackPrepare() {}
     public virtual void Shoot() {}
     public virtual void Run() {}
     public virtual void RunAway() {}
@@ -38,6 +39,9 @@ public abstract class EnemyAi : Behaviour {
                 break;
             case EnemyState.Death:
                 Death();
+                break;
+            case EnemyState.AttackPrepare:
+                AttackPrepare();
                 break;
             case EnemyState.Attack:
                 Attack();

@@ -57,10 +57,10 @@ public partial class Commands {
             Box box = new Box(BuildingsList.List[0]);
             return box;
         });
-        EntAdd("box_turret", () =>
-        {
+        EntAdd("box_turret", () => {
             Box box = new Box(BuildingsList.List[1]);
             return box;
+        });
         EntAdd("test_anim", () => {
             var gameObject = new GameObject("test_anim");
             var sprite = gameObject.AddComponent<SpriteRenderer2D>();
@@ -73,36 +73,70 @@ public partial class Commands {
         EntAdd("enemy_big", () => {
             var gameObject = new GameObject("Enemy (Big)");
             var sprite = gameObject.AddComponent<SpriteRenderer2D>();
-            sprite.Sprite = Data.GetSprite("textures/enemy/big.png");
             var animator = gameObject.AddComponent<Animator2D>();
-            animator.Animation = Data.GetAnimation("animations/enemy/big.toml");
+            var rb = gameObject.AddComponent<Rigidbody2D>();
+            var shape = gameObject.AddComponent<CircleCollider>();
             animator.AnimationName = "idle";
+            rb.Type = BodyType.Dynamic;
+            rb.FixedRotation = true;
+            shape.Filter = new Filter<PhysicsCategory> {
+                Category = PhysicsCategory.Enemy,
+                Mask = PhysicsCategory.All
+            };
+            
+            //var enemy = gameObject.AddComponent<BigEnemy>();
+            //var ai = gameObject.AddComponent<BigEnemyAi>();
+            sprite.Sprite = Data.GetSprite("textures/enemy/big.png");
+            animator.Animation = Data.GetAnimation("animations/enemy/big.toml");
+            //ai.Animator = animator;
+            //ai.Enemy = enemy;
+            shape.Radius = 5f;
             return gameObject;
         });
         EntAdd("enemy_small", () => {
             var gameObject = new GameObject("Enemy (small)");
             var sprite = gameObject.AddComponent<SpriteRenderer2D>();
-            sprite.Sprite = Data.GetSprite("textures/enemy/small.png");
             var animator = gameObject.AddComponent<Animator2D>();
-            animator.Animation = Data.GetAnimation("animations/enemy/small.toml");
-            animator.AnimationName = "idle";
-            var enemy = gameObject.AddComponent<SmallEnemy>();
-            var ai = gameObject.AddComponent<SmallEnemyAi>();
-            ai.Animator = animator;
-            ai.Enemy = enemy;
             var rb = gameObject.AddComponent<Rigidbody2D>();
             var shape = gameObject.AddComponent<CircleCollider>();
-            shape.Radius = 5f;
+            animator.AnimationName = "idle";
             rb.Type = BodyType.Dynamic;
+            rb.FixedRotation = true;
+            shape.Filter = new Filter<PhysicsCategory> {
+                Category = PhysicsCategory.Enemy,
+                Mask = PhysicsCategory.All
+            };
+            
+            var enemy = gameObject.AddComponent<SmallEnemy>();
+            var ai = gameObject.AddComponent<SmallEnemyAi>();
+            sprite.Sprite = Data.GetSprite("textures/enemy/small.png");
+            animator.Animation = Data.GetAnimation("animations/enemy/small.toml");
+            ai.Animator = animator;
+            ai.Enemy = enemy;
+            shape.Radius = 5f;
             return gameObject;
         });
         EntAdd("enemy_medium", () => {
-            var gameObject = new GameObject("Enemy (medium)");
+            var gameObject = new GameObject("Enemy (Medium)");
             var sprite = gameObject.AddComponent<SpriteRenderer2D>();
-            sprite.Sprite = Data.GetSprite("textures/enemy/medium.png");
             var animator = gameObject.AddComponent<Animator2D>();
-            animator.Animation = Data.GetAnimation("animations/enemy/medium.toml");
+            var rb = gameObject.AddComponent<Rigidbody2D>();
+            var shape = gameObject.AddComponent<CircleCollider>();
             animator.AnimationName = "idle";
+            rb.Type = BodyType.Dynamic;
+            rb.FixedRotation = true;
+            shape.Filter = new Filter<PhysicsCategory> {
+                Category = PhysicsCategory.Enemy,
+                Mask = PhysicsCategory.All
+            };
+            
+            var enemy = gameObject.AddComponent<MediumEnemy>();
+            var ai = gameObject.AddComponent<MediumEnemyAi>();
+            sprite.Sprite = Data.GetSprite("textures/enemy/medium.png");
+            animator.Animation = Data.GetAnimation("animations/enemy/medium.toml");
+            ai.Animator = animator;
+            ai.Enemy = enemy;
+            shape.Radius = 12f;
             return gameObject;
         });
     }

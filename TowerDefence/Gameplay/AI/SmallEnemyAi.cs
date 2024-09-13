@@ -1,5 +1,9 @@
 using System.Numerics;
+using Box2D;
+using NekoLib.Core;
 using NekoRay;
+using NekoRay.Physics2D;
+using Serilog;
 
 namespace TowerDefence.Gameplay.AI;
 
@@ -14,7 +18,7 @@ public class SmallEnemyAi : EnemyAi {
     }
 
     public float AttackCoolDown = 1f;
-    private float _currentTime = 0f;
+    protected float _currentTime = 0f;
     public Vector2 MoveDirection = Vector2.One;
     public override void Attack() {
         Enemy.Attack(MoveDirection);
@@ -22,7 +26,18 @@ public class SmallEnemyAi : EnemyAi {
     }
 
     public bool HasBreakableRoadBlock() {
-        return false;
+        GameObject? context = null; //FIXME: there could be buildings too
+        Enemy.GameObject.GetComponent<Rigidbody2D>() //could be slow, not sure
+            .World.CastRay<GameObject>(
+            Transform.Position.ToVector2(), 
+            Transform.Position.ToVector2()+MoveDirection*16,
+            new QueryFilter<PhysicsCategory> {Mask = PhysicsCategory.Buildings | PhysicsCategory.Player, Category = PhysicsCategory.Trigger},
+            static (Shape shape, Vector2 point, Vector2 normal, float fraction, ref GameObject? ctx) => {
+                var rb = (Rigidbody2D)(shape.Body.UserData);
+                ctx = rb.GameObject;
+                return 0f;
+            }, ref context);
+        return context is not null;
         //check if next to it run direction is a breakable
     }
 
