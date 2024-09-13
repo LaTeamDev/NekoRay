@@ -5,6 +5,7 @@ using NekoRay.Physics2D;
 using NekoRay.Tools;
 using Serilog;
 using TowerDefence.Gameplay;
+using TowerDefence.Gameplay.Buildings;
 using TowerDefence.Gameplay.AI;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
@@ -51,6 +52,15 @@ public partial class Commands {
             camera.BackgroundColor = Raylib.RAYWHITE;
             return gameObject;
         });
+        EntAdd("box_reactor", () =>
+        {
+            Box box = new Box(BuildingsList.List[0]);
+            return box;
+        });
+        EntAdd("box_turret", () =>
+        {
+            Box box = new Box(BuildingsList.List[1]);
+            return box;
         EntAdd("test_anim", () => {
             var gameObject = new GameObject("test_anim");
             var sprite = gameObject.AddComponent<SpriteRenderer2D>();
