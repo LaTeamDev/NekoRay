@@ -1,4 +1,5 @@
 using System.Numerics;
+using Box2D;
 using NekoRay;
 using NekoRay.Physics2D;
 using NekoRay.Tools;
@@ -35,6 +36,30 @@ public class WalkController : IController {
     public void Update() {
         UpdateInputDirection();
         Player.Rigidbody.LinearVelocity = Player.Speed*_normalizedInput;
-        if (Input.IsPressed("attack1")) Player.Attack();
+        if (Input.IsPressed("use"))
+        {
+            object? context = null;
+            Circle circle = new Circle(50);
+            bool used = false;
+            Player.Rigidbody.World.OverlapCircle(
+                ref circle, 
+                new Transform() { Position = Player.Transform.Position.ToVector2(), Rotation = Rotation.Identity},
+                new QueryFilter<PhysicsCategory> {Mask = PhysicsCategory.All, Category = PhysicsCategory.All},
+                 (Shape shape, ref object? ctx) =>
+                {
+                    Rigidbody2D rb = (Rigidbody2D)shape.Body.UserData;
+                    if (rb.GameObject is Usable usable && !used && usable.CanUse(Player))
+                    {
+                        usable.Use(Player);
+                        used = true;
+                    }
+                    return true;
+                }, ref context);
+        }
+
+        if (Input.IsPressed("attack1"))
+        {
+            Player.Inventory.Place(Player.TemplatePosition);
+        }
     }
 }

@@ -5,6 +5,7 @@ using NekoRay;
 using NekoRay.Physics2D;
 using NekoRay.Tools;
 using Serilog;
+using TowerDefence.Gameplay.Buildings;
 using ZeroElectric.Vinculum;
 using Object = NekoLib.Core.Object;
 
@@ -15,16 +16,26 @@ public class Player : Entity {
     public Rigidbody2D Rigidbody;
     public CircleCollider Collider;
     public SpriteRenderer2D Sprite;
+    public BuildingInventory Inventory { get; private set; }
+    public Vector2 TemplatePosition;
+    
     public float Speed = 64f;
 
     public Player() : base("Player") { }
 
-    public override void Initialize() {
+    public override void Initialize()
+    {
+        Inventory = new BuildingInventory();
         Controller = new WalkController(this);
         Collider = AddComponent<CircleCollider>();
+        Collider.Filter = new Filter<PhysicsCategory>()
+        {
+            Category = PhysicsCategory.Player,
+            Mask = PhysicsCategory.Buildings | PhysicsCategory.Enemy
+        };
         Collider.Radius = 16f;
         Rigidbody = AddComponent<Rigidbody2D>();
-        Rigidbody.Type = BodyType.Kinematic;
+        Rigidbody.Type = BodyType.Dynamic;
         Rigidbody.FixedRotation = true;
         Sprite = this.AddChild("Sprite").AddComponent<SpriteRenderer2D>();
         Sprite.Sprite = Data.GetSprite("textures/player/placeholder.png");
@@ -58,6 +69,7 @@ public class Player : Entity {
         Controller?.Update();
         try {
             var mousePos = BaseCamera.Main.ScreenToWorld(Input.MousePosition);
+            TemplatePosition = mousePos.ToVector2();
             Sprite.Transform.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ,
                 MathF.Atan2(mousePos.X - Transform.Position.X, Transform.Position.Y - mousePos.Y));
         }
@@ -68,6 +80,7 @@ public class Player : Entity {
 
     public override void Render() {
         base.Render();
+        Inventory.DrawTemplate(TemplatePosition);
         if (!DrawPlayerAttackHitbox) return;
         var pos = HitboxPosition.Position.ToVector2();
         var start = pos - HitboxSize;
