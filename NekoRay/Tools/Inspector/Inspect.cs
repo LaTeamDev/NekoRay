@@ -65,6 +65,7 @@ public class Inspect : ToolBehaviour {
                 _inspector.DrawGui();
             }
             catch (Exception e) {
+                ImGui.EndDisabled();
                 DrawFail(e);
             }
         }

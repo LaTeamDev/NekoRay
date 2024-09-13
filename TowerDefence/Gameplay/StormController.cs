@@ -4,6 +4,14 @@ using NekoRay.Tools;
 namespace TowerDefence.Gameplay;
 
 public static class StormController {
+    [ConCommand("td_start")]
+    public static void Start() => _started = true;
+    
+    private static bool _started;
+    
+    [ConVariable("td_gamestarted")] 
+    public static bool Started => _started;
+    
     [ConVariable("td_stormcount")]
     [ConTags("cheat")]
     public static int Count { get; set; }
@@ -19,14 +27,15 @@ public static class StormController {
     [ConVariable("td_time_max")]
     [ConTags("cheat")]
     public static float TimeMax { get; set; }
-    
+
     [ConVariable("td_time_next")]
     [ConTags("cheat")]
-    public static float TimeNext { get; set; }
+    public static float TimeNext { get; set; } = 60f;
 
     public static event Action? OnPhaseEnded;
 
     private static void UpdateTimer() {
+        Time -= NekoRay.Time.DeltaF;
         if (Time <= 0f) {
             EndWave();
         }
@@ -37,9 +46,11 @@ public static class StormController {
     public static void EndWave() {
         OnPhaseEnded?.Invoke();
         Time = TimeNext;
+        TimeMax = TimeNext;
     }
     
     public static void Update() {
+        if (!Started) return;
          UpdateTimer();
     }
 }

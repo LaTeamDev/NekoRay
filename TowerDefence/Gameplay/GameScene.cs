@@ -7,11 +7,13 @@ using TowerDefence.Gameplay.UI;
 using TowerDefence.UI;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
+using Timer = NekoLib.Core.Timer;
 
 namespace TowerDefence.Gameplay;
 
 public class GameScene : BaseScene {
     private World _world;
+    private Timer _spawner;
     public override void Initialize() {
         _world = this.CreateWorld();
         #region Camera
@@ -28,13 +30,34 @@ public class GameScene : BaseScene {
         progressBar.Transform.Position = new Vector3(228, 18, 0);
         progressBar.Transform.LocalScale = new Vector3(512, 16, 1);
         progressBar.GameObject.AddComponent<StormWatcher>();
+
+        _spawner = new Timer();
+        StormController.OnPhaseEnded += OnPhaseEnded;
         
         base.Initialize();
         
     }
 
+    public void SpawnLoop() {
+        if (!StormController.IsInStorm) return;
+        Commands.Commands.EntSpawn("enemy_small");
+    }
+
+    public void OnPhaseEnded() {
+        StormController.IsInStorm = !StormController.IsInStorm;
+    }
+
+    public float SpawnRate = 0.25f;
+    public float _time = 0f;
+
     public override void Update() {
+        _time += Time.DeltaF;
+        while (SpawnRate <= _time) {
+            SpawnLoop();
+            _time-=SpawnRate;
+        }
         StormController.Update();
+        //_spawner.Update(Time.DeltaF);
         base.Update();
     }
     

@@ -1,0 +1,62 @@
+[[frames]]
+width = 32
+height = 32
+x = 0
+y = 0
+[[frames]]
+width = 32
+height = 32
+x = 32
+y = 0
+[[frames]]
+width = 32
+height = 32
+x = 64
+y = 0
+[[frames]]
+width = 32
+height = 32
+x = 96
+y = 0
+[[frames]]
+width = 32
+height = 32
+x = 128
+y = 0
+[[frames]]
+width = 32
+height = 32
+x = 160
+y = 0
+[[frames]]
+width = 32
+height = 32
+x = 192
+y = 0
+[[frames]]
+width = 32
+height = 32
+x = 224
+y = 0
+[[frames]]
+width = 32
+height = 32
+x = 256
+y = 0
+
+[animations]
+    [animations.idle]
+        loop = true
+        frames = [0, 1 , 2]
+    [animations.run]
+        loop = true
+        frames = [3, 4, 5]
+    [animations.attack_prepare]
+        loop = true
+        frames = [6]
+    [animations.attack_left]
+        loop = true
+        frames = [7]
+    [animations.attack_right]
+        loop = true
+        frames = [8]
