@@ -49,11 +49,12 @@ public abstract class SimpleDrawer<T> : Drawer {
     }
     //this is basically the same implementation and i'm sure it is possible to fix it
     public virtual void DrawGui(PropertyInfo info, object? obj) {
+        if (info.GetGetMethod() is null) return;
         var name = info.Name;
         var disabled = info.GetSetMethod() is null;
         if (disabled) ImGui.BeginDisabled();
         if (obj == null) DrawNull(info);
-
+        
         var value = (T)info.GetValue(obj);
         var range = info.GetCustomAttribute<RangeAttribute>();
         if (range is null) {

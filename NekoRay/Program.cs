@@ -22,8 +22,8 @@ public class Program {
     public static void Init()
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        GamePath = Path.GetDirectoryName(Environment.ProcessPath);
-        _dllPaths.Add(Path.Join(GamePath, "\\bin\\"));
+        GamePath = Directory.GetCurrentDirectory();
+        _dllPaths.Add(Path.Join(GamePath, "bin"));
         Environment.CurrentDirectory = GamePath;
     }
 	

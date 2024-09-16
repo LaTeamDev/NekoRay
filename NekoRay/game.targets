@@ -28,6 +28,7 @@
             <_EngineItems Include="$(OutDir)\bin\NekoRay.dll" />
         </ItemGroup>
         <Move SourceFiles="@(_EngineItems)" DestinationFolder="$(OutDir)\" />
-        <Move SourceFiles="$(OutDir)\NekoRay.exe" DestinationFiles="$(OutDir)\$(NekoRayProjectId).exe"/>
+        <Move Condition="$(OS) == 'Windows_NT'" SourceFiles="$(OutDir)\NekoRay.exe" DestinationFiles="$(OutDir)\$(NekoRayProjectId).exe"/>
+        <Move Condition="$(OS) != 'Windows_NT'" SourceFiles="$(OutDir)\NekoRay" DestinationFiles="$(OutDir)\run_$(NekoRayProjectId)"/>
     </Target>
 </Project>

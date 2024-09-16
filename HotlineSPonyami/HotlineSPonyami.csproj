@@ -17,6 +17,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
         <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
+        <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
     </ItemGroup>
     
     <ItemGroup>
@@ -24,5 +25,9 @@
       <PackageReference Include="Serilog" Version="4.0.1" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
       <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="Tools\NodeTest.cs" />
     </ItemGroup>
 </Project>

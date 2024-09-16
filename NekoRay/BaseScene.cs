@@ -42,6 +42,9 @@ public abstract class BaseScene : IScene {
         foreach (var gameObject in currentGameObjects) {
             gameObject.SendMessage("Draw");
         }
+        foreach (var gameObject in currentGameObjects) {
+            gameObject.SendMessage("LateDraw");
+        }
         DrawCameraTexture();
     }
 

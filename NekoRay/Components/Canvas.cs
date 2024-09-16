@@ -5,7 +5,10 @@ public class Canvas : Behaviour {
         GameObject.Tags.Add("SkipRender");
     }
 
-    void DrawGui() {
-        GameObject.Broadcast("Render");
+    void LateDraw() {
+        var cam = BaseCamera.Main;
+        using (cam.RenderTexture.Attach()) {
+            GameObject.Broadcast("Render");
+        }
     }
 }

@@ -12,10 +12,12 @@ public class DebugScene : BaseScene {
         this.GetWorld().Sleeping = false;
         //this.GetWorld().Gravity = Vector2.UnitY*9.31f;
         #region Camera
-        var camera = new GameObject("Camera").AddComponent<Camera2D>();
-        camera.BackgroundColor = new Color(203, 219, 252, 255);
+        var camera = new GameObject("Camera").AddComponent<LamoonCamera>();
+        //camera.BackgroundColor = new Color(203, 219, 252, 255);
         camera.IsMain = true;
-        camera.Zoom = 2f;
+        camera.Orthographic = true;
+        camera.OrthoScale = 2f;
+        //camera.Zoom = 2f;
         #endregion
 
         #region Reticle
