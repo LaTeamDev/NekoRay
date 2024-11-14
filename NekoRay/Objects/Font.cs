@@ -95,4 +95,8 @@ public class Font : NekoObject {
         Raylib.UnloadFont(_font);
         Texture = null;
     }
+
+    public Vector2 Measure(string text, float fontSize, float spacing) {
+        return Raylib.MeasureTextEx(_font, text, fontSize, spacing);
+    }
 }
