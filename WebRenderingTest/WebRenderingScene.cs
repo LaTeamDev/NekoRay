@@ -20,128 +20,7 @@ namespace WebRenderingTest;
 
 public class WebRenderingScene : BaseScene {
     public override void Initialize() {
-        var source = @"<html>
-  <head>
-<style>
-div {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-body {
-  height: 100vh;
-  overflow: hidden;
-  background-color: #121212;
-  color: white;
-  margin: 0;
-}
-#app {
-  width: 100vw;
-  overflow: auto;
-  height: 100%;
-}
-
-#navbar {
-  height: 3rem;
-  background-color: rgba(255, 255, 255, 0.2);
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-#main {
-  width: 48rem;
-  height: 100%;
-}
-
-#sidebar {
-  width: 16rem;
-  gap: 1rem;
-}
-
-#contents {
-  justify-content: space-between;
-  flex-direction: row;
-  padding-left: 4rem;
-  padding-right: 4rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  height: 100%;
-  
-}
-
-.card {
-  background-color: rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-}
-
-#video {
-  width: 100%;
-  aspect-ratio: 1.77;
-  background-color: black;
-}
-
-.video-title {
-  font-size: 24px;
-}
-
-.suggestion {
-  flex-direction: row;
-  gap: 0.5rem;
-}
-
-.preview {
-  width: 7rem;
-  height: 4rem;
-  /*background-color: rgba(0,0,0,0.25);*/
-}
-
-.preview-title {
-  margin: 0;
-  font-size: 1rem;
-}
-</style>
-</head>
-  <body>
-    <div id=""app"">
-      <div id=""navbar"">
-        <div>cool design 228</div>
-        <div>Login</div>
-      </div>
-        <div id=""contents"">
-          <div id=""main"" class=""card"">
-            <div id=""video""></div>
-            <h1 class=""video-title"">Wow what a cool video</div>
-          </d>
-          <div id=""sidebar"" class=""card"">
-            <div class=""suggestion"">
-              <div class=""preview""></div>
-              <h1 class=""preview-title"">what a lame video</h1>
-            </div>
-            <div class=""suggestion"">
-              <div class=""preview""></div>
-              <h1 class=""preview-title"">what a lame video</h1>
-            </div>
-            <div class=""suggestion"">
-              <div class=""preview""></div>
-              <h1 class=""preview-title"">what a lame video</h1>
-            </div>
-            <div class=""suggestion"">
-              <div class=""preview""></div>
-              <h1 class=""preview-title"">what a lame video</h1>
-            </div>
-            <div class=""suggestion"">
-              <div class=""preview""></div>
-              <h1 class=""preview-title"">what a lame video</h1>
-            </div>
-          </div>
-        </div>
-    </div>
-  </body>
-</html>";
+        var source = @"";
         _renderDevice = new DefaultRenderDevice
         {
           DeviceHeight = Raylib.GetMonitorHeight(0),
@@ -149,19 +28,27 @@ body {
           ViewPortHeight = Raylib.GetRenderHeight(),
           ViewPortWidth = Raylib.GetRenderWidth(),
         };
-        IConfiguration config = Configuration.Default.WithCss().WithRenderDevice(_renderDevice);
+        IConfiguration config = Configuration.Default
+          .WithRenderDevice(_renderDevice)
+          .WithDefaultLoader(new LoaderOptions {
+            IsResourceLoadingEnabled = true
+          })
+          .WithFilesystemRequester()
+          .WithCss();
 
         //Create a new context for evaluating webpages with the given config
         IBrowsingContext context = BrowsingContext.New(config);
 
         //Just get the DOM representation
-        IDocument document = context.OpenAsync(req => req.Content(source)).Result;
+        IDocument document = context.OpenAsync("file:///html/video.html").Result;
         var window = document.DefaultView;
         var render = window.Render();
         //var style = context.GetCssStyling().ParseStylesheetAsync(new DefaultResponse{Content = new MemoryStream( Encoding.UTF8.GetBytes( style ) )}, new StyleOptions(context.Active), CancellationToken.None).Result;
         //document.style;
         
         var body_render = render.Find(document.QuerySelector("body"));
+        var a = body_render.DownloadResources();
+        if (!a.IsCompleted) a.RunSynchronously();
         _body = CreateLayoutNodeTree(window, body_render);
         _body.CalculateLayout(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
         //_body.Children[1].Children[0].Print(PrintOptions.Layout);

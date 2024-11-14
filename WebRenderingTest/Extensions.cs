@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
+using AngleSharp;
 using AngleSharp.Css;
 using AngleSharp.Css.Dom;
+using AngleSharp.Io;
 using Yoga;
 using ZeroElectric.Vinculum;
 using Font = NekoRay.Font;
@@ -85,4 +87,7 @@ public static class Extensions {
 
         return color;
     }
+
+    public static IConfiguration WithFilesystemRequester(this IConfiguration configuration) =>
+        configuration.With(new FilesystemRequester());
 }
