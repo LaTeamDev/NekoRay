@@ -22,45 +22,123 @@ public class WebRenderingScene : BaseScene {
     public override void Initialize() {
         var source = @"<html>
   <head>
-    <style>
-    .flex {
-  display:flex;
-  align-items: stretch;
-  align-content: stretch;
-  gap: 4px;
-  flex-direction: row;
+<style>
+div {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
-.flex-col {
-  flex-direction: column;
+body {
+  height: 100vh;
+  overflow: hidden;
+  background-color: #121212;
+  color: white;
+  margin: 0;
+}
+#app {
+  width: 100vw;
+  overflow: auto;
+  height: 100%;
+}
+
+#navbar {
+  height: 3rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 #main {
-  width: 128px;
-  background-color: rgba (128,128,128,1);
-  text-align: center;
-  padding: 8px;
-  border-radius: 2px;
-  color: red;
-  letter-spacing: 2px;
+  width: 48rem;
+  height: 100%;
 }
 
-div {
-  background: rgba(255,255,255,0.25);
-  border: 1px solid purple;
-  min-height: 16px;
+#sidebar {
+  width: 16rem;
+  gap: 1rem;
 }
-    </style>
-  </head>
+
+#contents {
+  justify-content: space-between;
+  flex-direction: row;
+  padding-left: 4rem;
+  padding-right: 4rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  height: 100%;
+  
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+}
+
+#video {
+  width: 100%;
+  aspect-ratio: 1.77;
+  background-color: black;
+}
+
+.video-title {
+  font-size: 24px;
+}
+
+.suggestion {
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.preview {
+  width: 7rem;
+  height: 4rem;
+  /*background-color: rgba(0,0,0,0.25);*/
+}
+
+.preview-title {
+  margin: 0;
+  font-size: 1rem;
+}
+</style>
+</head>
   <body>
-    <div id=""main"" class=""flex flex-col"">
-      <div>a</div>
-      <div>b</div>
-      <div class=""flex"">
-        <div style=""width:16px"">WARNING</div>
-        <div style=""width:36px"">2</div>
+    <div id=""app"">
+      <div id=""navbar"">
+        <div>cool design 228</div>
+        <div>Login</div>
       </div>
-      <div>LEHA HYPE DURAK</div>
+        <div id=""contents"">
+          <div id=""main"" class=""card"">
+            <div id=""video""></div>
+            <h1 class=""video-title"">Wow what a cool video</div>
+          </d>
+          <div id=""sidebar"" class=""card"">
+            <div class=""suggestion"">
+              <div class=""preview""></div>
+              <h1 class=""preview-title"">what a lame video</h1>
+            </div>
+            <div class=""suggestion"">
+              <div class=""preview""></div>
+              <h1 class=""preview-title"">what a lame video</h1>
+            </div>
+            <div class=""suggestion"">
+              <div class=""preview""></div>
+              <h1 class=""preview-title"">what a lame video</h1>
+            </div>
+            <div class=""suggestion"">
+              <div class=""preview""></div>
+              <h1 class=""preview-title"">what a lame video</h1>
+            </div>
+            <div class=""suggestion"">
+              <div class=""preview""></div>
+              <h1 class=""preview-title"">what a lame video</h1>
+            </div>
+          </div>
+        </div>
     </div>
   </body>
 </html>";
@@ -130,6 +208,9 @@ div {
         Widget = new Widget(),
         WidgetType = WidgetType.Default
       };
+      var aspectRatio = style.GetProperty("aspect-ratio");
+      if (aspectRatio?.RawValue != null)
+        nodeLayout.AspectRatio = (float) aspectRatio.RawValue.AsDouble();
       return nodeLayout;
     }
 

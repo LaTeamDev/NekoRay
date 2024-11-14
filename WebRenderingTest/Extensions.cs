@@ -11,12 +11,15 @@ public static class Extensions {
     public static void DrawBlock(this Node node, float offsetX = 0, float offsetY = 0) {
         var context = node.Context as WebRenderContext;
         var style = context.Style;
+
+        var colorProp = style.GetProperty("background-color");
+        if (colorProp.Value != "") {
+            var colorRaw = colorProp.RawValue.AsRgba();
+            var color = colorRaw.ToColor();
         
-        var colorRaw = style.GetProperty("background-color").RawValue.AsRgba();
-        var color = colorRaw.ToColor();
-        
-        Raylib.DrawRectangleRec(new Rectangle(node.Left+offsetX, node.Top+offsetY, node.Width, node.Height), color);
-        
+            Raylib.DrawRectangleRec(new Rectangle(node.Left+offsetX, node.Top+offsetY, node.Width, node.Height), color);
+        }
+
         var borderTop = node.GetBorder(Edge.Top);
         var borderBottom = node.GetBorder(Edge.Bottom);
         var borderRight = node.GetBorder(Edge.Right);
