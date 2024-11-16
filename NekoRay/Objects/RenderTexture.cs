@@ -8,6 +8,7 @@ public class RenderTexture : NekoObject, IDisposable {
     public Texture DepthTexture { get; internal set; }
 
     public uint TextureId => _renderTexture.id;
+    public uint RenderTextureId => _renderTexture.id;
 
     public static RenderTexture Load(int width, int height) {
         var rt =  new RenderTexture {

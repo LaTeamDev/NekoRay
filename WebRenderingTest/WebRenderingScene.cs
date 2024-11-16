@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Numerics;
 using System.Text;
 using AngleSharp;
 using AngleSharp.Css;
@@ -11,6 +12,7 @@ using NekoRay;
 using Serilog;
 using Yoga;
 using ZeroElectric.Vinculum;
+using Color = System.Drawing.Color;
 using FlexDirection = Yoga.FlexDirection;
 using Font = NekoRay.Font;
 using Node = Yoga.Node;
@@ -49,6 +51,7 @@ public class WebRenderingScene : BaseScene {
         var body_render = render.Find(document.QuerySelector("body"));
         var a = body_render.DownloadResources();
         if (!a.IsCompleted) a.RunSynchronously();
+        yogaConfig.UseWebDefaults = false;
         _body = CreateLayoutNodeTree(window, body_render);
         _body.CalculateLayout(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
         //_body.Children[1].Children[0].Print(PrintOptions.Layout);
@@ -101,7 +104,7 @@ public class WebRenderingScene : BaseScene {
       return nodeLayout;
     }
 
-    public static Font Font = Font.Default;
+    public static Font Font = Font.Load("font/inter.ttf");
     private Node CreateLayoutTextNode(ICssStyleDeclaration style, string text) {
       return new Node(yogaConfig) {
         Type = NodeType.Text,
@@ -126,14 +129,20 @@ public class WebRenderingScene : BaseScene {
         var text = el.Text.Trim('\n').Trim();
         return CreateLayoutTextNode(window.GetComputedStyle(el.Parent as IHtmlElement), el.Text);
       }
-      var element = CreateLayoutNode(window.GetComputedStyle(node.Ref as IHtmlElement));
+      var element = CreateLayoutNode(window.GetComputedStyle(htmlElement));
       if (node.Children == null) return element;
       foreach (var child in node.Children) {
         if (child.Ref is IText el) {
           if (el.Text.Trim('\n').Trim() == "") continue;
         }
-        var childLayout = CreateLayoutNodeTree(window, child);
-        childLayout.Parent = element;
+
+        try {
+          var childLayout = CreateLayoutNodeTree(window, child);
+          childLayout.Parent = element;
+        }
+        catch (Exception e) {
+          Log.Error(e, "Failed to create element");
+        }
       }
       return element;
     }

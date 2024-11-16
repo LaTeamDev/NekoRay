@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Runtime.InteropServices;
 using AngleSharp;
 using AngleSharp.Css;
 using AngleSharp.Css.Dom;
@@ -51,7 +52,7 @@ public static class Extensions {
         var colorRaw = style.GetProperty("color").RawValue.AsRgba();
         var color = colorRaw.ToColor();
         
-        Raylib.DrawTextEx(Raylib.GetFontDefault(),  textWidget.Text, new Vector2(node.Left+offsetX, node.Top+offsetY),(float) (style.GetProperty("font-size")?.RawValue?.AsPx(new DefaultRenderDevice
+        Raylib.DrawTextEx(WebRenderingScene.Font._font,  textWidget.Text, new Vector2(node.Left+offsetX, node.Top+offsetY),(float) (style.GetProperty("font-size")?.RawValue?.AsPx(new DefaultRenderDevice
         {
             DeviceHeight = Raylib.GetMonitorHeight(0),
             DeviceWidth = Raylib.GetMonitorWidth(0),
@@ -90,4 +91,6 @@ public static class Extensions {
 
     public static IConfiguration WithFilesystemRequester(this IConfiguration configuration) =>
         configuration.With(new FilesystemRequester());
+    
+    public static GCHandle GcPin<T>(this T obj) => GCHandle.Alloc(obj, GCHandleType.Pinned);
 }

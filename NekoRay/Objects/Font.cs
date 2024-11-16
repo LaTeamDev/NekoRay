@@ -4,7 +4,7 @@ using ZeroElectric.Vinculum.Extensions;
 namespace NekoRay; 
 
 public class Font : NekoObject {
-    internal RayFont _font;
+    public RayFont _font;
 
     internal Font(RayFont font) {
         _font = font;
