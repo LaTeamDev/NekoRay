@@ -25,6 +25,8 @@ public class HtmlRenderer : Behaviour {
     public static DefaultRenderDevice _renderDevice;
     public string Url { get; private set; } = "";
     private IBrowsingContext _context;
+    private IWindow? _window;
+    private IRenderNode? _bodyRender;
     public IDocument? Document { get; private set; }
 
     void Start() {
@@ -48,22 +50,32 @@ public class HtmlRenderer : Behaviour {
         if (Url != "") OpenPage(Url);
     }
 
+    private void OnWindowResize() {
+      _renderDevice.ViewPortHeight = Raylib.GetRenderHeight();
+      _renderDevice.ViewPortWidth = Raylib.GetRenderWidth();
+      RecalculateLayout();
+    }
+
+    public void RecalculateLayout() {
+      _body = CreateLayoutNodeTree(_window, _bodyRender);
+      _body.CalculateLayout(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
+    }
+
     public void OpenPage(string url) {
       Url = url;
       if (_context is null) return;
       //Just get the DOM representation
       Document = _context.OpenAsync(Url).Result;
-      var window = Document.DefaultView;
-      var render = window.Render();
+      _window = Document.DefaultView;
+      var render = _window.Render();
       //var style = context.GetCssStyling().ParseStylesheetAsync(new DefaultResponse{Content = new MemoryStream( Encoding.UTF8.GetBytes( style ) )}, new StyleOptions(context.Active), CancellationToken.None).Result;
       //document.style;
         
-      var body_render = render.Find(Document.QuerySelector("body"));
-      var a = body_render.DownloadResources();
+      _bodyRender = render.Find(Document.QuerySelector("body"));
+      var a = _bodyRender.DownloadResources();
       if (!a.IsCompleted) a.RunSynchronously();
       yogaConfig.UseWebDefaults = false;
-      _body = CreateLayoutNodeTree(window, body_render);
-      _body.CalculateLayout(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
+      RecalculateLayout();
       //_body.Children[1].Children[0].Print(PrintOptions.Layout);
     }
 

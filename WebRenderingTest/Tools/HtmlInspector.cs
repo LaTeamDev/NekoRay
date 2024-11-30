@@ -12,7 +12,7 @@ public class HtmlInspector : Inspector {
         ImGui.InputTextWithHint("URL", target.Url, ref url, 512);
         ImGui.SameLine();
         if (ImGui.Button("Go")) {
-            target.OpenPage(url);
+            target.OpenPage(url!=""?url:target.Url);
             url = "";
         }
     }

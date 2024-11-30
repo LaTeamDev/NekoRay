@@ -2,3 +2,4 @@
 # EDIT video.toml
 width = 1024
 height = 576
+resizable = true
