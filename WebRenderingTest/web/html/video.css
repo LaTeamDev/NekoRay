@@ -1,0 +1,80 @@
+﻿div {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background-color: #121212;
+    color: white;
+    margin: 0;
+}
+#app {
+    width: 100vw;
+    overflow: auto;
+    height: 100%;
+}
+
+#navbar {
+    height: 3rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#main {
+    width: 48rem;
+    height: 100%;
+}
+
+#sidebar {
+    width: 16rem;
+    gap: 1rem;
+}
+
+#contents {
+    justify-content: space-between;
+    flex-direction: row;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    height: 100%;
+
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+}
+
+#video {
+    width: 100%;
+    aspect-ratio: 1.77;
+    background-color: black;
+}
+
+.video-title {
+    font-size: 24px;
+}
+
+.suggestion {
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.preview {
+    width: 7rem;
+    height: 4rem;
+    /*background-color: rgba(0,0,0,0.25);*/
+}
+
+.preview-title {
+    margin: 0;
+    font-size: 1rem;
+}

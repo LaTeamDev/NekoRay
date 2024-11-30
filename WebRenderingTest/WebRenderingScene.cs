@@ -10,6 +10,7 @@ using AngleSharp.Html.Dom;
 using AngleSharp.Io;
 using NekoRay;
 using Serilog;
+using WebRenderingTest.Widgets;
 using Yoga;
 using ZeroElectric.Vinculum;
 using Color = System.Drawing.Color;
@@ -65,7 +66,7 @@ public class WebRenderingScene : BaseScene {
 
     private YogaConfig yogaConfig = YogaConfig.Default;
     private Node _body;
-    private DefaultRenderDevice _renderDevice;
+    public static DefaultRenderDevice _renderDevice;
 
     private Node CreateLayoutNode(ICssStyleDeclaration style) {
       var nodeLayout = new Node(yogaConfig);
@@ -93,11 +94,7 @@ public class WebRenderingScene : BaseScene {
       SetBorder(nodeLayout, style.GetBorderLeft(), Edge.Left);
       SetBorder(nodeLayout, style.GetBorderRight(), Edge.Right);
       SetGap(nodeLayout, style.GetColumnGap(), Gutter.All); //FIXME: no row gap??
-      nodeLayout.Context = new WebRenderContext {
-        Style = style,
-        Widget = new Widget(),
-        WidgetType = WidgetType.Default
-      };
+      nodeLayout.Context = new Widget(style, nodeLayout);
       var aspectRatio = style.GetProperty("aspect-ratio");
       if (aspectRatio?.RawValue != null)
         nodeLayout.AspectRatio = (float) aspectRatio.RawValue.AsDouble();
@@ -106,13 +103,8 @@ public class WebRenderingScene : BaseScene {
 
     public static Font Font = Font.Load("font/inter.ttf");
     private Node CreateLayoutTextNode(ICssStyleDeclaration style, string text) {
-      return new Node(yogaConfig) {
+      var node = new Node(yogaConfig) {
         Type = NodeType.Text,
-        Context = new WebRenderContext {
-          Style = style,
-          Widget = new TextWidget(text),
-          WidgetType = WidgetType.Text
-        },
         MeasureFunction = (node, width, mode, height, heightMode) => {
           Raylib.TextLength(text);
           var sizeV = Font.Measure(text,
@@ -121,6 +113,8 @@ public class WebRenderingScene : BaseScene {
           return new SizeF(sizeV);
         }
       };
+      node.Context = new TextWidget(style, node, text);
+      return node;
     }
     private Node CreateLayoutNodeTree(IWindow window, IRenderNode node) {
       var htmlElement = node.Ref as IHtmlElement;

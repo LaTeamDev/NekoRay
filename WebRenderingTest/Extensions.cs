@@ -4,6 +4,7 @@ using AngleSharp;
 using AngleSharp.Css;
 using AngleSharp.Css.Dom;
 using AngleSharp.Io;
+using WebRenderingTest.Widgets;
 using Yoga;
 using ZeroElectric.Vinculum;
 using Font = NekoRay.Font;
@@ -11,73 +12,38 @@ using Font = NekoRay.Font;
 namespace WebRenderingTest;
 
 public static class Extensions {
-    public static void DrawBlock(this Node node, float offsetX = 0, float offsetY = 0) {
-        var context = node.Context as WebRenderContext;
-        var style = context.Style;
 
-        var colorProp = style.GetProperty("background-color");
-        if (colorProp.Value != "") {
-            var colorRaw = colorProp.RawValue.AsRgba();
-            var color = colorRaw.ToColor();
-        
-            Raylib.DrawRectangleRec(new Rectangle(node.Left+offsetX, node.Top+offsetY, node.Width, node.Height), color);
+    public static List<Node> GetAllNodes(this Node node, List<Node> nodes) {
+        nodes.Add(node);
+        foreach (var childNode in node.Children) {
+            childNode.GetAllNodes(nodes);
         }
-
-        var borderTop = node.GetBorder(Edge.Top);
-        var borderBottom = node.GetBorder(Edge.Bottom);
-        var borderRight = node.GetBorder(Edge.Right);
-        var borderLeft = node.GetBorder(Edge.Left);
-
-        var borderColorRaw = style.GetProperty("border-color").RawValue.AsRgba();
-        var borderColor = Raylib.GetColor((uint) borderColorRaw);
-        
-        //Top
-        Raylib.DrawRectangleRec(new Rectangle(node.Left+offsetX, node.Top+offsetY, node.Width, borderTop), borderColor);
-        //Left
-        Raylib.DrawRectangleRec(new Rectangle(node.Left+offsetX, node.Top+offsetY, borderLeft, node.Height), borderColor);
-        //Right
-        Raylib.DrawRectangleRec(new Rectangle(node.Left+node.Width-borderRight+offsetX, node.Top+offsetY, borderRight, node.Height), borderColor);
-        //Bottom
-        Raylib.DrawRectangleRec(new Rectangle(node.Left+offsetX, node.Top+node.Height-borderBottom+offsetY, node.Width, borderBottom), borderColor);
+        return nodes;
+    }
+    public static void Draw(this Node node, float x = 0f, float y = 0f) {
+        if (node.Context is Widget widget) {
+            widget.Draw(x, y);
+        }
         foreach (var child in node.Children) {
-            child.Draw(node.Left+offsetX, node.Top+offsetY);
+            child.Draw(node.Left+x, node.Top+y);
         }
     }
 
-    public static void DrawText(this Node node, float offsetX = 0, float offsetY = 0) {
-        var context = node.Context as WebRenderContext;
-        var style = context.Style;
-        var textWidget = context.Widget as TextWidget;
-        
-        var colorRaw = style.GetProperty("color").RawValue.AsRgba();
-        var color = colorRaw.ToColor();
-        
-        Raylib.DrawTextEx(WebRenderingScene.Font._font,  textWidget.Text, new Vector2(node.Left+offsetX, node.Top+offsetY),(float) (style.GetProperty("font-size")?.RawValue?.AsPx(new DefaultRenderDevice
-        {
-            DeviceHeight = Raylib.GetMonitorHeight(0),
-            DeviceWidth = Raylib.GetMonitorWidth(0),
-            ViewPortHeight = Raylib.GetRenderHeight(),
-            ViewPortWidth = Raylib.GetRenderWidth(),
-        }, RenderMode.Undefined) ?? 16f),
-            (float) (style.GetProperty("letter-spacing")?.RawValue?.AsPx(new DefaultRenderDevice
-            {
-                DeviceHeight = Raylib.GetMonitorHeight(0),
-                DeviceWidth = Raylib.GetMonitorWidth(0),
-                ViewPortHeight = Raylib.GetRenderHeight(),
-                ViewPortWidth = Raylib.GetRenderWidth(),
-            }, RenderMode.Undefined) ?? 0f), color );
-    }
-
-    public static void Draw(this Node node, float offsetX = 0, float offsetY = 0) {
-        var context = node.Context as WebRenderContext;
-        
-        if (context.WidgetType == WidgetType.Default)
-            node.DrawBlock(offsetX, offsetY);
-        else if (context.WidgetType == WidgetType.Text) {
-            node.DrawText(offsetX, offsetY);
+    public static float GetAbsoluteTop(this Node node) {
+        var value = node.Top;
+        foreach (var child in node.Children) {
+            value += child.GetAbsoluteTop();
         }
+        return value;
     }
-
+    public static float GetAbsoluteLeft(this Node node) {
+        var value = node.Left;
+        foreach (var child in node.Children) {
+            value += child.GetAbsoluteLeft();
+        }
+        return value;
+    } 
+    
     public static Color ToColor(this Int32 hexValue) {
         Color color;
 
