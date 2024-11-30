@@ -17,11 +17,11 @@ public class TextWidget(ICssStyleDeclaration style, Node node, string text) : Wi
         var color = colorRaw.ToColor();
         
         Raylib.DrawTextEx(
-            WebRenderingScene.Font._font, 
+            HtmlRenderer.Font._font, 
             Text, 
             new Vector2(node.Left+x, node.Top+y),
-            (float) (style.GetProperty("font-size")?.RawValue?.AsPx(WebRenderingScene._renderDevice, RenderMode.Undefined) ?? 16f),
-            (float) (style.GetProperty("letter-spacing")?.RawValue?.AsPx(WebRenderingScene._renderDevice, RenderMode.Undefined) ?? 0f), color);
+            (float) (style.GetProperty("font-size")?.RawValue?.AsPx(HtmlRenderer._renderDevice, RenderMode.Undefined) ?? 16f),
+            (float) (style.GetProperty("letter-spacing")?.RawValue?.AsPx(HtmlRenderer._renderDevice, RenderMode.Undefined) ?? 0f), color);
         
     }
 }

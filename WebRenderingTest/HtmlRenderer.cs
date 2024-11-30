@@ -1,0 +1,221 @@
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using AngleSharp;
+using AngleSharp.Css;
+using AngleSharp.Css.Dom;
+using AngleSharp.Css.RenderTree;
+using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
+using AngleSharp.Io;
+using NekoLib.Core;
+using Serilog;
+using WebRenderingTest.Widgets;
+using Yoga;
+using ZeroElectric.Vinculum;
+using FlexDirection = Yoga.FlexDirection;
+using Node = Yoga.Node;
+using Font = NekoRay.Font;
+using NodeType = Yoga.NodeType;
+
+namespace WebRenderingTest;
+
+public class HtmlRenderer : Behaviour {
+    private YogaConfig yogaConfig = YogaConfig.Default;
+    private Node _body;
+    public static DefaultRenderDevice _renderDevice;
+    public string Url { get; private set; } = "";
+    private IBrowsingContext _context;
+    public IDocument? Document { get; private set; }
+
+    void Start() {
+        _renderDevice = new DefaultRenderDevice
+        {
+            DeviceHeight = Raylib.GetMonitorHeight(0),
+            DeviceWidth = Raylib.GetMonitorWidth(0),
+            ViewPortHeight = Raylib.GetRenderHeight(),
+            ViewPortWidth = Raylib.GetRenderWidth(),
+        };
+        IConfiguration config = Configuration.Default
+            .WithRenderDevice(_renderDevice)
+            .WithDefaultLoader(new LoaderOptions {
+                IsResourceLoadingEnabled = true
+            })
+            .WithFilesystemRequester()
+            .WithCss();
+
+        //Create a new context for evaluating webpages with the given config
+        _context = BrowsingContext.New(config);
+        if (Url != "") OpenPage(Url);
+    }
+
+    public void OpenPage(string url) {
+      Url = url;
+      if (_context is null) return;
+      //Just get the DOM representation
+      Document = _context.OpenAsync(Url).Result;
+      var window = Document.DefaultView;
+      var render = window.Render();
+      //var style = context.GetCssStyling().ParseStylesheetAsync(new DefaultResponse{Content = new MemoryStream( Encoding.UTF8.GetBytes( style ) )}, new StyleOptions(context.Active), CancellationToken.None).Result;
+      //document.style;
+        
+      var body_render = render.Find(Document.QuerySelector("body"));
+      var a = body_render.DownloadResources();
+      if (!a.IsCompleted) a.RunSynchronously();
+      yogaConfig.UseWebDefaults = false;
+      _body = CreateLayoutNodeTree(window, body_render);
+      _body.CalculateLayout(Raylib.GetRenderWidth(), Raylib.GetRenderHeight());
+      //_body.Children[1].Children[0].Print(PrintOptions.Layout);
+    }
+
+    void DrawGui() {
+      _body.Draw();
+    }
+    
+    private Node CreateLayoutNode(ICssStyleDeclaration style) {
+      var nodeLayout = new Node(yogaConfig);
+      SetWidth(nodeLayout, style.GetWidth());
+      SetHeight(nodeLayout, style.GetHeight());
+      SetMinHeight(nodeLayout, style.GetMinHeight());
+      SetFlexDirection(nodeLayout, style.GetFlexDirection());
+      nodeLayout.AlignContent = GetAlign(style.GetAlignContent())??nodeLayout.AlignContent;
+      nodeLayout.AlignItems = GetAlign(style.GetAlignItems())??nodeLayout.AlignItems;
+      nodeLayout.AlignSelf = GetAlign(style.GetAlignSelf())??nodeLayout.AlignSelf;
+      nodeLayout.JustifyContent = GetJustify(style.GetJustifyContent())??nodeLayout.JustifyContent;
+      nodeLayout.FlexWrap = GetWrap(style.GetFlexWrap())??nodeLayout.FlexWrap;
+      SetMargin(nodeLayout, style.GetMarginBottom(), Edge.Bottom);
+      SetMargin(nodeLayout, style.GetMarginTop(), Edge.Top);
+      SetMargin(nodeLayout, style.GetMarginLeft(), Edge.Left);
+      SetMargin(nodeLayout, style.GetMarginRight(), Edge.Right);
+      
+      SetPadding(nodeLayout, style.GetPaddingBottom(), Edge.Bottom);
+      SetPadding(nodeLayout, style.GetPaddingTop(), Edge.Top);
+      SetPadding(nodeLayout, style.GetPaddingLeft(), Edge.Left);
+      SetPadding(nodeLayout, style.GetPaddingRight(), Edge.Right);
+      
+      SetBorder(nodeLayout, style.GetBorderBottom(), Edge.Bottom);
+      SetBorder(nodeLayout, style.GetBorderTop(), Edge.Top);
+      SetBorder(nodeLayout, style.GetBorderLeft(), Edge.Left);
+      SetBorder(nodeLayout, style.GetBorderRight(), Edge.Right);
+      SetGap(nodeLayout, style.GetColumnGap(), Gutter.All); //FIXME: no row gap??
+      nodeLayout.Context = new Widget(style, nodeLayout);
+      var aspectRatio = style.GetProperty("aspect-ratio");
+      if (aspectRatio?.RawValue != null)
+        nodeLayout.AspectRatio = (float) aspectRatio.RawValue.AsDouble();
+      return nodeLayout;
+    }
+
+    public static Font Font = Font.Load("font/inter.ttf");
+    private Node CreateLayoutTextNode(ICssStyleDeclaration style, string text) {
+      var node = new Node(yogaConfig) {
+        Type = NodeType.Text,
+        MeasureFunction = (node, width, mode, height, heightMode) => {
+          Raylib.TextLength(text);
+          var sizeV = Font.Measure(text,
+            (float) (style.GetProperty("font-size")?.RawValue?.AsPx(_renderDevice, RenderMode.Undefined) ?? 16f),
+            (float) (style.GetProperty("letter-spacing")?.RawValue?.AsPx(_renderDevice, RenderMode.Undefined) ?? 0f));
+          return new SizeF(sizeV);
+        }
+      };
+      node.Context = new TextWidget(style, node, text);
+      return node;
+    }
+    private Node CreateLayoutNodeTree(IWindow window, IRenderNode node) {
+      var htmlElement = node.Ref as IHtmlElement;
+      if (htmlElement is null) {
+        var el = node.Ref as IText;
+        var text = el.Text.Trim('\n').Trim();
+        return CreateLayoutTextNode(window.GetComputedStyle(el.Parent as IHtmlElement), el.Text);
+      }
+      var element = CreateLayoutNode(window.GetComputedStyle(htmlElement));
+      if (node.Children == null) return element;
+      foreach (var child in node.Children) {
+        if (child.Ref is IText el) {
+          if (el.Text.Trim('\n').Trim() == "") continue;
+        }
+
+        try {
+          var childLayout = CreateLayoutNodeTree(window, child);
+          childLayout.Parent = element;
+        }
+        catch (Exception e) {
+          Log.Error(e, "Failed to create element");
+        }
+      }
+      return element;
+    }
+
+    private void SetWidth(Node node, string? width) {
+      if (width is null) return;
+      if (width.EndsWith("%")) node.StyleSetWidthPercent(Convert.ToSingle(width.Substring(0, width.Length-1)));
+      if (width.EndsWith("px")) node.Width = (Convert.ToSingle(width.Substring(0, width.Length-2)));
+      if (width.EndsWith("auto")) node.StyleSetWidthAuto();
+    }
+    
+    private void SetHeight(Node node, string? height) {
+      if (height is null) return;
+      if (height.EndsWith("%")) node.StyleSetHeightPercent(Convert.ToSingle(height.Substring(0, height.Length-1)));
+      if (height.EndsWith("px")) node.Height = (Convert.ToSingle(height.Substring(0, height.Length-2)));
+      if (height.EndsWith("auto")) node.StyleSetHeightAuto();
+    }
+    
+    private void SetMinHeight(Node node, string? minHeight) {
+      if (minHeight is null) return;
+      if (minHeight.EndsWith("%")) node.StyleSetMinHeightPercent(Convert.ToSingle(minHeight.Substring(0, minHeight.Length-1)));
+      if (minHeight.EndsWith("px")) node.StyleSetMinHeight(Convert.ToSingle(minHeight.Substring(0, minHeight.Length-2)));
+    }
+    
+    private void SetMargin(Node node, string? margin, Edge edge) {
+      if (margin is null) return;
+      if (margin.EndsWith("%")) node.StyleSetMarginPercent(edge, Convert.ToSingle(margin.Substring(0, margin.Length-1)));
+      if (margin.EndsWith("px")) node.StyleSetMargin(edge, Convert.ToSingle(margin.Substring(0, margin.Length-2)));
+      if (margin.EndsWith("auto")) node.StyleSetMarginAuto(edge);
+    }
+    
+    private void SetPadding(Node node, string? padding, Edge edge) {
+      if (padding is null) return;
+      if (padding.EndsWith("%")) node.StyleSetPaddingPercent(edge, Convert.ToSingle(padding.Substring(0, padding.Length-1)));
+      if (padding.EndsWith("px")) node.StyleSetPadding(edge, Convert.ToSingle(padding.Substring(0, padding.Length-2)));
+    }
+    
+    private void SetBorder(Node node, string? height, Edge edge) {
+      if (height is null) return;
+      if (height.EndsWith("px")) node.StyleSetBorder(edge, Convert.ToSingle(height.Substring(0, height.Length-2)));
+    }
+    
+    private void SetGap(Node node, string? width, Gutter gutter) {
+      if (width is null) return;
+      if (width.EndsWith("px")) node.StyleSetGap(Convert.ToSingle(width.Substring(0, width.Length-2)), gutter);
+    }
+
+    private void SetDisplay(Node node, string? display) {
+      if (display is null) return;
+      if (display == "none") node.Display = Display.None;
+    }
+    
+    private void SetFlexDirection(Node node, string? flexdirection) {
+      if (flexdirection is null) return;
+      if (Enum.TryParse(typeof(FlexDirection), flexdirection.Replace("-",""),true, out var yogaDirection))
+        node.FlexDirection = (FlexDirection)yogaDirection;
+    }
+
+    private Align? GetAlign(string? align) {
+      if (align is null) return null;
+      if (Enum.TryParse(typeof(Align), align.Replace("-",""),true, out var yogaAlign))
+        return (Align)yogaAlign;
+      return null;
+    }
+    
+    private Justify? GetJustify(string? justify) {
+      if (justify is null) return null;
+      if (Enum.TryParse(typeof(Justify), justify.Replace("-",""),true, out var yogaJustify))
+        return (Justify)yogaJustify;
+      return null;
+    }
+    
+    private Wrap? GetWrap(string? justify) {
+      if (justify is null) return null;
+      if (Enum.TryParse(typeof(Wrap), justify.Replace("-",""),true, out var yogaJustify))
+        return (Wrap)yogaJustify;
+      return null;
+    }
+}
