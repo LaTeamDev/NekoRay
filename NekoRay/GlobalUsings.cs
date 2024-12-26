@@ -13,5 +13,6 @@ global using RayWave = ZeroElectric.Vinculum.Wave;
 global using RaySound = ZeroElectric.Vinculum.Sound;
 global using RayMusic = ZeroElectric.Vinculum.Music;
 global using RayAudioStream = ZeroElectric.Vinculum.AudioStream;
+global using RayCamera3D = ZeroElectric.Vinculum.Camera3D;
 
 global using NekoObject = NekoLib.Core.Object;

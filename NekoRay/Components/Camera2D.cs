@@ -12,8 +12,6 @@ public class Camera2D : BaseCamera {
         set => _camera.zoom = value;
     }
 
-    public Color BackgroundColor = new(0, 0, 0, 0);
-
     void LateUpdate() {
         _camera.target = new Vector2(Transform.Position.X, Transform.Position.Y);
         _camera.offset = new Vector2(RenderWidth / 2f, RenderHeight / 2f);

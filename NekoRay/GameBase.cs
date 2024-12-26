@@ -56,6 +56,7 @@ public abstract class GameBase {
         new AssemblyFilesystem(GetType().Assembly, GetType().Namespace).Mount();
         RaylibNekoLibFilesystemCompat.Use();
         Console.ExecFile("autoexec");
+        if (DevMode) Console.ExecFile("autoexec_dev");
         InitConsoleWindow(CliOptions.Instance.ConsoleOnStart);
     }
 

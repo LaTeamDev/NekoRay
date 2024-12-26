@@ -7,6 +7,9 @@ namespace NekoRay;
 public abstract class BaseCamera : Behaviour {
     public static BaseCamera? CurrentCamera { get; protected set; }
     public static BaseCamera? Main { get; private set; }
+    
+    public Color BackgroundColor = new(0, 0, 0, 0);
+    
     internal bool _isMain;
     public bool IsMain {
         get => _isMain;
