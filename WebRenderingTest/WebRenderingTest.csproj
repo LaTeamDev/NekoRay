@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net9.0;net9.0-windows</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -13,7 +13,7 @@
     <Import Project="../NekoRay/game.targets" />
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Yoga\Yoga\Yoga.csproj" />
+      <ProjectReference Include="..\..\YogaSharp\Yoga\Yoga.csproj" />
       <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
     </ItemGroup>
 
