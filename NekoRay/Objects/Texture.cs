@@ -8,8 +8,13 @@ public class Texture : NekoObject {
     internal Texture() { }
 
     public static Texture Load(string file) {
-        return new Texture {
-            _texture = Raylib.LoadTexture(file)
+        using var image = Image.Load(file);
+        return FromImage(image);
+    }
+
+    public static Texture FromImage(Image image) {
+        return new Texture() {
+            _texture = Raylib.LoadTextureFromImage(image._image)
         };
     }
 
@@ -66,5 +71,7 @@ public class Texture : NekoObject {
     public void Draw(Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color color) {
         Raylib.DrawTexturePro(_texture, source, dest, origin, rotation, color);
     }
+    
+    
     //TODO: implement left
 }

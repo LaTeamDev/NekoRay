@@ -24,6 +24,9 @@ public class Font : NekoObject {
 
     public static Font Load(string fileName) => new(Raylib.LoadFont(fileName));
 
+    public static unsafe Font Load(string fileName, int fontSize, int glyphCount) {
+        return new Font(Raylib.LoadFontEx(fileName, fontSize, glyphCount));
+    }
     public static unsafe Font Load(string fileName, int fontSize, int[] codepoints) {
         var pin = codepoints.GcPin();
         var font = new Font(Raylib.LoadFontEx(fileName, fontSize, (int*)pin.AddrOfPinnedObject(), codepoints.Length));

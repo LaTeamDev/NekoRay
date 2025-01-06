@@ -2,7 +2,7 @@
 
 namespace NekoRay.Physics2D; 
 
-public class NekoRayWorld : World{
+public class NekoRayWorld : World {
     public NekoRayWorld(WorldDef def) : base(def) { }
     public NekoRayWorld() : base(new WorldDef()) { }
     public override void Step(float timeStep, int subStepCount) {

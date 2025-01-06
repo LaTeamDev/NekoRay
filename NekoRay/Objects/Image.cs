@@ -1,3 +1,4 @@
+using NekoLib.Filesystem;
 using ZeroElectric.Vinculum.Extensions;
 
 namespace NekoRay; 
@@ -10,10 +11,10 @@ public class Image : NekoObject {
     public int Height => _image.height;
     public int Width => _image.width;
 
-    public static Image Load(string filename) {
-        return new Image {
-            _image = Raylib.LoadImage(filename)
-        };
+    public static unsafe Image Load(string filename) {
+        var file = Files.GetFile(filename).ReadBinary();
+        fixed (byte* ptr = file) //TODO: investigate is this a valid way to load image (pointer never used again) or it is better to use GCHandle
+            return FromMemory(Path.GetExtension(filename), ptr, file.Length);
     }
 
     public static Image LoadRaw(string filename, int width, int height, PixelFormat format, int headerSize) {

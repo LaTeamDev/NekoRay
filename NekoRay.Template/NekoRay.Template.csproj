@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net9.0-windows</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <NekoRayProjectId>gameId</NekoRayProjectId>
+        <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">Company.NekoRayGame1</RootNamespace>
+        <CopyAllData>true</CopyAllData>
+    </PropertyGroup>
+
+    <Import Project="../NekoRay/game.targets" />
+
+    <ItemGroup>
+      <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
+    </ItemGroup>
+
+</Project>

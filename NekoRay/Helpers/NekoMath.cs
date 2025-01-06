@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 
 namespace NekoRay; 
 
@@ -35,5 +36,11 @@ public static class NekoMath {
             Damp(from.Y, to.Y, ref velocity.Y, smoothTime), 
             Damp(from.Z, to.Z, ref velocity.Z, smoothTime), 
             Damp(from.W, to.W, ref velocity.W, smoothTime));
+    }
+
+    public static bool CheckPointInRect(RectangleF rectangle, Vector2 position) {
+        var min = rectangle.Location;
+        var max = rectangle.Location + rectangle.Size;
+        return (position.X < max.X && position.Y < max.Y) && (position.X > min.X && position.Y > min.Y);
     }
 }

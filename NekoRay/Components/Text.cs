@@ -10,10 +10,11 @@ public class Text : Behaviour {
     public float Spacing = 1f;
     public RayColor Color = Raylib.WHITE;
     public virtual void Render() {
+        var o = Raylib.MeasureTextEx(Font._font, TextString, Font.BaseSize * Transform.LocalScale.X, Spacing) * Origin;
         Font.Draw(
             TextString, 
             new Vector2(Transform.Position.X, Transform.Position.Y), 
-            Origin, 
+            new Vector2(MathF.Round(o.X), MathF.Round(o.Y)), 
             Transform.Rotation.YawPitchRollAsVector3().Z,
             Font.BaseSize*Transform.LocalScale.X,
             Spacing,

@@ -14,7 +14,7 @@
         />
     </ItemGroup>
 
-    <Target Name="SetupDirAfterBuild" AfterTargets="Build" Condition="'$(NekoRayProjectId)' != ''">
+    <Target Name="SetupDirAfterBuild" AfterTargets="Build" Condition="'$(NekoRayProjectId)' != '' And '$(SkipCopy)' != 'true'">
         <ItemGroup>
             <_BinItems Include="$(OutDir)\client.*" /> <!--TODO: add support for server-->
         </ItemGroup>
@@ -26,6 +26,7 @@
         <Move SourceFiles="@(_DllItems)" DestinationFolder="$(OutDir)\bin\" />
         <ItemGroup>
             <_EngineItems Include="$(OutDir)\bin\NekoRay.dll" />
+            <_EngineItems Include="$(OutDir)\bin\NekoRay.pdb" />
         </ItemGroup>
         <Move SourceFiles="@(_EngineItems)" DestinationFolder="$(OutDir)\" />
         <Move Condition="$(OS) == 'Windows_NT'" SourceFiles="$(OutDir)\NekoRay.exe" DestinationFiles="$(OutDir)\$(NekoRayProjectId).exe"/>

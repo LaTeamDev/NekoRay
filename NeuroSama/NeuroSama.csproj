@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net9.0-windows</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <NekoRayProjectId>neuro</NekoRayProjectId>
+        <CopyAllData>true</CopyAllData>
+        <PackageId>NeuroSama</PackageId>
+    </PropertyGroup>
+
+    <Import Project="../NekoRay/game.targets"/>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NekoRay\NekoRay.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update=".itch.toml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

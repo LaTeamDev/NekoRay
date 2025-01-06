@@ -58,8 +58,24 @@ This distribution contains code from the following projects (full license text b
     Website: https://github.com/ocornut/imgui
     License: MIT
     Copyright (c) 2014-2024 Omar Cornut
+ - JetBrains.Annotations
+    Website: https://www.jetbrains.com/help/resharper/Code_Analysis__Code_Annotations.html
+    License: MIT
+    Copyright (c) JetBrains
+ - CommandLineParser
+    Website: https://github.com/commandlineparser/commandline
+    License: MIT
+    Copyright (c) 2005 - 2015 Giacomo Stelluti Scala & Contributors
+ - SoLoud
+    Website: https://solhsa.com/soloud/
+    License: zlib
+    Copyright (c) 2013-2018 Jari Komppa
 
-
+ - SoLoud.NET
+    Website: https://github.com/LaTeamDev/SoLoud.NET
+    License: MIT
+    Copyright (c) 2024 VanderCat
+    
 zlib license
     This software is provided 'as-is', without any express or implied
     warranty.  In no event will the authors be held liable for any damages

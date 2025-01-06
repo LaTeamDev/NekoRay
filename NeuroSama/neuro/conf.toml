@@ -1,0 +1,8 @@
+name = "Neuro Sama GameJam"
+
+[meta]
+developers = ["VanderCat", "Devyatyi9", "umba_huyumba"]
+
+[filesystem]
+bin = ["{{this}}/bin/"]
+mount = ["{{this}}", "{{this}}/custom/*"]

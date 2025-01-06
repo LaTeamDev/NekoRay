@@ -73,7 +73,7 @@ public abstract class BaseScene : IScene {
         }
     }
 
-    public void Dispose() {
+    public virtual void Dispose() {
         var currentGameObjects = new GameObject[GameObjects.Count];
         GameObjects.CopyTo(currentGameObjects);
         foreach (var gameObject in currentGameObjects) {

@@ -4,9 +4,9 @@ using NekoLib.Filesystem;
 using Serilog;
 using ZeroElectric.Vinculum.Extensions;
 
-namespace NekoRay; 
+namespace NekoRay.Compat; 
 
-public static class RaylibNekoLibFilesystemCompat {
+public static class RaylibNekoLibFilesystem {
     private static ILogger Log = Serilog.Log.ForContext("Name","Filesystem");
     
     public static unsafe void Use() {
@@ -43,7 +43,7 @@ public static class RaylibNekoLibFilesystemCompat {
             return null;
         }
 
-        var data = (byte*)Marshal.AllocHGlobal(*dataSize).ToPointer();
+        var data = (byte*)Marshal.AllocCoTaskMem(*dataSize).ToPointer();
 
         if (data is null) {
             Log.Error("Failed to allocated memory for reading file {File}", filepath);

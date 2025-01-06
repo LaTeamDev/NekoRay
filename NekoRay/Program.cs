@@ -1,8 +1,11 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 
 namespace NekoRay; 
 
-public class Program {
+public static class Program {
     private static bool _shouldQuit = false;
     public static bool ShouldQuit => _shouldQuit;
     public static void Quit() => _shouldQuit = true;
@@ -17,10 +20,31 @@ public class Program {
         _dllPaths.Add(path);
         Environment.SetEnvironmentVariable("PATH", NewPath);
     }
-	
+	#if WINDOWS
+    [DllImport("user32.dll", EntryPoint = "MessageBoxW",CharSet = CharSet.Auto)]
+    public static extern int MessageBox(nint hWnd, string text, string caption, long type);
     
-    public static void Init()
-    {
+    private static void WinCrashHandler(object sender, UnhandledExceptionEventArgs e) {
+        if (e.ExceptionObject is Exception exception) {
+            MessageBox(0, 
+                $"NekoRay encountered an error it could not recover from:\n{exception}\n\n If you see an error about dll not found, most probably you don't have Visual C++ Redistributables installed.", "NekoRay", 0x00000010L);
+        }
+        else {
+            MessageBox(0, 
+                $"NekoRay encountered an error it could not recover from AND it is not exception.\nHow?", "NekoRay", 0x00000010L);
+        }
+    }
+    
+    public static void SetCrashHandler() {
+
+        AppDomain.CurrentDomain.UnhandledException += WinCrashHandler;
+    }
+    #endif
+
+    public static void Init() {
+#if WINDOWS
+        SetCrashHandler();
+#endif
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         GamePath = Directory.GetCurrentDirectory();
         _dllPaths.Add(Path.Join(GamePath, "bin"));
@@ -38,7 +62,8 @@ public class Program {
 
         return null;
     }
-		
+    
+    [HandleProcessCorruptedStateExceptions] 
     public static void Main(string[] args) {
         Init();
         Bootstrapper.Start(args);

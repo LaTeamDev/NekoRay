@@ -71,14 +71,20 @@ public static class Bootstrapper {
     
     [DebuggerHidden]
     public static int Start(string[] args) {
+        Compat.RaylibSerilog.Use();
         new AssemblyFilesystem(typeof(Bootstrapper).Assembly).Mount();
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
         var gameAttr = typeof(Bootstrapper).Assembly.GetCustomAttribute<DefaultGameIdAttribute>();
         
-        var parser = new Parser(with => with.HelpWriter = null);
-        parser.ParseArguments<CliOptions>(args).WithParsed(opt => CliOptions._instance = opt);
+        var parser = Parser.Default;
+        var success = false;
+        parser.ParseArguments<CliOptions>(args).WithParsed(opt => {
+            CliOptions._instance = opt;
+            success = true;
+        });
+        if (!success) return -1;
         
-        var gameId = CliOptions.Instance.Game??"default";
+        var gameId = CliOptions.Instance.Game??gameAttr?.GameId??"default";
 
         GameBase game; 
         try {
@@ -89,7 +95,7 @@ public static class Bootstrapper {
             Raylib.SetWindowState(WindowSettings.Instance.GetFlags());
             Raylib.InitWindow(WindowSettings.Instance.Width, WindowSettings.Instance.Height, conf.Name);
         }
-        catch (Exception e) {
+        catch (Exception e) when (!Debugger.IsAttached) {
             Console.WriteLine("Abort loading game due to {0}", e);
             game = new NoGame();
             game.Initlogging();
@@ -97,7 +103,7 @@ public static class Bootstrapper {
         }
         Raylib.SetExitKey(0);
 
-        NekoRay.Tools.Console.Init();
+        Tools.Console.Init();
        
         try {
             var loopFunction = game.Run(args);

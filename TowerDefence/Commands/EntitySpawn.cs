@@ -9,6 +9,7 @@ using TowerDefence.Gameplay.Buildings;
 using TowerDefence.Gameplay.AI;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
+using Texture = NekoRay.Texture;
 
 namespace TowerDefence.Commands;
 
@@ -45,6 +46,11 @@ public partial class Commands {
 
     private static void DefaultEnt() {
         EntAdd("player", () => new Player());
+        EntAdd("particle", () => {
+            var ps = new GameObject("Particle System").AddComponent<ParticleSystemComponent>();
+            ps.Sprite = Texture.Load("textures/notexture.png").ToSprite();
+            return ps.GameObject;
+        });
         EntAdd("camera2d", () => {
             var gameObject = new GameObject("camera2d");
             var camera = gameObject.AddComponent<Camera2D>();

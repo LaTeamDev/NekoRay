@@ -1,18 +1,22 @@
+using Serilog;
+using SoLoud;
+
 namespace NekoRay; 
 
 public static class Audio {
+
+    public static SoLoud.SoLoud SoLoud;
+    public static SoLoudBackend Backend = SoLoudBackend.Auto;
     public static void Init() {
-        Raylib.InitAudioDevice();
+        if (SoLoud is not null) return;
+        SoLoud = new SoLoud.SoLoud();
+        Backend = CliOptions.Instance.AudioBackend;
+        SoLoud.Init(SoloudFlags.ClipRoundoff, Backend);
+        Log.Information("SoLoud {version} started with {backend} backend, {channels} channels, {samplerate} samplerate", SoLoud.Version, SoLoud.Backend, SoLoud.BackendChannels, SoLoud.BackendSampleRate);
     }
 
     public static void Close() {
-        Raylib.CloseAudioDevice();
-    }
-
-    public static bool IsReady => Raylib.IsAudioDeviceReady();
-
-    public static float MasterVolume {
-        get => Raylib.GetMasterVolume();
-        set => Raylib.SetMasterVolume(value);
+        SoLoud.DeInit();
+        Log.Information("Successfully shutdown audio");
     }
 }

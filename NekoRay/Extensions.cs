@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Box2D.Interop;
 using ImGuiNET;
 using NekoLib.Filesystem;
+using Rectangle = ZeroElectric.Vinculum.Rectangle;
 
 namespace NekoRay; 
 
@@ -62,5 +63,29 @@ public static class Extensions {
     public static Vector2 ToVector2(this Size point) => new(point.Width, point.Height);
     public static Point ToPoint(this Vector2 vector) => new((int)vector.X, (int)vector.Y);
     public static Size ToSize(this Vector2 vector) => new((int)vector.X, (int)vector.Y);
+
+    public static Rectangle ToRaylib(this RectangleF rectangle) =>
+        new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
     
+    public static RectangleF ToDotNet(this Rectangle rectangle)  =>
+        new(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+
+    public static Sprite ToSprite(this Texture texture) =>
+        new (texture, new Rectangle(0, 0, texture.Width, texture.Height));
+    
+    public static Quaternion YawPitchRollAsQuaternion(this Vector3 rotation) =>
+        Quaternion.CreateFromYawPitchRoll(rotation.X, rotation.Y, rotation.Z);
+
+
+    private static Stack<BlendMode> _blendModes = new();
+    public static AttachMode Attach(this BlendMode blendMode) {
+        Raylib.BeginBlendMode(blendMode);
+        _blendModes.Push(blendMode);
+        return new AttachMode(()=> {
+            Raylib.EndBlendMode();
+            _blendModes.Pop();
+            if (_blendModes.TryPeek(out var prev))
+                Raylib.BeginBlendMode(prev);
+        });
+    }
 }

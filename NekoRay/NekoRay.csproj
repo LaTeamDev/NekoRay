@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
+        <OutputType>WinExe</OutputType>
+        <TargetFrameworks>net9.0;net9.0-windows</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -12,7 +12,7 @@
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
-    <ItemGroup> 
+    <ItemGroup>
         <AssemblyAttribute Include="NekoRay.DefaultGameIdAttribute">
             <_Parameter1>$(NekoRayDefaultGameId)</_Parameter1>
         </AssemblyAttribute>
@@ -23,6 +23,7 @@
       <ProjectReference Include="..\..\box2c-sharp\Box2D\Box2D.csproj" />
       <ProjectReference Include="..\..\box2c-sharp\Box2D.Interop\Box2D.Interop.csproj" />
       <ProjectReference Include="..\..\rlImGui-CSharp-Vinculum\rlImGui\rlImGui.csproj" />
+      <ProjectReference Include="..\..\SoLoud.NET\SoLoud\SoLoud.csproj" />
     </ItemGroup>
 
     <ItemGroup>

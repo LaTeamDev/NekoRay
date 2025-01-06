@@ -1,0 +1,12 @@
+﻿[[actions]]
+name = "play"
+path = "neuro.exe"
+args = ["--game", "neuro"]
+
+[[actions]]
+name = "editor"
+path = "neuro.exe"
+args = ["--game", "neuro", "--tools"]
+
+[[prereqs]]
+name = "vcredist-2015-x64"

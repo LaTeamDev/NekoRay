@@ -34,6 +34,10 @@ public abstract class Drawer {
             return _drawers.TryGetValue(typeof(object), out value);
         }
     }
+
+    public static bool TryGet<T>(out Drawer? value) {
+        return TryGet(typeof(T), out value);
+    }
     
     static Drawer() {
         UpdateDrawers();

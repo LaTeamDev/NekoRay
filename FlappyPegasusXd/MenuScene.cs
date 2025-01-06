@@ -2,9 +2,11 @@ using System.Numerics;
 using FlappyPegasus.GameStuff;
 using FlappyPegasus.Gui;
 using NekoLib.Core;
+using NekoLib.Filesystem;
 using NekoLib.Scenes;
 using NekoRay;
 using Serilog;
+using SoLoud;
 using ZeroElectric.Vinculum;
 using Camera2D = NekoRay.Camera2D;
 using Console = NekoRay.Tools.Console;
@@ -12,6 +14,8 @@ using Console = NekoRay.Tools.Console;
 namespace FlappyPegasus; 
 
 public class MenuScene : BaseScene {
+
+    private WavStream MenuMusic;
     public override void Initialize() {
         var cameraObject = new GameObject("Camera");
         var camera = cameraObject.AddComponent<Camera2D>();
@@ -95,13 +99,16 @@ public class MenuScene : BaseScene {
         guiExit.Height = 30f;
 
         layout.Calculate();
-        
-        //TODO: Fix Audio (use openal instead?)
-        //var audio = new GameObject("Level Music").AddComponent<AudioPlayer>();
-        //audio.AudioClip = Music.Load("TownTheme.mp3");
-        //audio.Loop = true;
-        //audio.Play();
+
+        using var stream = Files.GetFile("TownTheme.mp3").GetStream();
+        MenuMusic = WavStream.LoadFromStream(stream);
+        Audio.SoLoud.PlayBackground(MenuMusic);
         
         base.Initialize();
+    }
+
+    public override void Dispose() {
+        base.Dispose();
+        Audio.SoLoud.StopAll();
     }
 }

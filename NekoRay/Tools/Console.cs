@@ -194,6 +194,19 @@ public static class Console {
         }
     }
     
+    [ConCommand("dotnet_version")]
+    [ConDescription("Print running .NET version")]
+    public static void DotnetVersion() {
+        Serilog.Log.Information("Running " 
+                                + RuntimeInformation.FrameworkDescription 
+                                + " ("
+                                + RuntimeInformation.RuntimeIdentifier
+                                + ") On " 
+                                + RuntimeInformation.OSDescription 
+                                + " "
+                                + RuntimeInformation.ProcessArchitecture);
+    }
+    
     [ConVariable("test_variable")]
     [ConTags("test")]
     public static bool TestVariable { get; set; }

@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using SoLoud;
 
 namespace NekoRay;
 
@@ -14,4 +15,7 @@ public class CliOptions {
     
     [Option("console", HelpText = "open console on start")]
     public bool ConsoleOnStart { get; set; }
+    
+    [Option('a',"audio-backend", HelpText = "audio backend to use", Default = SoLoudBackend.Auto)]
+    public SoLoudBackend AudioBackend { get; set; }
 }

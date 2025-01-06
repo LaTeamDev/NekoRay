@@ -88,6 +88,8 @@ public class GameScene : BaseScene {
         player.Transform.Position = player.Transform.Position with {X = -120f};
         
         playerAnimation.AnimationFrames = AsepriteLoader.Load("texture/bladhead.json");
+
+        player.GameObject.AddComponent<AudioListener>();
         #endregion
         
         #region Setup Bounds
