@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net9.0-windows</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <NekoRayProjectId>scriptedgame</NekoRayProjectId>
+        <CopyAllData>true</CopyAllData>
+    </PropertyGroup>
+
+    <Import Project="../NekoRay/game.targets"/>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NekoRay.Scripting\NekoRay.Scripting.csproj" />
+        <ProjectReference Include="..\NekoRay\NekoRay.csproj"/>
+    </ItemGroup>
+
+</Project>

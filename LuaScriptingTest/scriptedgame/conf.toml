@@ -1,0 +1,9 @@
+name = "Untitled"
+
+[meta]
+developers = ["Your Name"]
+website = "https://example.com/"
+
+[filesystem]
+bin = ["{{this}}/bin/"]
+mount = ["{{this}}", "{{this}}/custom/*"]

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NekoRay\NekoRay.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NLua" Version="1.7.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="package.lua" />
+      <EmbeddedResource Include="package.lua" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Tools\" />
+    </ItemGroup>
+
+</Project>
