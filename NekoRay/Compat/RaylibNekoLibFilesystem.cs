@@ -33,7 +33,7 @@ public static class RaylibNekoLibFilesystem {
         
         if (ms.Length > 2147483647)
         {
-            // Is this limit artificial? TODO: investigate
+            // Is this limit artificial? TODO: investigate // https://stackoverflow.com/questions/53193085/
             Log.Warning("File {File} is bigger than 2147483647 bytes, avoid using Raylib for loading such files", filepath);
         }
         
