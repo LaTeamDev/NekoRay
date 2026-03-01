@@ -2,5 +2,6 @@
   "texture": "textures/minigame/tutel.png",
   "bounds": {"x": 0, "y": 0, "width": 17, "height": 23},
   "origin": {"x": 8, "y": 12},
-  "pixelSize": 1.0
+  "pixelSize": 1.0,
+  "imageFilter": "point"
 }

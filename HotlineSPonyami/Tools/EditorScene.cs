@@ -57,7 +57,6 @@ public class EditorScene : Scene, IBinarySavable
         new GameObject("Tools").AddComponent<Tools>().Initialize(this);
         _camera = new GameObject("DragCamera").AddComponent<DragCamera>();
         new GameObject("EditorMenu").AddComponent<EditorMenu>().Initialize(this);
-        base.Initialize();
     }
 
     public void GetCurrentCell(out int x, out int y)

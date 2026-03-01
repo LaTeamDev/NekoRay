@@ -195,7 +195,6 @@ public class ParticleSystem : NekoObject {
     }
 
     public override void Dispose() {
-        base.Dispose();
         _pool.Dispose();
     }
 }

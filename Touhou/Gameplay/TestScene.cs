@@ -11,7 +11,6 @@ public class TestScene : Scene {
         var info = PlayerInfo.Load("data/characters/reimuA.plr");
         //new GameObject("reimu").AddComponent<SpriteRenderer2D>().Sprite = Sprite.Load("sprites/characters/reimu/idle.nrs");
         SpawnPlayer(info);
-        base.Initialize();
     }
 
     public static void SpawnPlayer(PlayerInfo playerInfo) {

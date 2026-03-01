@@ -2,5 +2,6 @@
   "texture": "textures/location1_fg.png",
   "bounds": {"x": 0, "y": 0, "width": 10229, "height": 1750},
   "origin": {"x": 5114.5, "y": 875},
-  "pixelSize": 1.0
+  "pixelSize": 1.0,
+  "imageFilter": "trilinear"
 }

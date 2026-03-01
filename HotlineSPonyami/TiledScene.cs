@@ -65,6 +65,5 @@ public class TiledScene : Scene
                 }
             }
         }
-        base.Initialize();
     }
 }

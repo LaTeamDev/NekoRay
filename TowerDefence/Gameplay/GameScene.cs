@@ -34,9 +34,6 @@ public class GameScene : Scene {
 
         _spawner = new Timer();
         StormController.OnPhaseEnded += OnPhaseEnded;
-        
-        base.Initialize();
-        
     }
 
     public void SpawnLoop() {

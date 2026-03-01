@@ -1,6 +1,7 @@
 using ImGuiNET;
 using NekoLib.Extra;
 using NekoLib.Filesystem;
+using NekoLib.QueuedActions;
 using NekoLib.Tools;
 using NekoRay.Physics2D;
 using rlImGui_cs;
@@ -111,6 +112,7 @@ public abstract class GameBase {
             Time.Step();
             UpdateEvents();
             NekoLib.Core.Timer.Global.Update(Time.DeltaF);
+            ActionDispatcher.ExecuteQueuedActions();
             Input.Update();
             Update();
             while (Time._fixedTime > Time.FixedDeltaF) {

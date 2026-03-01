@@ -14,7 +14,5 @@ public class YourScene : Scene {
         camera.IsMain = true;
 
         var text = new GameObject("Text").AddComponent<YourBehaviour>();
-        
-        base.Initialize();
     }
 }

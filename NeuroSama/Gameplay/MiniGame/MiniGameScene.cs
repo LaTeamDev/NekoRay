@@ -68,8 +68,6 @@ public class MiniGameScene : Scene {
         var musicStream = WavStream.LoadFromStream(stream);
         _voice = Audio.SoLoud.Play(musicStream);
         _voice.Loop = true;
-        
-        base.Initialize();
     }
     private bool _dialogueShown = false;
     public override void Update() {

@@ -105,8 +105,6 @@ public class MenuScene : Scene {
         using var stream = Files.GetFile("TownTheme.mp3").GetStream();
         MenuMusic = WavStream.LoadFromStream(stream);
         Audio.SoLoud.PlayBackground(MenuMusic);
-        
-        base.Initialize();
     }
 
     public override void Dispose() {

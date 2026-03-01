@@ -2,5 +2,6 @@
   "texture": "textures/minigame/answer_1.png",
   "bounds": {"x": 0, "y": 0, "width": 109, "height": 28},
   "origin": {"x": 55, "y": 14},
-  "pixelSize": 1.0
+  "pixelSize": 1.0,
+  "imageFilter": "point"
 }

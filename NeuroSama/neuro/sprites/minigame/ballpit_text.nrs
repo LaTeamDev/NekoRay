@@ -2,5 +2,6 @@
   "texture": "textures/minigame/ballpit_text.png",
   "bounds": {"x": 0, "y": 0, "width": 143, "height": 20},
   "origin": {"x": 71, "y": 10},
-  "pixelSize": 1.0
+  "pixelSize": 1.0,
+  "imageFilter": "point"
 }

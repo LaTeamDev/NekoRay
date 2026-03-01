@@ -25,7 +25,6 @@ public class SplashScene : Scene {
         var gameObject = new GameObject("Camera");
         var camera = gameObject.AddComponent<Camera2D>();
         camera.IsMain = true;
-        base.Initialize();
     }
 
     public IScene NextScene;

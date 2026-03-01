@@ -27,8 +27,6 @@ public class DebugScene : Scene {
         //var reticleRenderer = reticle.GameObject.AddComponent<SpriteRenderer2D>();
         //reticleRenderer.Sprite = new Sprite(Data.GetTexture("textures/gameui/reticle.png"), new Rectangle(0, 0, 9, 9));
         #endregion
-
-        base.Initialize();
     }
 
     public override void FixedUpdate() {

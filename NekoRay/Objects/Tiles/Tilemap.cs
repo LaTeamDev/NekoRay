@@ -36,6 +36,7 @@ public class Tilemap : NekoObject, IEnumerable<TilemapEntry> {
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     
     public ref Tile this[int x, int y] => ref _tiles[x, y];
+    public override void Dispose() { }
 }
  
 public class TilemapEnumerator : IEnumerator<TilemapEntry> {

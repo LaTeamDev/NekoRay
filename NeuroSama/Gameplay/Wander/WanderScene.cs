@@ -71,8 +71,6 @@ public class WanderScene : Scene {
         var musicStream = WavStream.LoadFromStream(stream);
         _voice = Audio.SoLoud.Play(musicStream);
         _voice.Loop = true;
-        
-        base.Initialize();
     }
     
     private void CreateCollider(RectangleF rect) {

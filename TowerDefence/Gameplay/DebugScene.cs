@@ -22,8 +22,6 @@ public class DebugScene : Scene {
         camera.Zoom = 2f;
         //camera.Zoom = 2f;
         #endregion
-        
-        base.Initialize();
     }
 
     public override void FixedUpdate() {

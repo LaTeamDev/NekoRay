@@ -40,7 +40,8 @@ public class Preloader(IScene next) : IScene {
     public void Update() {
         if (!texturesLoaded) {
             LastLoaded = Textures[idx++];
-            NekoRay.Texture.Load(LastLoaded);
+            var tex = NekoRay.Texture.Load(LastLoaded);
+            tex.GenMipmaps();
             if (idx >= Textures.Count) {
                 texturesLoaded = true;
                 idx = 0;

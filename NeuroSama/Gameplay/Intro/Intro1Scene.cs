@@ -1,6 +1,7 @@
 ﻿using NekoLib.Core;
 using NekoLib.Extra;
 using NekoLib.Filesystem;
+using NekoLib.QueuedActions;
 using NekoRay;
 using NeuroSama.Gameplay.Dialogue;
 using NeuroSama.Gameplay.MiniGame;
@@ -33,8 +34,7 @@ public class Intro1Scene : Scene {
         var musicStream = WavStream.LoadFromStream(stream);
         _voice = Audio.SoLoud.Play(musicStream);
         _voice.Loop = true;
-        
-        base.Initialize();
+        ActionDispatcher.QueueAction(new ShowDialogueAction(this));
     }
 
     public override void Dispose() {
@@ -54,12 +54,9 @@ public class Intro1Scene : Scene {
         DialogueController.ChangeScene(new SplashScene(new Intro2Scene(), "thepast"));
     }
 
-    private bool _dialogueShown = false;
-    public override void Update() {
-        base.Update();
-        if (!_dialogueShown) {
-            _dialogueShown = true;
-            ShowDialogue();
+    private class ShowDialogueAction(Intro1Scene t) : IQueuedAction {
+        public void Execute() {
+            t.ShowDialogue();
         }
     }
 

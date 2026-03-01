@@ -52,7 +52,6 @@ public class SpriteAnimation : NekoObject, IAsset {
     }
 
     public override void Dispose() {
-        base.Dispose();
         if (Path != null) AssetCache.Remove(this);
     }
 }

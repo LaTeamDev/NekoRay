@@ -19,7 +19,5 @@ public class GameOverScene : OverlayScene {
         exit.Width = 120f;
         exit.OnClick += () => Console.Submit("leave");
         exit.Text = "Leave";
-
-        base.Initialize();
     }
 }

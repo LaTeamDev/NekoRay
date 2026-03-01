@@ -2,5 +2,6 @@
   "texture": "textures/minigame/overlay.png",
   "bounds": {"x": 0, "y": 0, "width": 5459, "height": 3072},
   "origin": {"x": 2729.5, "y": 1536},
-  "pixelSize": 0.2345
+  "pixelSize": 0.2345,
+  "imageFilter": "point"
 }

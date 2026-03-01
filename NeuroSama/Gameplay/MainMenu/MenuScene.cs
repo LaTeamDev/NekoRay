@@ -60,8 +60,7 @@ namespace NeuroSama.Gameplay.MainMenu {
             logo.Sprite = Sprite.Load("sprites/logo.nrs");
             logo.Transform.Position = new Vector3(0, -243f, 0f);
             logo.Transform.LocalScale = new Vector3(2f);
-        
-            base.Initialize();
+            
         }
         private Voice _voice;
 

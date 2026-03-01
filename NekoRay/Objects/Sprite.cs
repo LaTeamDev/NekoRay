@@ -2,6 +2,7 @@ using System.Numerics;
 using NekoLib.Filesystem;
 using NekoRay.Data;
 using NekoRay.Tools;
+using TextureFilter = NekoRay.Data.TextureFilter;
 
 namespace NekoRay; 
 
@@ -12,6 +13,11 @@ public class Sprite : NekoObject, IAsset {
     public float Width => Bounds.Width;
     public float Height => Bounds.Height;
     public float PixelSize = 1f;
+
+    public TextureFilter Filter {
+        get => (TextureFilter)Texture.Filter;
+        set => Texture.Filter = (ZeroElectric.Vinculum.TextureFilter)value;
+    }
     public Sprite(Texture texture, Rectangle bounds) {
         Texture = texture;
         Bounds = bounds;
@@ -42,6 +48,7 @@ public class Sprite : NekoObject, IAsset {
             Origin = spriteFile.Origin,
             Path = path,
             PixelSize = spriteFile.PixelSize,
+            Filter = spriteFile.ImageFilter
         };
         return sprite;
     }
@@ -49,6 +56,7 @@ public class Sprite : NekoObject, IAsset {
     public void Reload() {
         var spriteFile = SpriteFile.Load(Path);
         Texture = Texture.Load(spriteFile.Texture);
+        Texture.Filter = (ZeroElectric.Vinculum.TextureFilter)spriteFile.ImageFilter;
         Bounds = spriteFile.Bounds.ToRaylib();
         Origin = spriteFile.Origin;
         PixelSize = spriteFile.PixelSize;
@@ -63,7 +71,7 @@ public class Sprite : NekoObject, IAsset {
         var dest = new Rectangle(
             destination.X, destination.Y,
             Bounds.Width * Math.Abs(scale.Value.X), Bounds.Height * Math.Abs(scale.Value.Y));
-
+        
         Raylib.DrawTexturePro(
             Texture._texture, 
             source, 
@@ -74,7 +82,6 @@ public class Sprite : NekoObject, IAsset {
     }
 
     public override void Dispose() {
-        base.Dispose();
         if (Path != null) AssetCache.Remove(this);
     }
 }

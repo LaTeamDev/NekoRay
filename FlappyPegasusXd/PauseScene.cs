@@ -27,7 +27,5 @@ public class PauseScene : OverlayScene {
         cont.Text = "Continue";
 
         overlay.AddComponent<ButtonLayout>().Calculate();
-
-        base.Initialize();
     }
 }

@@ -14,7 +14,7 @@ public class AudioStream : NekoObject, IPlayable {
     public static AudioStream Load(uint sampleRate, uint sampleSize, uint channels) => 
         new(Raylib.LoadAudioStream(sampleRate, sampleSize, channels));
 
-    public void Dispose() {
+    public override void Dispose() {
         Raylib.UnloadAudioStream(_AudioStream);
     }
 

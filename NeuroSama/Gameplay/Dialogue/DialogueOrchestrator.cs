@@ -29,6 +29,7 @@ public class DialogueOrchestrator : Behaviour, IObserver<DialogueEvent> {
         SpriteLeft = GameObject.AddChild("Sprite Left").AddComponent<SpriteRenderer2D>();
         SpriteCenter = GameObject.AddChild("Sprite Center").AddComponent<SpriteRenderer2D>();
         SpriteRight = GameObject.AddChild("Sprite Right").AddComponent<SpriteRenderer2D>();
+        SpriteRight.GameObject.Active = SpriteCenter.GameObject.Active = SpriteLeft.GameObject.Active = false;
         
         var topBox = GameObject.AddChild("Top Box").AddComponent<Rect>();
         var bottomBox = GameObject.AddChild("Bottom Box").AddComponent<Rect>();
@@ -75,9 +76,9 @@ public class DialogueOrchestrator : Behaviour, IObserver<DialogueEvent> {
         SpriteLeft.Sprite = Sprite.Load("sprites/dialogues/neuro neutral.nrs");
         SpriteCenter.Sprite = SpriteLeft.Sprite;
         SpriteRight.Sprite = SpriteLeft.Sprite;
-        SpriteLeft.Transform.LocalPosition = new Vector3(256, 467, 0);
+        SpriteLeft.Transform.LocalPosition = new Vector3(128, 467, 0);
         SpriteCenter.Transform.LocalPosition = new Vector3(640, 467, 0);
-        SpriteRight.Transform.LocalPosition = new Vector3(1024, 467, 0);
+        SpriteRight.Transform.LocalPosition = new Vector3(1152, 467, 0);
         SpriteLeft.Color = SpriteRight.Color = SpriteCenter.Color = Raylib.WHITE.Fade(0f);
 
         _trackerHandle = DialogueController.DialogueObservable.Subscribe(this);

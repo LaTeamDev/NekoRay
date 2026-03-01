@@ -18,9 +18,11 @@ public class SpriteRenderer2D : Behaviour {
         var fullscale = new Vector2(scale.X * (FlipX ? -1 : 1)*Sprite.PixelSize, scale.Y * (FlipY ? -1 : 1)*Sprite.PixelSize);
         var rotation = float.RadiansToDegrees(Transform.Rotation.YawPitchRollAsVector3().Z);
         using (BlendMode.Attach()) {
-            using (Shader?.Attach()) {
-                Sprite.Draw(position, fullscale, rotation, Color);
-            }
+            if (Shader is not null)
+                using (Shader.Attach()) {
+                    Sprite.Draw(position, fullscale, rotation, Color);
+                }
+            else Sprite.Draw(position, fullscale, rotation, Color);
         }
     }
     

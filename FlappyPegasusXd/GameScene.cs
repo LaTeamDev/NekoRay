@@ -157,8 +157,6 @@ public class GameScene : Scene {
         };
 
         //new GameObject("DebugWorldDraw").AddComponent<DrawWorld>();
-
-        base.Initialize();
     }
 
     void HandlePause() {
